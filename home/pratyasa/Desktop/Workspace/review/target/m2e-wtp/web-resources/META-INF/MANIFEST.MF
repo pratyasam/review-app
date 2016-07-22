@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: pratyasa
+Build-Jdk: 1.8.0_101
+Implementation-Title: Spring MVC Application
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: com.mindfire
+Implementation-Vendor: Pivotal Software, Inc.
+Created-By: Maven Integration for Eclipse
+
