@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 class WebMvcConfig extends WebMvcConfigurationSupport {
@@ -30,17 +31,18 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         return requestMappingHandlerMapping;
     }
 
-    @Bean(name = "messageSource")
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename(MESSAGE_SOURCE);
-        messageSource.setCacheSeconds(5);
-        return messageSource;
-    }
+//    @Bean(name = "messageSource")
+//    public MessageSource messageSource() {
+//        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+//        messageSource.setBasename(MESSAGE_SOURCE);
+//        messageSource.setCacheSeconds(5);
+//        return messageSource;
+//    }
 
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setViewClass(org.springframework.web.servlet.view.JstlView.class);
         viewResolver.setPrefix(VIEWS);
         viewResolver.setSuffix(".jsp");
         return viewResolver;
@@ -60,11 +62,11 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     /**
      * Handles favicon.ico requests assuring no <code>404 Not Found</code> error is returned.
      */
-    @Controller
-    static class FaviconController {
-        @RequestMapping("favicon.ico")
-        String favicon() {
-            return "forward:/resources/images/favicon.ico";
-        }
-    }
+//    @Controller
+//    static class FaviconController {
+//        @RequestMapping("favicon.ico")
+//        String favicon() {
+//            return "forward:/resources/images/favicon.ico";
+//        }
+//    }
 }

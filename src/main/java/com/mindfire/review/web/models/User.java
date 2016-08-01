@@ -20,13 +20,13 @@ public class User implements Serializable {
 	@Column(name="user_id", unique=true, nullable=false)
 	private Long userId;
 
-	@Column(nullable=false, length=50)
-	private String user_firstName;
+	@Column(name="user_firstName", nullable=false, length=50)
+	private String firstName;
 
-	@Column(nullable=false, length=50)
-	private String user_lastName;
+	@Column(name="user_lastName", nullable=false, length=50)
+	private String lastName;
 
-	@Column(name="user_name", nullable=false, length=255)
+	@Column(name="user_name", unique=true, nullable=false, length=255)
 	private String userName;
 
 	@Column(name="user_password", nullable=false, length=45)
@@ -34,6 +34,10 @@ public class User implements Serializable {
 
 	@Column(name="user_type", nullable=false, length=45)
 	private String userType;
+	
+	@Column(name="user_gender", nullable=false, length=45)
+	private String userGender;
+
 
 	//bi-directional many-to-one association to ReviewAuthor
 	@OneToMany(mappedBy="user")
@@ -55,19 +59,19 @@ public class User implements Serializable {
 	}
 
 	public String getUser_firstName() {
-		return this.user_firstName;
+		return this.firstName;
 	}
 
 	public void setUser_firstName(String user_firstName) {
-		this.user_firstName = user_firstName;
+		this.firstName = user_firstName;
 	}
 
 	public String getUser_lastName() {
-		return this.user_lastName;
+		return this.lastName;
 	}
 
 	public void setUser_lastName(String user_lastName) {
-		this.user_lastName = user_lastName;
+		this.lastName = user_lastName;
 	}
 
 	public String getUserName() {
@@ -93,6 +97,14 @@ public class User implements Serializable {
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
+	public String getUserGender() {
+		return userGender;
+	}
+
+	public void setUserGender(String userGender) {
+		this.userGender = userGender;
+	}
+
 
 	public List<ReviewAuthor> getReviewAuthors() {
 		return this.reviewAuthors;
@@ -138,4 +150,12 @@ public class User implements Serializable {
 		return review;
 	}
 
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", user_firstName=" + firstName + ", user_lastName=" + lastName
+				+ ", userName=" + userName + ", userPassword=" + userPassword + ", userType=" + userType + "]";
+	}
+
+	
+	
 }

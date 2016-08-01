@@ -1,7 +1,5 @@
 package com.mindfire.review;
 
-import javax.servlet.ServletRegistration;
-
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -21,9 +19,9 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         return null;
     }
 
-    @Override
-    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
-        registration.setInitParameter("defaultHtmlEscape", "true");
-        registration.setInitParameter("spring.profiles.active", "default");
-    }
+//    @Override
+//    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+//        registration.setInitParameter("defaultHtmlEscape", "true");
+//        registration.setInitParameter("spring.profiles.active", "default");
+//    }
 }

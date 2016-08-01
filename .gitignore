@@ -1,6 +1,12 @@
+.idea/
+src/main/webapp/WEB-INF/lib/
 /target/
 .project
 .classpath
 *.tmp
 .settings
 /home
+build.properties
+review.iml
+META-INF/
+
