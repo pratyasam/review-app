@@ -1,161 +1,155 @@
 package com.mindfire.review.web.models;
 
-import java.io.Serializable;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 
 /**
  * The persistent class for the user database table.
- * 
  */
 @Entity
-@Table(name="user")
-@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@Table(name = "user")
+@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="user_id", unique=true, nullable=false)
-	private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id", unique = true, nullable = false)
+    private Long userId;
 
-	@Column(name="user_firstName", nullable=false, length=50)
-	private String firstName;
+    @Column(name = "firstName", nullable = false, length = 50)
+    private String firstName;
 
-	@Column(name="user_lastName", nullable=false, length=50)
-	private String lastName;
+    @Column(name = "lastName", nullable = false, length = 50)
+    private String lastName;
 
-	@Column(name="user_name", unique=true, nullable=false, length=255)
-	private String userName;
+    @Column(name = "user_name", unique = true, nullable = false, length = 255)
+    private String userName;
+    @Column(name = "password", nullable = false, length = 45)
+    private String userPassword;
+    @Column(name = "role", nullable = false, length = 45)
+    private String role = "normal";
+    @Column(name = "gender", nullable = false, length = 45)
+    private String userGender;
+    //bi-directional many-to-one association to ReviewAuthor
+    @OneToMany(mappedBy = "user")
+    private List<ReviewAuthor> reviewAuthors;
+    //bi-directional many-to-one association to ReviewBook
+    @OneToMany(mappedBy = "user")
+    private List<ReviewBook> reviewBooks;
 
-	@Column(name="user_password", nullable=false, length=45)
-	private String userPassword;
+    public User() {
+    }
 
-	@Column(name="user_type", nullable=false, length=45)
-	private String userType;
-	
-	@Column(name="user_gender", nullable=false, length=45)
-	private String userGender;
+    public String getFirstName() {
+        return firstName;
+    }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	//bi-directional many-to-one association to ReviewAuthor
-	@OneToMany(mappedBy="user")
-	private List<ReviewAuthor> reviewAuthors;
+    public String getLastName() {
+        return lastName;
+    }
 
-	//bi-directional many-to-one association to Review
-	@OneToMany(mappedBy="user")
-	private List<Review> reviews;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public User() {
-	}
+    public String getUserPassword() {
+        return userPassword;
+    }
 
-	public Long getUserId() {
-		return this.userId;
-	}
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public String getRole() {
+        return role;
+    }
 
-	public String getUser_firstName() {
-		return this.firstName;
-	}
+    public void setRole(String userType) {
+        this.role = userType;
+    }
 
-	public void setUser_firstName(String user_firstName) {
-		this.firstName = user_firstName;
-	}
+    public String getUserGender() {
+        return userGender;
+    }
 
-	public String getUser_lastName() {
-		return this.lastName;
-	}
+    public void setUserGender(String userGender) {
+        this.userGender = userGender;
+    }
 
-	public void setUser_lastName(String user_lastName) {
-		this.lastName = user_lastName;
-	}
+    public Long getUserId() {
+        return this.userId;
+    }
 
-	public String getUserName() {
-		return this.userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getUserPassword() {
-		return this.userPassword;
-	}
-
-	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
-	}
-
-	public String getUserType() {
-		return this.userType;
-	}
-
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
-	public String getUserGender() {
-		return userGender;
-	}
-
-	public void setUserGender(String userGender) {
-		this.userGender = userGender;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
 
-	public List<ReviewAuthor> getReviewAuthors() {
-		return this.reviewAuthors;
-	}
+    public String getUserName() {
+        return this.userName;
+    }
 
-	public void setReviewAuthors(List<ReviewAuthor> reviewAuthors) {
-		this.reviewAuthors = reviewAuthors;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public ReviewAuthor addReviewAuthor(ReviewAuthor reviewAuthor) {
-		getReviewAuthors().add(reviewAuthor);
-		reviewAuthor.setUser(this);
 
-		return reviewAuthor;
-	}
+    public List<ReviewAuthor> getReviewAuthors() {
+        return this.reviewAuthors;
+    }
 
-	public ReviewAuthor removeReviewAuthor(ReviewAuthor reviewAuthor) {
-		getReviewAuthors().remove(reviewAuthor);
-		reviewAuthor.setUser(null);
+    public void setReviewAuthors(List<ReviewAuthor> reviewAuthors) {
+        this.reviewAuthors = reviewAuthors;
+    }
 
-		return reviewAuthor;
-	}
+    public ReviewAuthor addReviewAuthor(ReviewAuthor reviewAuthor) {
+        getReviewAuthors().add(reviewAuthor);
+        reviewAuthor.setUser(this);
 
-	public List<Review> getReviews() {
-		return this.reviews;
-	}
+        return reviewAuthor;
+    }
 
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
-	}
+    public ReviewAuthor removeReviewAuthor(ReviewAuthor reviewAuthor) {
+        getReviewAuthors().remove(reviewAuthor);
+        reviewAuthor.setUser(null);
 
-	public Review addReview(Review review) {
-		getReviews().add(review);
-		review.setUser(this);
+        return reviewAuthor;
+    }
 
-		return review;
-	}
+    public List<ReviewBook> getReviewBooks() {
+        return this.reviewBooks;
+    }
 
-	public Review removeReview(Review review) {
-		getReviews().remove(review);
-		review.setUser(null);
+    public void setReviewBooks(List<ReviewBook> reviewBooks) {
+        this.reviewBooks = reviewBooks;
+    }
 
-		return review;
-	}
+    public ReviewBook addReview(ReviewBook reviewBook) {
+        getReviewBooks().add(reviewBook);
+        reviewBook.setUser(this);
 
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", user_firstName=" + firstName + ", user_lastName=" + lastName
-				+ ", userName=" + userName + ", userPassword=" + userPassword + ", userType=" + userType + "]";
-	}
+        return reviewBook;
+    }
 
-	
-	
+    public ReviewBook removeReview(ReviewBook reviewBook) {
+        getReviewBooks().remove(reviewBook);
+        reviewBook.setUser(null);
+
+        return reviewBook;
+    }
+
+    @Override
+    public String toString() {
+        return "User [userId=" + userId + ", user_firstName=" + firstName + ", user_lastName=" + lastName
+                + ", userName=" + userName + ", userPassword=" + userPassword + ", role=" + role + "]";
+    }
+
+
 }

@@ -1,58 +1,68 @@
 /**
- * 
+ *
  */
 package com.mindfire.review.web.controllers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.mindfire.review.exceptions.UserExistException;
+import com.mindfire.review.services.UserServiceInterface;
+import com.mindfire.review.web.dto.SignupDto;
+import com.mindfire.review.web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mindfire.review.exceptions.UserExistException;
-import com.mindfire.review.services.UserRegistrationService;
-import com.mindfire.review.web.dto.SignupDto;
-import com.mindfire.review.web.models.User;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 /**
  * @author pratyasa
- *
  */
 @Controller
 public class UserRegistrationController {
-	@Autowired
-	private UserRegistrationService userRegistrationService;
-	
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView addUser(SignupDto signupDto,BindingResult bindingResult){
-		
-		Map<String,Object> errors = new HashMap<>();
-		
-		if(bindingResult.hasErrors()){
-			errors.put("errors",(List<ObjectError>)bindingResult.getAllErrors());
-			return new ModelAndView("signup",errors);
-		}
-		
-		try{
-			User user = new User();
-			user.setUser_firstName(signupDto.getFirstName());
-			user.setUser_lastName(signupDto.getLastName());
-			user.setUserName(signupDto.getUserName());
-			user.setUserPassword(signupDto.getPassword());
-			user.setUserGender(signupDto.getGender());
-			userRegistrationService.addUser(user);
-			return new ModelAndView("thankyou","user",user);
-		}
-		catch(UserExistException ex){
-			return new ModelAndView("signup","userExp",ex);
-		}
-		
-	
-	}
+    @Autowired
+    private UserServiceInterface userService;
+
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public Object signup(HttpSession httpSession) {
+        if (httpSession.getAttribute("userName") != null) {
+            return "redirect:/";
+        }
+
+        return new ModelAndView("signup", "signUp", new SignupDto());
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String addUser(@Valid @ModelAttribute("signUp") SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+        if (httpSession.getAttribute("userName") != null) {
+            return null;
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "signup";
+        }
+
+        System.out.println(signupDto);
+
+        try {
+            User user = new User();
+            user.setFirstName(signupDto.getFirstName());
+            user.setLastName(signupDto.getLastName());
+            user.setUserName(signupDto.getUserName());
+            user.setUserPassword(signupDto.getPassword());
+            user.setUserGender(signupDto.getGender());
+            userService.addUser(user);
+            model.addAttribute("userName", user.getFirstName());
+            return "thankyou";
+        } catch (UserExistException ex) {
+            model.addAttribute("userExist", ex);
+            return "signup";
+        }
+
+
+    }
 }

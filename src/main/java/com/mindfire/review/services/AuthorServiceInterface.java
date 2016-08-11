@@ -1,75 +1,101 @@
 package com.mindfire.review.services;
 
-import java.util.List;
+import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.web.dto.AuthorDto;
+import com.mindfire.review.web.models.*;
 
-import com.mindfire.review.web.models.Author;
-import com.mindfire.review.web.models.Book;
-import com.mindfire.review.web.models.Review;
-import com.mindfire.review.web.models.User;
+import java.util.List;
 
 public interface AuthorServiceInterface {
 
-	/**
-	 * 
-	 * @return
-	 */
+    /**
+     * @return
+     */
 
-	List<Author> getAllAuthor();
+    List<Author> getAllAuthor();
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
+    /**
+     * @param name
+     * @return
+     */
 
-	List<Author> getAuthorByNameLike(String name);
+    List<Author> getAuthorByNameLike(String name);
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
+    /**
+     * @param name
+     * @return
+     */
 
-	Author getAuthorByName(String name);
+    Author getAuthorByName(String name);
 
-	/**
-	 * 
-	 * @param rating
-	 * @return
-	 */
+    /**
+     * @param rating
+     * @return
+     */
 
-	List<Author> getAuthorByRating(int rating);
+    List<Author> getAuthorByRating(int rating);
 
-	/**
-	 * 
-	 * @param genre
-	 * @return
-	 */
+    /**
+     * @param genre
+     * @return
+     */
 
-	List<Author> getAuthorByGenre(String genre);
+    List<Author> getAuthorByGenre(String genre);
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
+    /**
+     * @param name
+     * @return
+     */
 
-	List<Review> getReviewByAuthor(String name);
+    List<ReviewAuthor> getAuthorReviewByAuthorName(String name);
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
+    /**
+     * @param name
+     * @return
+     */
 
-	List<Book> getBookByAuthor(String name);
+    List<Book> getBookByAuthor(String name);
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
+    /**
+     * @param name
+     * @return
+     */
 
-	List<User> getUserByAuthorReview(String name);
+    List<User> getUserByAuthor(String name);
+
+    /**
+     * @param name
+     * @return
+     */
+    public List<ReviewBook> getBookReviewByAuthorName(String name);
+
+    /**
+     *
+     * @param authorId
+     * @return
+     */
+    public Author getAuthorById(Long authorId);
+
+    /**
+     *
+     * @param authorDto
+     * @throws AuthorExistenceException
+     */
+    public void addAuthor(AuthorDto authorDto) throws AuthorExistenceException;
+
+    /**
+     *
+     * @param authorDto
+     * @param authorId
+     * @throws AuthorExistenceException
+     */
+    public void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException;
+
+    /**
+     *
+     * @param authorId
+     * @throws AuthorExistenceException
+     */
+    public void removeAuthor(Long authorId) throws AuthorExistenceException;
 
 }

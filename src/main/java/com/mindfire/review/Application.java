@@ -1,3 +1,4 @@
 package com.mindfire.review;
 
-public interface Application {}
+public interface Application {
+}

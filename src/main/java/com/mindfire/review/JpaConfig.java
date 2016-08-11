@@ -1,10 +1,5 @@
 package com.mindfire.review;
 
-import java.util.Properties;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +12,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ClassUtils;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -50,15 +49,15 @@ class JpaConfig {
 //
 //        return new HikariDataSource(config);
 //    }
-    
+
     @Bean
-    public DataSource dataSource(){
-    	DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    	dataSource.setDriverClassName(driver);
-    	dataSource.setUrl(url);
-    	dataSource.setUsername(username);
-    	dataSource.setPassword(password);
-    	return dataSource;
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
     }
 
     @Bean

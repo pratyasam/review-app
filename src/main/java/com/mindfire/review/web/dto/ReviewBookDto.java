@@ -1,26 +1,23 @@
 /**
- * 
+ *
  */
 package com.mindfire.review.web.dto;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author pratyasa
- *
  */
 public class ReviewBookDto {
-	private String reviewBook;
-	private Long userId;
-	public String getReviewBook() {
-		return reviewBook;
-	}
-	public void setReviewBook(String reviewBook) {
-		this.reviewBook = reviewBook;
-	}
-	public Long getUserId() {
-		return userId;
-	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    @NotNull(message = " review field cannot be Null")
+    private String reviewText;
+
+    public String getReviewText() {
+        return reviewText;
+    }
+
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
+    }
 
 }

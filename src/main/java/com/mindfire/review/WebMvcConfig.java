@@ -1,18 +1,19 @@
 package com.mindfire.review;
 
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
+import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
+
+import javax.servlet.Filter;
+import javax.servlet.ServletContext;
 
 @Configuration
 class WebMvcConfig extends WebMvcConfigurationSupport {
@@ -22,6 +23,9 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
 
     private static final String RESOURCES_LOCATION = "/resources/";
     private static final String RESOURCES_HANDLER = RESOURCES_LOCATION + "**";
+
+    @Autowired
+    private ServletContext servletContext;
 
     @Override
     public RequestMappingHandlerMapping requestMappingHandlerMapping() {
@@ -42,11 +46,19 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setViewClass(org.springframework.web.servlet.view.JstlView.class);
+        //viewResolver.setViewClass(org.springframework.web.servlet.view.JstlView.class);
         viewResolver.setPrefix(VIEWS);
         viewResolver.setSuffix(".jsp");
         return viewResolver;
-        
+
+    }
+
+    @Bean
+    public Filter httpPutFormFilter(){
+        HiddenHttpMethodFilter filter = new HiddenHttpMethodFilter();
+        filter.setServletContext(servletContext);
+        filter.setMethodParam("method");
+        return filter;
     }
 
     @Override

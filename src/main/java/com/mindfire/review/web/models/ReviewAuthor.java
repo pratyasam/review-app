@@ -1,84 +1,95 @@
 package com.mindfire.review.web.models;
 
-import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
+import java.io.Serializable;
 
 
 /**
  * The persistent class for the review_author database table.
- * 
  */
 @Entity
-@Table(name="review_author")
-@NamedQuery(name="ReviewAuthor.findAll", query="SELECT r FROM ReviewAuthor r")
+@Table(name = "review_author")
+@NamedQuery(name = "ReviewAuthor.findAll", query = "SELECT r FROM ReviewAuthor r")
 public class ReviewAuthor implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="review_author_id", unique=true, nullable=false)
-	private Long reviewAuthorId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "review_author_id", unique = true, nullable = false)
+    private Long reviewAuthorId;
 
-	@Column(name="review_author_text", nullable=false, length=4005)
-	private String reviewAuthorText;
+    @Column(name = "review_author_text", nullable = false, length = 4005)
+    private String reviewAuthorText;
 
-	//bi-directional many-to-one association to AuthorReview
-	@OneToMany(mappedBy="reviewAuthor")
-	private List<AuthorReview> authorReviewAssociations;
+//	//bi-directional many-to-one association to AuthorReview
+//	@OneToMany(mappedBy="reviewAuthor")
+//	private List<AuthorReview> authorReviewAssociations;
 
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user_id", nullable=false)
-	private User user;
+    //bi-directional many-to-one association to Author
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
 
-	public ReviewAuthor() {
-	}
+    //bi-directional many-to-one association to User
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-	public Long getReviewAuthorId() {
-		return this.reviewAuthorId;
-	}
+    public ReviewAuthor() {
+    }
 
-	public void setReviewAuthorId(Long reviewAuthorId) {
-		this.reviewAuthorId = reviewAuthorId;
-	}
+    public Long getReviewAuthorId() {
+        return this.reviewAuthorId;
+    }
 
-	public String getReviewAuthorText() {
-		return this.reviewAuthorText;
-	}
+    public void setReviewAuthorId(Long reviewAuthorId) {
+        this.reviewAuthorId = reviewAuthorId;
+    }
 
-	public void setReviewAuthorText(String reviewAuthorText) {
-		this.reviewAuthorText = reviewAuthorText;
-	}
+    public String getReviewAuthorText() {
+        return this.reviewAuthorText;
+    }
 
-	public List<AuthorReview> getAuthorReviewAssociations() {
-		return this.authorReviewAssociations;
-	}
+    public void setReviewAuthorText(String reviewAuthorText) {
+        this.reviewAuthorText = reviewAuthorText;
+    }
 
-	public void setAuthorReviewAssociations(List<AuthorReview> authorReviewAssociations) {
-		this.authorReviewAssociations = authorReviewAssociations;
-	}
+//	public List<AuthorReview> getAuthorReviewAssociations() {
+//		return this.authorReviewAssociations;
+//	}
+//
+//	public void setAuthorReviewAssociations(List<AuthorReview> authorReviewAssociations) {
+//		this.authorReviewAssociations = authorReviewAssociations;
+//	}
 
-	public AuthorReview addAuthorReviewAssociation(AuthorReview authorReviewAssociation) {
-		getAuthorReviewAssociations().add(authorReviewAssociation);
-		authorReviewAssociation.setReviewAuthor(this);
+//	public AuthorReview addAuthorReviewAssociation(AuthorReview authorReviewAssociation) {
+//		getAuthorReviewAssociations().add(authorReviewAssociation);
+//		authorReviewAssociation.setReviewAuthor(this);
+//
+//		return authorReviewAssociation;
+//	}
+//
+//	public AuthorReview removeAuthorReviewAssociation(AuthorReview authorReviewAssociation) {
+//		getAuthorReviewAssociations().remove(authorReviewAssociation);
+//		authorReviewAssociation.setReviewAuthor(null);
+//
+//		return authorReviewAssociation;
+//	}
 
-		return authorReviewAssociation;
-	}
+    public User getUser() {
+        return this.user;
+    }
 
-	public AuthorReview removeAuthorReviewAssociation(AuthorReview authorReviewAssociation) {
-		getAuthorReviewAssociations().remove(authorReviewAssociation);
-		authorReviewAssociation.setReviewAuthor(null);
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-		return authorReviewAssociation;
-	}
+    public Author getAuthor() {
+        return this.author;
+    }
 
-	public User getUser() {
-		return this.user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
 
 }

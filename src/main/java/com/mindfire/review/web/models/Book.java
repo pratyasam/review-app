@@ -1,174 +1,184 @@
 package com.mindfire.review.web.models;
 
-import java.io.Serializable;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 
 /**
  * The persistent class for the book database table.
- * 
  */
 @Entity
-@Table(name="book")
-@NamedQuery(name="Book.findAll", query="SELECT b FROM Book b")
+@Table(name = "book")
+@NamedQuery(name = "Book.findAll", query = "SELECT b FROM Book b")
 public class Book implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="book_id", unique=true, nullable=false)
-	private Long bookId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "book_id", unique = true, nullable = false)
+    private Long bookId;
 
-	@Column(name="book_cost", nullable=false)
-	private float bookCost;
+    @Column(name = "cost", nullable = false)
+    private float bookCost;
 
-	@Column(name="book_description", nullable=false, length=4005)
-	private String bookDescription;
+    @Column(name = "description", nullable = false, length = 4005)
+    private String bookDescription;
 
-	@Column(name="book_genre", nullable=false, length=255)
-	private String bookGenre;
+    @Column(name = "genre", nullable = false, length = 255)
+    private String bookGenre;
 
-	@Column(name="book_isbn", nullable=false, length=255)
-	private String bookIsbn;
+    @Column(name = "isbn", nullable = false, length = 255)
+    private String bookIsbn;
 
-	@Column(name="book_link", length=255)
-	private String bookLink;
+    @Column(name = "link", length = 255)
+    private String bookLink;
 
-	@Column(name="book_name", nullable=false, length=255)
-	private String bookName;
+    @Column(name = "name", nullable = false, length = 255)
+    private String bookName;
 
-	@Column(name="book_rating", nullable=false)
-	private int bookRating;
+    @Column(name = "rating", nullable = false)
+    private float bookRating;
 
-	@Column(name="book_review", nullable=false, length=4005)
-	private String bookReview;
+    @Column(name = "review", nullable = false, length = 4005)
+    private String bookReview;
 
-	//bi-directional many-to-one association to BookAuthor
-	@OneToMany(mappedBy="book")
-	private List<BookAuthor> bookAuthors;
+    @Column(name = "verified", nullable = false)
+    private boolean bookVerified = false;
 
-	//bi-directional many-to-one association to BookReview
-	@OneToMany(mappedBy="book")
-	private List<BookReview> bookReviews;
+    //bi-directional many-to-one association to BookAuthor
+    @OneToMany(mappedBy = "book")
+    private List<BookAuthor> bookAuthors;
 
-	public Book() {
-	}
+//	//bi-directional many-to-one association to BookReview
+//	@OneToMany(mappedBy="book")
+//	private List<BookReview> bookReviews;
 
-	public Long getBookId() {
-		return this.bookId;
-	}
+    public Book() {
+    }
 
-	public void setBookId(Long bookId) {
-		this.bookId = bookId;
-	}
+    public Long getBookId() {
+        return this.bookId;
+    }
 
-	public float getBookCost() {
-		return this.bookCost;
-	}
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
 
-	public void setBookCost(float bookCost) {
-		this.bookCost = bookCost;
-	}
+    public float getBookCost() {
+        return this.bookCost;
+    }
 
-	public String getBookDescription() {
-		return this.bookDescription;
-	}
+    public void setBookCost(float bookCost) {
+        this.bookCost = bookCost;
+    }
 
-	public void setBookDescription(String bookDescription) {
-		this.bookDescription = bookDescription;
-	}
+    public String getBookDescription() {
+        return this.bookDescription;
+    }
 
-	public String getBookGenre() {
-		return this.bookGenre;
-	}
+    public void setBookDescription(String bookDescription) {
+        this.bookDescription = bookDescription;
+    }
 
-	public void setBookGenre(String bookGenre) {
-		this.bookGenre = bookGenre;
-	}
+    public String getBookGenre() {
+        return this.bookGenre;
+    }
 
-	public String getBookIsbn() {
-		return this.bookIsbn;
-	}
+    public void setBookGenre(String bookGenre) {
+        this.bookGenre = bookGenre;
+    }
 
-	public void setBookIsbn(String bookIsbn) {
-		this.bookIsbn = bookIsbn;
-	}
+    public String getBookIsbn() {
+        return this.bookIsbn;
+    }
 
-	public String getBookLink() {
-		return this.bookLink;
-	}
+    public void setBookIsbn(String bookIsbn) {
+        this.bookIsbn = bookIsbn;
+    }
 
-	public void setBookLink(String bookLink) {
-		this.bookLink = bookLink;
-	}
+    public String getBookLink() {
+        return this.bookLink;
+    }
 
-	public String getBookName() {
-		return this.bookName;
-	}
+    public void setBookLink(String bookLink) {
+        this.bookLink = bookLink;
+    }
 
-	public void setBookName(String bookName) {
-		this.bookName = bookName;
-	}
+    public String getBookName() {
+        return this.bookName;
+    }
 
-	public int getBookRating() {
-		return this.bookRating;
-	}
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
 
-	public void setBookRating(int bookRating) {
-		this.bookRating = bookRating;
-	}
+    public float getBookRating() {
+        return this.bookRating;
+    }
 
-	public String getBookReview() {
-		return this.bookReview;
-	}
+    public void setBookRating(float bookRating) {
+        this.bookRating = bookRating;
+    }
 
-	public void setBookReview(String bookReview) {
-		this.bookReview = bookReview;
-	}
+    public String getBookReview() {
+        return this.bookReview;
+    }
 
-	public List<BookAuthor> getBookAuthors() {
-		return this.bookAuthors;
-	}
+    public void setBookReview(String bookReview) {
+        this.bookReview = bookReview;
+    }
 
-	public void setBookAuthors(List<BookAuthor> bookAuthors) {
-		this.bookAuthors = bookAuthors;
-	}
+    public boolean getBookVerified() {
+        return bookVerified;
+    }
 
-	public BookAuthor addBookAuthor(BookAuthor bookAuthor) {
-		getBookAuthors().add(bookAuthor);
-		bookAuthor.setBook(this);
+    public void setBookVerified(boolean bookVerified) {
+        this.bookVerified = bookVerified;
+    }
 
-		return bookAuthor;
-	}
+    public List<BookAuthor> getBookAuthors() {
+        return this.bookAuthors;
+    }
 
-	public BookAuthor removeBookAuthor(BookAuthor bookAuthor) {
-		getBookAuthors().remove(bookAuthor);
-		bookAuthor.setBook(null);
+    public void setBookAuthors(List<BookAuthor> bookAuthors) {
+        this.bookAuthors = bookAuthors;
+    }
 
-		return bookAuthor;
-	}
+    public BookAuthor addBookAuthor(BookAuthor bookAuthor) {
+        getBookAuthors().add(bookAuthor);
+        bookAuthor.setBook(this);
 
-	public List<BookReview> getBookReviews() {
-		return this.bookReviews;
-	}
+        return bookAuthor;
+    }
 
-	public void setBookReviews(List<BookReview> bookReviews) {
-		this.bookReviews = bookReviews;
-	}
+    public BookAuthor removeBookAuthor(BookAuthor bookAuthor) {
+        getBookAuthors().remove(bookAuthor);
+        bookAuthor.setBook(null);
 
-	public BookReview addBookReview(BookReview bookReview) {
-		getBookReviews().add(bookReview);
-		bookReview.setBook(this);
+        return bookAuthor;
+    }
 
-		return bookReview;
-	}
-
-	public BookReview removeBookReview(BookReview bookReview) {
-		getBookReviews().remove(bookReview);
-		bookReview.setBook(null);
-
-		return bookReview;
-	}
+//	public List<BookReview> getBookReviews() {
+//		return this.bookReviews;
+//	}
+//
+//	public void setBookReviews(List<BookReview> bookReviews) {
+//		this.bookReviews = bookReviews;
+//	}
+//
+//	public BookReview addBookReview(BookReview bookReview) {
+//		getBookReviews().add(bookReview);
+//		bookReview.setBook(this);
+//
+//		return bookReview;
+//	}
+//
+//	public BookReview removeBookReview(BookReview bookReview) {
+//		getBookReviews().remove(bookReview);
+//		bookReview.setBook(null);
+//
+//		return bookReview;
+//	}
 
 }

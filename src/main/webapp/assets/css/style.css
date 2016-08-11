@@ -1,5 +1,5 @@
 body {
-    background-image: url(../img/Abg6.jpg.jpg);
+    background-image: url(../img/abg9.jpg);
     background-size: cover;
 }
 
@@ -15,7 +15,7 @@ body {
     margin-top: 180px;
     background-color: #FFF;
     border-radius: 5px;
-    height: 685px
+
 }
 
 .login-form-wrapper .form-group {
@@ -43,4 +43,13 @@ body {
 
 .heading {
     text-align: center;
+}
+
+.error {
+    color: #000;
+    display: block;
+}
+
+.wrapperbox {
+    margin-top: 150px;
 }

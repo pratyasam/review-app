@@ -4,10 +4,13 @@ body {
 
 #loginbox {
     margin-top: 30px;
+    background-color: transparent;
+
 }
 
 #loginbox > div:first-child {
     padding-bottom: 10px;
+
 }
 
 .iconmelon {
@@ -17,6 +20,7 @@ body {
 
 #form > div {
     margin-bottom: 25px;
+    border-radius: 5px;
 }
 
 #form > div:last-child {
@@ -25,7 +29,7 @@ body {
 }
 
 .panel {
-    ;
+    background-color: transparent;
 }
 
 .panel-body {
@@ -57,7 +61,7 @@ body {
 .iconmelon:after,
 .im:after {
     content: '';
-    position: absolute;
+
     top: 0;
     left: 0;
     width: 100%;
@@ -70,4 +74,8 @@ body {
 
 .pad-tb-20 {
     padding: 20px 0px 20px 0px;
+}
+
+.navbackground {
+    background-color: transparent;
 }
