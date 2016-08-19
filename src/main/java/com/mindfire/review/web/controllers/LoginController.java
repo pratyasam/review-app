@@ -1,7 +1,7 @@
 package com.mindfire.review.web.controllers;
 
 import com.mindfire.review.exceptions.LoginFailException;
-import com.mindfire.review.services.UserServiceInterface;
+import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.LoginDto;
 import com.mindfire.review.web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +22,17 @@ import javax.validation.Valid;
 @Controller
 public class LoginController {
     @Autowired
-    private UserServiceInterface userService;
+    private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Object login(HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null) {
-            return "redirect:/";
+            return "redirect:/profile";
         }
 
-        return new ModelAndView("login", "login", new LoginDto());
+        ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("login", new LoginDto());
+        return modelAndView;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -57,14 +59,8 @@ public class LoginController {
             httpSession.setAttribute("role", user.getRole());
             httpSession.setAttribute("userId", user.getUserId());
 
+            return "redirect:/profile";
 
-            if (user.getRole().equalsIgnoreCase("admin") || user.getRole().equalsIgnoreCase("moderator")) {
-
-                return "admin";
-            } else {
-
-                return "redirect:/";
-            }
         } catch (LoginFailException lex) {
 
 
@@ -74,16 +70,6 @@ public class LoginController {
 
         }
 
-
-    }
-
-    @RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String getAdmin(HttpSession httpSession) {
-        if (httpSession.getAttribute("role").equals("admin")) {
-
-            return "admin";
-        }
-        return "login";
 
     }
 

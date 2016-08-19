@@ -1,56 +1,132 @@
 <%--
   Created by IntelliJ IDEA.
   User: pratyasa
-  Date: 3/8/16
-  Time: 1:33 PM
+  Date: 17/8/16
+  Time: 2:47 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html lang="en">
 
 <head>
-    <title> User Profile Page </title>
+    <title> ${book.bookName} </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link href="assets/css/home-style.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
-</head>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+    <link href="/assets/css/home-style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/css/animation.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/bookprofile-style.css">
+    <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'> </head>
 
 <body>
-<nav class="navbar navbar-inverse">
+<%if (session.getAttribute("userName") != null){%>
+<nav class="navbar navbackground">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"><span
-                    class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-            <a class="navbar-brand" href="#">${userFirstName} ${userLastName}</a></div>
-        <div class="collapse navbar-collapse" id="myNavbar">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
+        <div class="collapse navbar-collapse" id="myNavbar1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Home</a></li>
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Options <span
-                        class="caret"></span></a>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Update Info</a></li>
                         <li><a href="#">Delete Account</a></li>
-                        <li><a href="#">Page 1-3</a></li>
+                        <li><a href="#">Profile</a></li>
                     </ul>
                 </li>
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                <li><img src="/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="100" height="100">Hello User</li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
+                </ul>
         </div>
     </div>
 </nav>
+<%}%>
+<%if (session.getAttribute("userName") == null){%>
+<nav class="navbar navbackground">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Page 2 </a></li>
+                <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> LogIn</a> </li>
+                <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> SignUp</a> </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<%}%>
+<div class="container-fluid">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-3" style="height:20%"><img src="assets/img/book.jpg" style="height:100%; width:100%;"></div>
+        <div class="col-lg-9">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <h3>${book.bookName}</h3>
+                    <h4>${book.bookIsbn}</h4>by : author name </div>
+                <div class="panel-body">
+                    <h4>Book Genre: ${book.bookGenre} </h4>
+                    <h4>Book Rating:${book.bookRating}</h4>
+                    <h4>Book Cost: ${book.bookCost} </h4>
+                    <h5>Book Link: <a href=#>${book.bookLink}<span class="fa  fa-arrow-circle-down"></span> </a></h5> </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <h3 class="text-center" style="border-bottom: 2px #CCC solid;">Book Description :</h3>
+            <p>${book.bookDescription}</p>
+        </div>
+        <div class="col-lg-12">
+            <h3 class="text-center" style="border-bottom: 2px #CCC solid;">Editorial Review :</h3>
+            <p>${book.bookReview}</p>
+        </div>
+        <div class="col-lg-12">
+            <div class="jumbotron text-center">
+                <h3>Community Reviews </h3>
+                <ul class="pagination">
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                </ul>
+            </div>
+        </div>
+        <br>
+        <div class="col-lg-12">
+            <form:form method="post" action="/books/${book.bookId}/review" class="form-horizontal" modelAttribute="bookprofile">
+                <fieldset>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <div class="well-primary well-sm ">
+                                <h6 class="text-right"> Please <a href="/login.html">Log-In</a> to Review.</h6> </div>
+                            <label>Enter Review: </label>
+                            <form:textarea path="reviewText" cols="91" rows="5"></form:textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2">
+                            <button type="reset" class="btn btn-default pull-right"> Cancel</button>
+                            <button type="submit" class="btn btn-primary pull-right"> Submit</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form:form>
+        </div>
+        <div class="footer text-center "><small>Copyright &copy; Pratyasha</small></div>
+    </div>
+</div>
 <div id="particles"></div>
-<svg id="svg-source" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg"
-     style="position:absolute; margin-left: -100%">
+<svg id="svg-source" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" style="position:absolute; margin-left: -100%" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="git" data-iconmelon="Iconmelon:c88d710192f240e49b7f92912997850e">
-        <path fill="#40B7AE"
-              d="M16.176,31.751c4.82,0,8.764-3.196,9.08-7.242H7.096C7.413,28.555,11.355,31.751,16.176,31.751z"></path>
+        <path fill="#40B7AE" d="M16.176,31.751c4.82,0,8.764-3.196,9.08-7.242H7.096C7.413,28.555,11.355,31.751,16.176,31.751z"></path>
         <g opacity="0.1">
             <path fill="#FFFFFF" d="M20.893,30.672c-0.006-0.014-0.013-0.026-0.019-0.04c-0.004,0.003-0.009,0.005-0.013,0.007
     	C20.871,30.65,20.883,30.66,20.893,30.672z"></path>
-            <path fill="#FFFFFF"
-                  d="M25.251,24.514h-0.009c0,0.021,0,0.041,0,0.062C25.244,24.555,25.25,24.534,25.251,24.514z"></path>
+            <path fill="#FFFFFF" d="M25.251,24.514h-0.009c0,0.021,0,0.041,0,0.062C25.244,24.555,25.25,24.534,25.251,24.514z"></path>
             <path fill="#FFFFFF" d="M22.508,26.766c0.229,0.683,0.398,1.385,0.518,2.093c0.012,0.07,0.012,0.143,0.022,0.213
 		c1.243-1.224,2.045-2.781,2.194-4.496c0-0.021,0-0.041,0-0.062h-3.72c0.057,0.107,0.123,0.21,0.177,0.319
 		C22.015,25.456,22.289,26.103,22.508,26.766z"></path>
@@ -266,18 +342,13 @@
 		c0.149-0.086,0.215-0.248,0.299-0.389c0.08-0.082,0.232,0.012,0.194,0.12c-0.13,0.433-0.62,0.708-1.059,0.605
 		c-0.31-0.064-0.581-0.301-0.675-0.604C15.042,13.697,15.096,13.62,15.162,13.613z"></path>
         </g>
-        <path fill="#FFFFFF"
-              d="M6.766,15.525c0.115-0.059,0.293,0.027,0.293,0.164C6.993,15.896,6.597,15.68,6.766,15.525z"></path>
-        <path fill="#FFFFFF"
-              d="M7.334,15.876c0.156-0.024,0.337,0.156,0.259,0.308C7.426,16.358,7.088,15.98,7.334,15.876z"></path>
+        <path fill="#FFFFFF" d="M6.766,15.525c0.115-0.059,0.293,0.027,0.293,0.164C6.993,15.896,6.597,15.68,6.766,15.525z"></path>
+        <path fill="#FFFFFF" d="M7.334,15.876c0.156-0.024,0.337,0.156,0.259,0.308C7.426,16.358,7.088,15.98,7.334,15.876z"></path>
         <path fill="#E9437F" d="M5.614,16.766c0.083-0.299,0.171-0.596,0.255-0.894c0.084,0.296,0.172,0.592,0.254,0.889
 	c0.03,0.113,0.03,0.249-0.045,0.345c-0.084,0.097-0.242,0.121-0.348,0.047C5.601,17.074,5.574,16.898,5.614,16.766z"></path>
-        <path fill="#FFFFFF"
-              d="M7.836,16.465c0.206-0.073,0.418,0.24,0.278,0.406C7.901,17.005,7.634,16.611,7.836,16.465z"></path>
-        <path fill="#FFFFFF"
-              d="M8.358,17.204c0.205-0.149,0.521,0.196,0.352,0.387C8.504,17.715,8.216,17.396,8.358,17.204z"></path>
-        <path fill="#FFFFFF"
-              d="M9.042,17.855c0.169-0.119,0.475,0.045,0.439,0.259C9.358,18.375,8.851,18.088,9.042,17.855z"></path>
+        <path fill="#FFFFFF" d="M7.836,16.465c0.206-0.073,0.418,0.24,0.278,0.406C7.901,17.005,7.634,16.611,7.836,16.465z"></path>
+        <path fill="#FFFFFF" d="M8.358,17.204c0.205-0.149,0.521,0.196,0.352,0.387C8.504,17.715,8.216,17.396,8.358,17.204z"></path>
+        <path fill="#FFFFFF" d="M9.042,17.855c0.169-0.119,0.475,0.045,0.439,0.259C9.358,18.375,8.851,18.088,9.042,17.855z"></path>
         <path fill="#FFFFFF" d="M11.79,18.089c0.016-0.153,0.192-0.185,0.317-0.19c-0.018,0.125-0.033,0.25-0.042,0.377
 	C11.958,18.252,11.786,18.234,11.79,18.089z"></path>
         <path fill="#FFFFFF" d="M9.972,18.136c0.154-0.069,0.418,0.007,0.417,0.204c-0.068,0.198-0.37,0.17-0.483,0.026
@@ -292,9 +363,9 @@
 	c-0.049-0.366-0.046-0.739-0.025-1.11c0.009-0.125,0.024-0.25,0.042-0.375C12.122,17.814,12.141,17.732,12.164,17.65z"></path>
     </g>
 </svg>
-<script type="text/javascript" src="assets/js/animation.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/animation.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,29 @@
+.cover {
+    background-image: url(/assets/img/coverimg.jpg);
+    background-size: cover;
+}
+
+.pad-tab-20 {
+    padding: 20px;
+}
+
+.wrapper {
+    margin: 250px;
+}
+
+p1 {
+    background-color: bisque;
+}
+
+.left {
+    float: left;
+}
+
+img {
+    height: 50%;
+    width: 110%
+}
+
+.search-wrapper {
+    float: right;
+}

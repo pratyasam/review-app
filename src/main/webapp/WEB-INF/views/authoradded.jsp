@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="container-fluid pad-tb-20" style="margin-top: 210px">
-    <p style="font-size: 150%; margin-left: 150px"> Book ${bookName} Successfully Added. <a href="/addbook"> <b>Click
+    <p style="font-size: 150%; margin-left: 150px"> Author ${authorName} Successfully Added. <a href="/addauthor"> <b>Click
         Here</b></a> to continue adding, or <a href="/profile"><b></b>Click Here</a> to go back to home.</p>
 
 </div>

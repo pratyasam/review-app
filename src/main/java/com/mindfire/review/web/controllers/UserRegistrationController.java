@@ -4,9 +4,8 @@
 package com.mindfire.review.web.controllers;
 
 import com.mindfire.review.exceptions.UserExistException;
-import com.mindfire.review.services.UserServiceInterface;
+import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.SignupDto;
-import com.mindfire.review.web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,12 +24,12 @@ import javax.validation.Valid;
 @Controller
 public class UserRegistrationController {
     @Autowired
-    private UserServiceInterface userService;
+    private UserService userService;
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public Object signup(HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null) {
-            return "redirect:/";
+            return "redirect:/profile";
         }
 
         return new ModelAndView("signup", "signUp", new SignupDto());
@@ -49,14 +48,8 @@ public class UserRegistrationController {
         System.out.println(signupDto);
 
         try {
-            User user = new User();
-            user.setFirstName(signupDto.getFirstName());
-            user.setLastName(signupDto.getLastName());
-            user.setUserName(signupDto.getUserName());
-            user.setUserPassword(signupDto.getPassword());
-            user.setUserGender(signupDto.getGender());
-            userService.addUser(user);
-            model.addAttribute("userName", user.getFirstName());
+            userService.addUser(signupDto);
+            model.addAttribute("userName", signupDto.getFirstName());
             return "thankyou";
         } catch (UserExistException ex) {
             model.addAttribute("userExist", ex);

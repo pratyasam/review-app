@@ -10,18 +10,12 @@
 </head>
 <body>
 
-<form action="http://localhost:8080/" method="patch">
-    <input type="text" name="abc">
-</form>
 <table>
     <thead>
     <tr>
-        <th>Name</th>
+        <th>HELLO ANONYMOUS</th>
     </tr>
     </thead>
-    <tbody>
-    hello
-    </tbody>
 </table>
 </body>
 </html>
