@@ -3,6 +3,7 @@ package com.mindfire.review.services;
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
 import com.mindfire.review.web.dto.BookDto;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.*;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
 import com.mindfire.review.web.repositories.BookRepository;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -87,7 +90,7 @@ public class BookServiceImpl implements BookService {
      * @return
      */
 
-    public Book getBookByName(String name) {
+    public List<Book> getBookByNameLike(String name) {
         return bookRepository.findByBookNameContainsIgnoreCase(name);
     }
 
@@ -99,7 +102,17 @@ public class BookServiceImpl implements BookService {
 
     public List<Author> getAuthorByBook(String name) {
         Book book = getBookByName(name);
-        return bookAuthorRepository.findByBook(book);
+        List<Author> list = bookAuthorRepository.findByBook(book);
+        return list;
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public Book getBookByName(String name){
+        return bookRepository.findByBookName(name);
     }
 
     /**
@@ -242,9 +255,11 @@ public class BookServiceImpl implements BookService {
      * method to verify the book
      * @param id
      */
-    public void verifyBook(Long id) {
+    public void verifyBook(Long id, ChoiceDto choiceDto) {
         Book book = getBookById(id);
+        if(choiceDto.getChoice().equalsIgnoreCase("y"))
         book.setBookVerified(true);
+        else book.setBookVerified(false);
     }
 
 

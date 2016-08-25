@@ -5,7 +5,7 @@ import com.mindfire.review.exceptions.AuthorExistenceException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.ReviewService;
 import com.mindfire.review.web.dto.AuthorDto;
-import com.mindfire.review.web.dto.DeleteDto;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewAuthorDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,11 +93,12 @@ public class AuthorController {
 
     @RequestMapping(value = "/authors/{authorId}", method = RequestMethod.GET)
     public Object getSingleAuthor(@PathVariable("authorId") Long authorId, HttpSession httpSession){
+        String authorName = authorService.getAuthorById(authorId).getAuthorName();
         if(httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))){
             ModelAndView modelAndView = new ModelAndView("adminauthorprofile");
             modelAndView.addObject("author",authorService.getAuthorById(authorId));
-            modelAndView.addObject("bookforauthor",authorService.getBookByAuthor(authorService.getAuthorById(authorId).getAuthorName()));
-            modelAndView.addObject("delete",new DeleteDto());
+            modelAndView.addObject("bookforauthor",authorService.getBookByAuthor(authorName));
+            modelAndView.addObject("delete",new ChoiceDto());
             modelAndView.addObject("reviewforauthor",authorService.getAuthorReviewByAuthorName(authorService.getAuthorById(authorId).getAuthorName()));
             modelAndView.addObject("authorprofile",new ReviewAuthorDto());
             System.out.println("Admin");
@@ -105,7 +106,7 @@ public class AuthorController {
         }
        ModelAndView modelAndView = new ModelAndView("authorprofile");
         modelAndView.addObject("author",authorService.getAuthorById(authorId));
-        modelAndView.addObject("bookforauthor",authorService.getBookByAuthor(authorService.getAuthorById(authorId).getAuthorName()));
+        modelAndView.addObject("bookforauthor",authorService.getBookByAuthor(authorName));
         modelAndView.addObject("reviewforauthor",authorService.getAuthorReviewByAuthorName(authorService.getAuthorById(authorId).getAuthorName()));
         modelAndView.addObject("authorprofile",new ReviewAuthorDto());
         System.out.println("User");
@@ -139,7 +140,7 @@ public class AuthorController {
      * @param httpSession
      * @return
      */
-    @RequestMapping(value = "/authors/{authorId}", method = {RequestMethod.PUT,RequestMethod.POST})
+    @RequestMapping(value = "/authors/{authorId}", method = RequestMethod.PUT)
     public String updateAuthorPost(@PathVariable("authorId") Long authorId, @Valid @ModelAttribute("authorupdatedto") AuthorDto authorDto, BindingResult bindingResult, Model model,HttpSession httpSession){
         if(bindingResult.hasErrors()){
             return "authorupdate";
@@ -157,16 +158,16 @@ public class AuthorController {
     /**
      * to delete the author by the admin
      * @param authorId
-     * @param deleteDto
+     * @param choiceDto
      * @param model
      * @param httpSession
      * @return
      */
-    @RequestMapping(value = "/authors/{authorId}", method = {RequestMethod.DELETE,RequestMethod.POST})
-    public String removeAuthor(@PathVariable("authorId") Long authorId, @Valid @ModelAttribute("delete")DeleteDto deleteDto, Model model, HttpSession httpSession){
+    @RequestMapping(value = "/authors/{authorId}", method = RequestMethod.DELETE)
+    public String removeAuthor(@PathVariable("authorId") Long authorId, @Valid @ModelAttribute("delete")ChoiceDto choiceDto, Model model, HttpSession httpSession){
         if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin"))){
             try{
-                authorService.removeAuthor(authorId,deleteDto);
+                authorService.removeAuthor(authorId, choiceDto);
                 return "allauthors";
             }
             catch (AuthorExistenceException e){

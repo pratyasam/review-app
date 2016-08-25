@@ -1,4 +1,5 @@
-<%--
+<%@ page import="com.mindfire.review.web.models.Author" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: pratyasa
   Date: 19/8/16
@@ -6,11 +7,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+
+
 <html lang="en">
 
 <head>
-    <title> Book Name </title>
+    <title> <b>${book.bookName}</b> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -35,9 +39,9 @@
                 </li>
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Option <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/books">Page 1-1</a></li>
-                        <li><a href="/authors">Page 1-2</a></li>
-                        <li><a href="/users">Page 1-3</a></li>
+                        <li><a href="/books">All Books</a></li>
+                        <li><a href="/authors">All Authors</a></li>
+                        <li><a href="/users">All Users</a></li>
                     </ul>
                 </li>
                 <li><a href="#">Page 2 </a></li>
@@ -52,8 +56,13 @@
         <div class="col-lg-9">
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
-                    <h3>Book Name</h3>
-                    <h4>Book ISBN</h4>by : author name </div>
+                    <h3><b>${book.bookName}</b></h3>
+                    <h4><em>${book.bookIsbn}</em></h4>by : Author name:
+                    <% for(Object a:(List) request.getAttribute("authors")){%>
+                    <%= ((Author)a).getAuthorName()%>>
+
+                    <%}%>
+                </div>
                 <div class="panel-body">
                     <h4>Book Genre: </h4>
                     <h4>Book Rating:</h4>
@@ -61,12 +70,17 @@
                     <h5>Book Link: <a href=#> Download <span class="fa  fa-arrow-circle-down"></span> </a></h5>
                     <div class="col-lg-12">
                         <div class="row ">
-                            <div class="col-lg-6 col-md-6">
+                            <div class="col-lg-4 col-md-4">
                                 <div class="col-lg-10 col-lg-offset-2">
                                     <button class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal"> Delete</button>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6">
+                            <div class="col-lg-4 col-md-4">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <button class="btn btn-primary " data-toggle="modal" data-target="#myModal1"> Verify</button>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4">
                                 <div class="col-lg-10 col-lg-offset-2">
                                     <a class="btn btn-default" href="/books/${book.bookId}/update"> Update</a>
                                 </div>
@@ -133,7 +147,36 @@
                         <fieldset>
                             <div class="form-group">
                                 <div class="col-lg-10 col-lg-offset-2">
-                                    <form:input path="choice" type="text" placeholder="Enter Y for 'YES' or N for 'No'." required="required">
+                                    <label>Enter Y for 'YES' or N for 'No'.</label>
+                                    <form:input path="choice" type="text"  required="required" />
+                                    <br>
+                                    <br>
+                                    <form:button type="submit" class="btn btn-sm btn-primary "> Submit</form:button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form:form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal 2 -->
+    <div class="modal fade" id="myModal1" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">verify Book?</h4> </div>
+                <div class="modal-body">
+                    <form:form method="post" action="/books/{bookId}/verifybooks" modelAttribute="verify">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <form:input path="choice" type="text" placeholder="Enter Y for 'YES' or N for 'No'." required="required"/>
                                     <br>
                                     <br>
                                     <button type="submit" class="btn btn-sm btn-primary "> Submit</button>

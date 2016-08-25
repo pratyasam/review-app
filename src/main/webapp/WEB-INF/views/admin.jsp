@@ -30,12 +30,11 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Home</a></li>
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Option <span
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Add <span
                         class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/book">Add Book</a></li>
-                        <li><a href="admin/allbooks">All Books</a></li>
-                        <li><a href="#">option 3</a></li>
+                        <li><a href="/addbook">Add Book</a></li>
+                        <li><a href="/addauthor">Add Author</a></li>
                     </ul>
                 </li>
                 <li><a href="#">Page 2 </a></li>

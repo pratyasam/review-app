@@ -4,8 +4,9 @@ import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.web.dto.BookDto;
-import com.mindfire.review.web.dto.DeleteDto;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
+import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by pratyasa on 3/8/16.
@@ -69,24 +71,31 @@ public class BookController {
             return "addbook";
         }
     }
+//    @RequestMapping(value = "/books/{bookId}/verifybooks", method = RequestMethod.GET)
+//    public Object verifyBookGet(@PathVariable("bookId") Long bookId, HttpSession httpSession, Model model) {
+//        if (httpSession.getAttribute("userName") != null && ((httpSession.getAttribute("role").equals("admin")) || httpSession.getAttribute("role").equals("moderator"))) {
+//            model.addAttribute("choice", new ChoiceDto());
+//            return model;
+//        }
+//
+//        return "null";
+//    }
 
     /**
      *
      * @param bookId
-     * @param bookDto
+     * @param choiceDto
      * @param bindingResult
      * @param model
      * @param httpSession
      * @return
      */
 
-    @RequestMapping(value = "books/{bookId}/verifybooks", method = RequestMethod.POST)
-    public String verifyBook(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("allbooks") BookDto bookDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+    @RequestMapping(value = "/books/{bookId}/verifybooks", method = RequestMethod.POST)
+    public String verifyBookPost(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("verify") ChoiceDto choiceDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null && ((httpSession.getAttribute("role").equals("admin")) || httpSession.getAttribute("role").equals("moderator"))) {
-            if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))) {
-                bookService.verifyBook(bookId);
+                bookService.verifyBook(bookId, choiceDto);
                 return "redirect:/books";
-            }
         }
 
         return "null";
@@ -120,15 +129,22 @@ public class BookController {
      */
     @RequestMapping(value = "/books/{bookId}", method = RequestMethod.GET)
     public Object getBook(@PathVariable("bookId") Long bookId, HttpSession httpSession) {
+        List<Author> author = bookService.getAuthorByBook(bookService.getBookById(bookId).getBookName());
+        System.out.println(author.size());
 
-        if(httpSession.getAttribute("uerName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))){
+        if(httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))){
+
+            System.out.println("admin book profile");
             ModelAndView modelAndView = new ModelAndView("adminbookprofile");
             modelAndView.addObject("book", bookService.getBookById(bookId));
+            modelAndView.addObject("authors",author);
             modelAndView.addObject("updatebook", new BookDto());
-            modelAndView.addObject("delete", new DeleteDto());
+            modelAndView.addObject("delete", new ChoiceDto());
+            modelAndView.addObject("verify", new ChoiceDto());
             modelAndView.addObject("bookprofile",new ReviewBookDto());
             return modelAndView;
         }
+        System.out.println("normal book profile");
         ModelAndView modelAndView = new ModelAndView("bookprofile");
         modelAndView.addObject("book", bookService.getBookById(bookId));
         modelAndView.addObject("bookprofile",new ReviewBookDto());
@@ -167,7 +183,7 @@ public class BookController {
      * @param httpSession
      * @return
      */
-    @RequestMapping(value = "admin/allbooks/{bookId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/books/{bookId}", method = RequestMethod.PUT)
     public String updateBook(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("bookupdatedto") BookDto bookDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             return "authorupdate";
@@ -190,7 +206,7 @@ public class BookController {
      * @return
      */
     @RequestMapping(value = "/books/{bookId}", method = RequestMethod.DELETE)
-    public Object removeBook(@PathVariable("bookId") Long bookId,@ModelAttribute("delete") DeleteDto deleteDto, HttpSession httpSession, Model model) {
+    public Object removeBook(@PathVariable("bookId") Long bookId, @ModelAttribute("delete") ChoiceDto choiceDto, HttpSession httpSession, Model model) {
         if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin"))) {
             try {
                 bookService.removeBook(bookId);

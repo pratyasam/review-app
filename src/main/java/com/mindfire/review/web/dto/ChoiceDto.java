@@ -4,7 +4,7 @@ package com.mindfire.review.web.dto;
  * ${}
  * Created by pratyasa on 18/8/16.
  */
-public class DeleteDto {
+public class ChoiceDto {
     public String getChoice() {
         return choice;
     }
@@ -14,4 +14,6 @@ public class DeleteDto {
     }
 
     private String choice;
+
+
 }

@@ -2,7 +2,7 @@ package com.mindfire.review.services;
 
 import com.mindfire.review.exceptions.AuthorExistenceException;
 import com.mindfire.review.web.dto.AuthorDto;
-import com.mindfire.review.web.dto.DeleteDto;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.*;
 
 import java.util.List;
@@ -97,6 +97,6 @@ public interface AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void removeAuthor(Long authorId, DeleteDto deleteDto) throws AuthorExistenceException;
+    public void removeAuthor(Long authorId, ChoiceDto choiceDto) throws AuthorExistenceException;
 
 }

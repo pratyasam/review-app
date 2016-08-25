@@ -39,7 +39,7 @@
                         <li><a href="/users">Page 1-3</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Page 2 </a></li>
+                <li><a href="#">Something </a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
             </ul>
         </div>

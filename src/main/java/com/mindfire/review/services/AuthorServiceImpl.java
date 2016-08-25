@@ -2,7 +2,7 @@ package com.mindfire.review.services;
 
 import com.mindfire.review.exceptions.AuthorExistenceException;
 import com.mindfire.review.web.dto.AuthorDto;
-import com.mindfire.review.web.dto.DeleteDto;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.*;
 import com.mindfire.review.web.repositories.AuthorRepository;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
@@ -197,12 +197,12 @@ public class AuthorServiceImpl implements AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void removeAuthor(Long authorId, DeleteDto deleteDto) throws AuthorExistenceException{
+    public void removeAuthor(Long authorId, ChoiceDto choiceDto) throws AuthorExistenceException{
         Author author = authorRepository.findOne(authorId);
         if(author == null){
             throw new AuthorExistenceException("Author does not exist");
         }
-        if(deleteDto.getChoice().equalsIgnoreCase("Y")) {
+        if(choiceDto.getChoice().equalsIgnoreCase("Y")) {
             authorRepository.delete(author);
             System.out.println("Author deleted");
         }

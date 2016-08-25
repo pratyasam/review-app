@@ -3,6 +3,7 @@ package com.mindfire.review.services;
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
 import com.mindfire.review.web.dto.BookDto;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.*;
 import org.springframework.data.domain.Page;
 
@@ -43,13 +44,20 @@ public interface BookService {
      * @param name
      * @return
      */
-    Book getBookByName(String name);
+    List<Book> getBookByNameLike(String name);
 
     /**
      * @param name
      * @return
      */
     List<Author> getAuthorByBook(String name);
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    Book getBookByName(String name);
 
     /**
      * @param name
@@ -101,7 +109,8 @@ public interface BookService {
 
     /**
      * @param id
+     * @param choiceDto
      */
-    public void verifyBook(Long id);
+    public void verifyBook(Long id, ChoiceDto choiceDto);
 
 }
