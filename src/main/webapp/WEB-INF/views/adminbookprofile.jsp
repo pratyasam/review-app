@@ -58,8 +58,8 @@
                 <div class="panel-heading text-center">
                     <h3><b>${book.bookName}</b></h3>
                     <h4><em>${book.bookIsbn}</em></h4>by : Author name:
-                    <% for(Object a:(List) request.getAttribute("authors")){%>
-                    <%= ((Author)a).getAuthorName()%>>
+                    <% for(Author a:(List<Author>) request.getAttribute("authors")){%>
+                    <%= a.getAuthorName()%>
 
                     <%}%>
                 </div>

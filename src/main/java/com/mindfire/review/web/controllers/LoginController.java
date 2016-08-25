@@ -59,7 +59,7 @@ public class LoginController {
             httpSession.setAttribute("role", user.getRole());
             httpSession.setAttribute("userId", user.getUserId());
 
-            return "redirect:/profile";
+            return "redirect:/";
 
         } catch (LoginFailException lex) {
 

@@ -29,7 +29,7 @@
             <a class="navbar-brand" href="#">User Name</a></div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Home</a></li>
+                <li><a href="/home">Home</a></li>
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Add <span
                         class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -37,7 +37,7 @@
                         <li><a href="/addauthor">Add Author</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Page 2 </a></li>
+                <li><a href="/profile">Profile </a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </div>
     </div>

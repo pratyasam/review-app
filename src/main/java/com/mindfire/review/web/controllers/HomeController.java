@@ -15,14 +15,9 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
     public String home(Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("userName") == null) {
-            return "redirect:/login";
-        }
-
-
-        return "index";
+         return "homepage";
     }
 
 }

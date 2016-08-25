@@ -36,7 +36,7 @@
                         <li><a href="#">Profile</a></li>
                     </ul>
                 </li>
-                <li><img src="/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="100" height="100">Hello User</li>
+                <li><img src="/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="100" height="100">Hello <%=(String)session.getAttribute("userName")%>></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
                 </ul>
         </div>
@@ -50,8 +50,8 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Page 2 </a></li>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/profile">Profile </a></li>
                 <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> LogIn</a> </li>
                 <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> SignUp</a> </li>
             </ul>
