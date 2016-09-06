@@ -1,0 +1,55 @@
+body {
+    background-image: url(../img/abg9.jpg);
+    background-size: cover;
+}
+
+.text-white {
+    color: #FFF;
+}
+
+.pad-tb-20 {
+    padding: 20px 0px 20px 0px;
+}
+
+.login-form-wrapper {
+    margin-top: 180px;
+    background-color: #FFF;
+    border-radius: 5px;
+
+}
+
+.login-form-wrapper .form-group {
+    margin-top: 7px;
+}
+
+.card {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.social-wrapper {
+    margin-top: -60px;
+    height: 120px;
+}
+
+.icon-container {
+    text-align: center;
+    padding: 32px;
+}
+
+.icon-container span {
+    font-size: 32px;
+    text-align: center;
+}
+
+.heading {
+    text-align: center;
+}
+
+.error {
+    color: #000;
+    display: block;
+}
+
+.wrapperbox {
+    margin-top: 150px;
+}

@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "book_authors")
 @NamedQuery(name = "BookAuthor.findAll", query = "SELECT b FROM BookAuthor b")
-public class BookAuthor implements Serializable {
+public class BookAuthor{
     private static final long serialVersionUID = 1L;
 
     @Id

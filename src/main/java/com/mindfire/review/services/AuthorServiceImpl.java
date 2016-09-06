@@ -128,7 +128,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Book> getBookByAuthor(String name) {
-        return bookAuthorRepository.findByAuthor(getAuthorByName(name));
+       List<BookAuthor> list = bookAuthorRepository.findByAuthor(authorRepository.findByAuthorNameIgnoreCase(name));
+        List<Book> book = new ArrayList<>();
+        for(BookAuthor ba : list){
+        	book.add(ba.getBook());
+        }
+        return book;
     }
 
     /**

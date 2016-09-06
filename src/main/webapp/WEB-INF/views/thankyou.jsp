@@ -13,9 +13,9 @@
     <title>Successfully Registered </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link href="assets/css/thankyou-style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+    <link href="/reviewBook/assets/css/thankyou-style.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
 </head>
 
@@ -26,7 +26,7 @@
             <div class="panel panel-default thankyou-wrapper">
                 <div class="panel-body">
                     <h1 class="text-center text-uppercase"> Welcome Aboard ${userName}!</h1>
-                    <p> Thank you for registering with us. <a href="/login"><b>Click Here</b></a> to continue. </p>
+                    <p> Thank you for registering with us. <a href="login"><b>Click Here</b></a> to continue. </p>
                 </div>
             </div>
             <div class="footer text-center text-white">

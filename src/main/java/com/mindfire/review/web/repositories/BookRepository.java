@@ -36,7 +36,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param genre
      * @return
      */
-    List<Book> findByBookGenreContainsIgnoreCase(String genre);
+    List<Book> findByBookGenreContainsIgnoreCaseAndBookVerified(String genre, boolean verified);
 
     /**
      * @param isbn

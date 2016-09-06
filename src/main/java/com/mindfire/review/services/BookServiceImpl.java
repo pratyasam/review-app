@@ -62,7 +62,7 @@ public class BookServiceImpl implements BookService {
      */
 
     public List<Book> getBookByGenre(String genre) {
-        return bookRepository.findByBookGenreContainsIgnoreCase(genre);
+        return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, true);
     }
 
     /**
@@ -102,7 +102,11 @@ public class BookServiceImpl implements BookService {
 
     public List<Author> getAuthorByBook(String name) {
         Book book = getBookByName(name);
-        List<Author> list = bookAuthorRepository.findByBook(book);
+        List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
+        List<Author> list = new ArrayList<>();
+        for(BookAuthor ba : list1){
+        	list.add(ba.getAuthor());
+        }
         return list;
     }
 

@@ -19,12 +19,12 @@ public interface BookAuthorRepository extends JpaRepository<BookAuthor, Long> {
      * @return
      */
 
-    List<Book> findByAuthor(Author author);
+    List<BookAuthor> findByAuthor(Author author);
 
     /**
      * @param book
      * @return
      */
-    List<Author> findByBook(Book book);
+    List<BookAuthor> findByBook(Book book);
 
 }

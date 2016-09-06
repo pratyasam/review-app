@@ -1,0 +1,21 @@
+body {
+    background-image: url(/assets/img/tybook6.jpg);
+    background-size: cover;
+}
+
+.thankyou-wrapper {
+    margin-top: 180px;
+    background-color: transparent;
+    padding: 20px;
+    margin: 100px;
+}
+
+p {
+    color: black;
+    padding: 30px;
+    font-size: 150%;
+}
+
+.text-white {
+    color: black;
+}

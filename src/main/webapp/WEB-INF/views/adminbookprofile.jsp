@@ -1,5 +1,6 @@
 <%@ page import="com.mindfire.review.web.models.Author" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%--
   Created by IntelliJ IDEA.
   User: pratyasa
   Date: 19/8/16
@@ -17,11 +18,11 @@
     <title> <b>${book.bookName}</b> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link href="assets/css/home-style.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="assets/css/animation.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/bookprofile-style.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+    <link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/bookprofile-style.css">
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'> </head>
 
 <body>
@@ -33,33 +34,33 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/addbook">Add Books</a></li>
-                        <li><a href="/addauthor">Add Authors</a></li>
+                        <li><a href="/reviewBook/addbook">Add Books</a></li>
+                        <li><a href="/reviewBook/addauthor">Add Authors</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Option <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/books">All Books</a></li>
-                        <li><a href="/authors">All Authors</a></li>
-                        <li><a href="/users">All Users</a></li>
+                        <li><a href="/reviewBook/books">All Books</a></li>
+                        <li><a href="/reviewBook/authors">All Authors</a></li>
+                        <li><a href="/reviewBook/users">All Users</a></li>
                     </ul>
                 </li>
                 <li><a href="#">Page 2 </a></li>
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
+                <li><a href="/reviewBook/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
             </ul>
         </div>
     </div>
 </nav>
 <div class="container-fluid">
     <div class="col-lg-6 col-lg-offset-3">
-        <div class="col-lg-3" style="height:20%"><img src="assets/img/book.jpg" style="height:100%; width:100%;"></div>
+        <div class="col-lg-3" style="height:20%"><img src="/reviewBook/assets/img/book.jpg" style="height:100%; width:100%;"></div>
         <div class="col-lg-9">
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
                     <h3><b>${book.bookName}</b></h3>
                     <h4><em>${book.bookIsbn}</em></h4>by : Author name:
                     <% for(Author a:(List<Author>) request.getAttribute("authors")){%>
-                    <%= a.getAuthorName()%>
+                    <b><%= a.getAuthorName()%></b> <br>
 
                     <%}%>
                 </div>
@@ -82,7 +83,7 @@
                             </div>
                             <div class="col-lg-4 col-md-4">
                                 <div class="col-lg-10 col-lg-offset-2">
-                                    <a class="btn btn-default" href="/books/${book.bookId}/update"> Update</a>
+                                    <a class="btn btn-default" href="books/${book.bookId}/update"> Update</a>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +113,7 @@
         </div>
         <br>
         <div class="col-lg-12">
-            <form:form method="post" action="/books/${book.bookId}/review" class="form-horizontal" modelAttribute="bookprofile">
+            <form:form method="post" action="books/${book.bookId}/review" class="form-horizontal" modelAttribute="bookprofile">
                 <fieldset>
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -143,7 +144,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Are you sure you want to delete?</h4> </div>
                 <div class="modal-body">
-                    <form:form method="delete" action="/books/${book.bookId}" modelAttribute="delete">
+                    <form:form method="delete" action="books/${book.bookId}" modelAttribute="delete">
                         <fieldset>
                             <div class="form-group">
                                 <div class="col-lg-10 col-lg-offset-2">
@@ -172,7 +173,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">verify Book?</h4> </div>
                 <div class="modal-body">
-                    <form:form method="post" action="/books/{bookId}/verifybooks" modelAttribute="verify">
+                    <form:form method="post" action="books/{bookId}/verifybooks" modelAttribute="verify">
                         <fieldset>
                             <div class="form-group">
                                 <div class="col-lg-10 col-lg-offset-2">
@@ -438,7 +439,7 @@
 </svg>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="assets/js/animation.js"></script>
+<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
 </body>
 
 </html>

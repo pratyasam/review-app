@@ -13,9 +13,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/style.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
                     <h4 class="text-white">Log In</h4></div>
             </div>
             <div class="panel-body">
-                <form:form name="loginForm" id="loginForm" cssClass="form-horizontal" method="POST" action="/login"
+                <form:form name="loginForm" id="loginForm" cssClass="form-horizontal" method="POST" action="login"
                            modelAttribute="login">
                     <form:errors path="*" cssClass="alert alert-danger" element="div"/>
                     <% if (lex != null) { %>
@@ -57,7 +57,7 @@
                 </form:form>
             </div>
             <div class="panel-footer">
-                <p>New Here ? <a href="/signup"><b>Sign Up</b></a> now.</p>
+                <p>New Here ? <a href="signup"><b>Sign Up</b></a> now.</p>
             </div>
         </div>
         <div class="footer text-center text-white ">

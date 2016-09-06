@@ -16,13 +16,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+    <link href="/reviewBook/assets/css/style.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
+	<nav class="navbar navbackground">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#myNavbar">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName} ${userLastName}</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="home">Home</a></li>
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/reviewBookaddbook">Add Book</a></li>
+							<li><a href="/reviewBookaddauthor">Add Author</a></li>
+						</ul></li>
+					<li><a href="profile">Profile </a></li>
+					<li><a href="logout"><span
+							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 <div class="container-fluid">
     <div class="col-lg-10 col-lg-offset-1">
         <div class="row">
@@ -31,7 +57,7 @@
                     <div class="panel panel-heading">
                         <h3>Add Book</h3></div>
                     <div class="panel-body">
-                        <form:form method="post" id="book" action="/book" cssClass="form-horizontal" name="book"
+                        <form:form method="post" id="book" action="addbook" cssClass="form-horizontal" name="book"
                                    modelAttribute="book">
                             <form:errors path="*" element="div" cssClass="alert alert-danger"></form:errors>
 

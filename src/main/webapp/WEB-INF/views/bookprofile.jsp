@@ -1,3 +1,5 @@
+<%@ page import="com.mindfire.review.web.models.Author" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: pratyasa
@@ -13,11 +15,11 @@
     <title> ${book.bookName} </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
-    <link href="/assets/css/home-style.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/assets/css/animation.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/bookprofile-style.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+    <link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/bookprofile-style.css">
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'> </head>
 
 <body>
@@ -33,11 +35,11 @@
                     <ul class="dropdown-menu">
                         <li><a href="#">Update Info</a></li>
                         <li><a href="#">Delete Account</a></li>
-                        <li><a href="#">Profile</a></li>
+                        <li><a href="/reviewBook/profile">Profile</a></li>
                     </ul>
                 </li>
-                <li><img src="/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="100" height="100">Hello <%=(String)session.getAttribute("userName")%>></li>
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
+                <li><img src="/reviewBook/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="100" height="100">Hello <%=(String)session.getAttribute("userName")%>></li>
+                <li><a href="/reviewBook/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
                 </ul>
         </div>
     </div>
@@ -50,10 +52,9 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/home">Home</a></li>
-                <li><a href="/profile">Profile </a></li>
-                <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> LogIn</a> </li>
-                <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> SignUp</a> </li>
+                <li><a href="/reviewBook/home">Home</a></li>
+                <li><a href="/reviewBook/login"><span class="glyphicon glyphicon-log-in"></span> LogIn</a> </li>
+                <li><a href="/reviewBook/signup"><span class="glyphicon glyphicon-user"></span> SignUp</a> </li>
             </ul>
         </div>
     </div>
@@ -61,12 +62,17 @@
 <%}%>
 <div class="container-fluid">
     <div class="col-lg-6 col-lg-offset-3">
-        <div class="col-lg-3" style="height:20%"><img src="assets/img/book.jpg" style="height:100%; width:100%;"></div>
+        <div class="col-lg-3" style="height:20%"><img src="/reviewBook/assets/img/book.jpg" style="height:100%; width:100%;"></div>
         <div class="col-lg-9">
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
                     <h3>${book.bookName}</h3>
-                    <h4>${book.bookIsbn}</h4>by : author name </div>
+                    <h4>${book.bookIsbn}</h4>by : author name
+                    <% for(Author a:(List<Author>) request.getAttribute("authors")){%>
+                   <b> <%= a.getAuthorName()%> </b><br>
+
+                    <%}%>
+                     </div>
                 <div class="panel-body">
                     <h4>Book Genre: ${book.bookGenre} </h4>
                     <h4>Book Rating:${book.bookRating}</h4>
@@ -96,7 +102,7 @@
         </div>
         <br>
         <div class="col-lg-12">
-            <form:form method="post" action="/books/${book.bookId}/review" class="form-horizontal" modelAttribute="bookprofile">
+            <form:form method="post" action="books/${book.bookId}/review" class="form-horizontal" modelAttribute="bookprofile">
                 <fieldset>
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -365,7 +371,7 @@
 </svg>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="assets/js/animation.js"></script>
+<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
 </body>
 
 </html>

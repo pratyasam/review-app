@@ -18,9 +18,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+    <link href="/reviewBook/assets/css/style.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
 </head>
 
@@ -41,7 +41,7 @@
             <div class="panel-body">
                 <div class="col-lg-12 ">
                     <form:form name="signupFrom" id="signupForm" cssClass="form-horizontal" method="post"
-                               modelAttribute="signUp" action="/signup">
+                               modelAttribute="signUp" action="signup">
                         <form:errors path="*" cssClass="alert alert-danger" element="div"/>
                         <% if (ex != null) { %>
                         <div class="alert alert-danger"><%= ex.getMessage() %>
@@ -124,12 +124,18 @@
                     </form:form>
                     <br>
                     <div class="col-lg-12">
-                        <p>Already Have an Account ? <a href="/login"><b>LogIn</b></a> here.</p>
+                        <p>Already Have an Account ? <a href="login"><b>LogIn</b></a> here.</p>
                     </div>
                 </div>
             </div>
 
         </div>
+        <div class="col-lg-12">
+			<div class="footer text-center">
+				<br> <br> <small>Copyright &copy;
+					Pratyasha</small> <br> <br>
+			</div>
+		</div>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

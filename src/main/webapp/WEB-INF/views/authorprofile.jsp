@@ -15,10 +15,10 @@
     <title>${author.authorName} </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link href="assets/css/home-style.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="assets/css/animation.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+    <link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'> </head>
 
 <body>
@@ -29,16 +29,16 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
         <div class="collapse navbar-collapse" id="myNavbar1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Home</a></li>
+                <li><a href="home">Home</a></li>
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Update Info</a></li>
                         <li><a href="#">Delete Account</a></li>
-                        <li><a href="#">Profile</a></li>
+                        <li><a href="/reviewBook/profile">Profile</a></li>
                     </ul>
                 </li>
-                <li><img src="/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="50" height="50">Hello User</li>
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
+                <li><img src="reviewBook/assets/img/book.jpg" class="img-circle img-responsive" alt="book" width="50" height="50">Hello User</li>
+                <li><a href="/reviewBook/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
             </ul>
         </div>
     </div>
@@ -51,10 +51,10 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Home</a></li>
+                <li><a href="home">Home</a></li>
                 <li><a href="#">Page 2 </a></li>
-                <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> LogIn</a> </li>
-                <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> SignUp</a> </li>
+                <li><a href="/reviewBook/login"><span class="glyphicon glyphicon-log-in"></span> LogIn</a> </li>
+                <li><a href="/reviewBook/signup"><span class="glyphicon glyphicon-user"></span> SignUp</a> </li>
             </ul>
         </div>
     </div>
@@ -62,7 +62,7 @@
 <%}%>
 <div class="container-fluid">
     <div class="col-lg-6 col-lg-offset-3">
-        <div class="col-lg-3" style="height:20%"><img src="assets/img/book.jpg" style="height:100%; width:100%;"></div>
+        <div class="col-lg-3" style="height:20%"><img src="/reviewBook/assets/img/book.jpg" style="height:100%; width:100%;"></div>
         <div class="col-lg-9">
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
@@ -107,7 +107,7 @@
         </div>
         <br>
         <div class="col-lg-12">
-            <form:form  method="post" action="/allauthors/${author.authorId}/review" class="form-horizontal" modelAttribute="authorprofile">
+            <form:form  method="post" action="allauthors/${author.authorId}/review" class="form-horizontal" modelAttribute="authorprofile">
                 <fieldset>
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -377,7 +377,7 @@
 </svg>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="assets/js/animation.js"></script>
+<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
 </body>
 
 </html>
