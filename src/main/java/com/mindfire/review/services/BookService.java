@@ -14,7 +14,7 @@ public interface BookService {
     /**
      * @return
      */
-    Page<Book> getBooks(int page, int limit);
+    List<Book> getBooks();
 
     /**
      * @param id
@@ -32,7 +32,7 @@ public interface BookService {
      * @param rating
      * @return
      */
-    List<Book> getBookByRating(int rating);
+    List<Book> getBookByRating(float rating);
 
     /**
      * @param isbn

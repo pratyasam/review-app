@@ -48,7 +48,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param rating
      * @return
      */
-    List<Book> findByBookRating(int rating);
+    List<Book> findByBookRating(float rating);
 
     /**
      * @param verified

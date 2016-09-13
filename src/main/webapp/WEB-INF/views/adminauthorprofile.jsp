@@ -38,6 +38,7 @@
 						<ul class="dropdown-menu">
 							<li><a href="/reviewBook/addbook">Add Book</a></li>
 							<li><a href="/reviewBook/addauthor">Add Author</a></li>
+							<li><a href="/reviewBook/linkBookAndAuthor">Link Book and Author</a></li>
 						</ul></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
 					<li><a href="/reviewBook/logout"><span

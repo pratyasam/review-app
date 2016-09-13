@@ -58,7 +58,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Map<String, Object> searchByRating(int rating) {
+    public Map<String, Object> searchByRating(float rating) {
         List<Author> authors = authorService.getAuthorByRating(rating);
         List<Book> books = bookService.getBookByRating(rating);
         Map<String, Object> map = new HashMap<>();

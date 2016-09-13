@@ -34,7 +34,7 @@ public interface AuthorService {
      * @return
      */
 
-    List<Author> getAuthorByRating(int rating);
+    List<Author> getAuthorByRating(float rating);
 
     /**
      * @param genre
@@ -68,21 +68,21 @@ public interface AuthorService {
      * @param name
      * @return
      */
-    public List<ReviewBook> getBookReviewByAuthorName(String name);
+    List<ReviewBook> getBookReviewByAuthorName(String name);
 
     /**
      *
      * @param authorId
      * @return
      */
-    public Author getAuthorById(Long authorId);
+     Author getAuthorById(Long authorId);
 
     /**
      *
      * @param authorDto
      * @throws AuthorExistenceException
      */
-    public void addAuthor(AuthorDto authorDto) throws AuthorExistenceException;
+     void addAuthor(AuthorDto authorDto) throws AuthorExistenceException;
 
     /**
      *
@@ -90,7 +90,7 @@ public interface AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException;
+    void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException;
 
     /**
      *

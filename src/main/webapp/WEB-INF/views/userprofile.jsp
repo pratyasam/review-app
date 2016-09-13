@@ -52,43 +52,45 @@
 		</div>
 	</nav>
 	<div class="container-fluid pad">
-		<div class="row">
-			<div class="col-sm-2 col-lg-2 pad">
-				<img src="/reviewBook/assets/img/download.jpg" alt="image">
-			</div>
-			<div class="col-sm-10 col-lg-10 pad">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3>${userFirstName}${userLastName}</h3>
-					</div>
-					<div class="panel-body">
-						<p>fdfffdddfdfdffdfdfdf ddfdf dfdfdfffdf fvfvfv fvfvfvf vfv
-							fvf vf vf vf vffvfvfvf</p>
-						<p>dbdiygvjdsbkwdhgwgbvk</p>
-					</div>
-					<div class="panel-footer">
-						<div class="row nav">
-							<div class="col-md-8 col-xs-12">
-								<div class="col-md-4 col-xs-4 well">
-									<i class="fa fa-weixin fa-lg"></i> 16
-								</div>
-								<div class="col-md-4 col-xs-4 well">
-									<i class="fa fa-heart-o fa-lg"></i> 14
-								</div>
-								<div class="col-md-4 col-xs-4 well">
-									<i class="fa fa-thumbs-o-up fa-lg"></i> 26
+		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-6">
+			<div class="row">
+				<div class="col-sm-4 col-lg-4 pad">
+					<img src="/reviewBook/assets/img/download.jpg" alt="image" style="width:100%;">
+				</div>
+				<div class="col-sm-8 col-lg-8 pad">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3>${userFirstName}${userLastName}</h3>
+						</div>
+						<div class="panel-body">
+							<p>User Name: ${user.userName}</p>
+							<p>Gender: ${user.userGender}</p>
+							<p>Role: ${user.role}</p>
+						</div>
+						<div class="panel-footer">
+							<div class="row nav">
+								<div class="col-md-8 col-xs-12">
+									<div class="col-md-4 col-xs-4 well">
+										<i class="fa fa-weixin fa-lg"></i> 16
+									</div>
+									<div class="col-md-4 col-xs-4 well">
+										<i class="fa fa-heart-o fa-lg"></i> 14
+									</div>
+									<div class="col-md-4 col-xs-4 well">
+										<i class="fa fa-thumbs-o-up fa-lg"></i> 26
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<jsp:include page='contact.jsp'/>
-		<div class="col-lg-12">
-			<div class="footer text-center">
-				<br> <br> <small>Copyright &copy;
-					Pratyasha</small> <br> <br>
+			<jsp:include page='contact.jsp' />
+			<div class="col-lg-12">
+				<div class="footer text-center">
+					<br> <br> <small>Copyright &copy; Pratyasha</small> <br>
+					<br>
+				</div>
 			</div>
 		</div>
 	</div>

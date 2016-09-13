@@ -22,249 +22,272 @@ import java.util.Map;
 @Service
 public class BookServiceImpl implements BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private BookAuthorRepository bookAuthorRepository;
-    @Autowired
-    private ReviewBookRepository reviewBookRepository;
-    @Autowired
-    private ReviewAuthorRepository reviewAuthorRepository;
+	@Autowired
+	private BookRepository bookRepository;
+	@Autowired
+	private BookAuthorRepository bookAuthorRepository;
+	@Autowired
+	private ReviewBookRepository reviewBookRepository;
+	@Autowired
+	private ReviewAuthorRepository reviewAuthorRepository;
 
+	public BookServiceImpl() {
+		super();
+	}
 
-    public BookServiceImpl() {
-        super();
-    }
+	/**
+	 * get book by Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Book getBookById(Long id) {
+		return bookRepository.findOne(id);
+	}
 
-    /**
-     * get book by Id
-     * @param id
-     * @return
-     */
-    public Book getBookById(Long id) {
-        return bookRepository.findOne(id);
-    }
+	/**
+	 * find all the listed books in pages
+	 * 
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public List<Book> getBooks() {
+		return bookRepository.findAll();
+	}
 
-    /**
-     * find all the listed books in pages
-     * @param page
-     * @param size
-     * @return
-     */
-    public Page<Book> getBooks(int page, int size) {
-        return bookRepository.findAll(new PageRequest(page, size));
-    }
+	/**
+	 * get all books by genre
+	 * 
+	 * @param genre
+	 * @return
+	 */
 
-    /**
-     * get all books by genre
-     * @param genre
-     * @return
-     */
+	public List<Book> getBookByGenre(String genre) {
+		return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, true);
+	}
 
-    public List<Book> getBookByGenre(String genre) {
-        return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, true);
-    }
+	/**
+	 * get all the books by rating
+	 * 
+	 * @param rating
+	 * @return
+	 */
 
-    /**
-     * get all the books by rating
-     * @param rating
-     * @return
-     */
+	public List<Book> getBookByRating(float rating) {
+		return bookRepository.findByBookRating(rating);
+	}
 
-    public List<Book> getBookByRating(int rating) {
-        return bookRepository.findByBookRating(rating);
-    }
+	/**
+	 * get book by Isbn
+	 * 
+	 * @param isbn
+	 * @return
+	 */
+	public Book getBookByIsbn(String isbn) {
+		return bookRepository.findByBookIsbn(isbn);
+	}
 
-    /**
-     * get book by Isbn
-     * @param isbn
-     * @return
-     */
-    public Book getBookByIsbn(String isbn) {
-        return bookRepository.findByBookIsbn(isbn);
-    }
+	/**
+	 * Get book by book name
+	 * 
+	 * @param name
+	 * @return
+	 */
 
-    /**
-     * Get book by book name
-     * @param name
-     * @return
-     */
+	public List<Book> getBookByNameLike(String name) {
+		return bookRepository.findByBookNameContainsIgnoreCase(name);
+	}
 
-    public List<Book> getBookByNameLike(String name) {
-        return bookRepository.findByBookNameContainsIgnoreCase(name);
-    }
+	/**
+	 * get the list of authors who have authored on the book
+	 * 
+	 * @param name
+	 * @return
+	 */
 
-    /**
-     * get the list of authors who have authored on the book
-     * @param name
-     * @return
-     */
+	public List<Author> getAuthorByBook(String name) {
+		Book book = getBookByName(name);
+		List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
+		List<Author> list = new ArrayList<>();
+		for (BookAuthor ba : list1) {
+			list.add(ba.getAuthor());
+		}
+		return list;
+	}
 
-    public List<Author> getAuthorByBook(String name) {
-        Book book = getBookByName(name);
-        List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
-        List<Author> list = new ArrayList<>();
-        for(BookAuthor ba : list1){
-        	list.add(ba.getAuthor());
-        }
-        return list;
-    }
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
+	public Book getBookByName(String name) {
+		return bookRepository.findByBookName(name);
+	}
 
-    /**
-     *
-     * @param name
-     * @return
-     */
-    public Book getBookByName(String name){
-        return bookRepository.findByBookName(name);
-    }
+	/**
+	 * find all the reviews on a book
+	 * 
+	 * @param name
+	 * @return
+	 */
 
-    /**
-     * find all the reviews on a book
-     * @param name
-     * @return
-     */
+	public List<ReviewBook> getBookReviewByBook(String name) {
+		return reviewBookRepository.findByBook(getBookByName(name));
+	}
 
-    public List<ReviewBook> getBookReviewByBook(String name) {
-        return reviewBookRepository.findByBook(getBookByName(name));
-    }
+	/**
+	 * get the list of reviews on authors of a book
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public List<ReviewAuthor> getAuthorReviewByBook(String name) {
+		List<Author> authorList = getAuthorByBook(name);
+		List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
+		List<ReviewAuthor> reviewAuthorList1;
+		for (Author a : authorList) {
+			reviewAuthorList1 = reviewAuthorRepository.findByAuthor(a);
+			reviewAuthorList.addAll(reviewAuthorList1);
+		}
+		return reviewAuthorList;
+	}
 
-    /**
-     * get the list of reviews on authors of a book
-     * @param name
-     * @return
-     */
-    public List<ReviewAuthor> getAuthorReviewByBook(String name) {
-        List<Author> authorList = getAuthorByBook(name);
-        List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
-        List<ReviewAuthor> reviewAuthorList1;
-        for (Author a : authorList) {
-            reviewAuthorList1 = reviewAuthorRepository.findByAuthor(a);
-            reviewAuthorList.addAll(reviewAuthorList1);
-        }
-        return reviewAuthorList;
-    }
+	/**
+	 * get verified books in the form of list
+	 * 
+	 * @param verified
+	 * @return
+	 */
+	public List<Book> getVerifiedBook(boolean verified) {
+		return bookRepository.findByBookVerified(verified);
+	}
 
-    /**
-     * get verified books in the form of list
-     * @param verified
-     * @return
-     */
-    public List<Book> getVerifiedBook(boolean verified) {
-        return bookRepository.findByBookVerified(verified);
-    }
+	/**
+	 * get all the users who have reviewed on the book
+	 * 
+	 * @param name
+	 * @return
+	 */
 
-    /**
-     *get all the users who have reviewed on the book
-     * @param name
-     * @return
-     */
+	public List<User> getUserByBookReview(String name) {
+		List<User> users = new ArrayList<>();
+		List<ReviewBook> reviewBooks = getBookReviewByBook(name);
+		for (ReviewBook r : reviewBooks) {
+			users.add(r.getUser());
+		}
+		return users;
+	}
 
-    public List<User> getUserByBookReview(String name) {
-        List<User> users = new ArrayList<>();
-        List<ReviewBook> reviewBooks = getBookReviewByBook(name);
-        for (ReviewBook r : reviewBooks) {
-            users.add(r.getUser());
-        }
-        return users;
-    }
+	/**
+	 * to check whether the book exists or not
+	 * 
+	 * @param isbn
+	 * @return
+	 */
 
-    /**
-     * to check whether the book exists or not
-     * @param isbn
-     * @return
-     */
+	public boolean doesBookExist(String isbn) {
+		Book book = getBookByIsbn(isbn);
+		if (book != null)
+			return true;
+		else
+			return false;
+	}
 
-    public boolean doesBookExist(String isbn) {
-        Book book = getBookByIsbn(isbn);
-        if (book != null)
-            return true;
-        else
-            return false;
-    }
+	/**
+	 * method to add book
+	 * 
+	 * @param bookDto
+	 * @throws BookExistException
+	 */
 
-    /**
-     * method to add book
-     * @param bookDto
-     * @throws BookExistException
-     */
+	public void addBook(BookDto bookDto) throws BookExistException {
+		if (bookDto == null)
+			throw new RuntimeException("");
+		if (doesBookExist(bookDto.getBookIsbn())) {
+			throw new BookExistException("Book Already Exists");
+		}
+		Book book = new Book();
+		book.setBookCost(bookDto.getBookCost());
+		book.setBookDescription(bookDto.getBookDescription());
+		book.setBookGenre(bookDto.getBookGenre());
+		book.setBookIsbn(bookDto.getBookIsbn());
+		book.setBookName(bookDto.getBookName());
+		book.setBookLink(bookDto.getBookLink());
+		book.setBookReview(bookDto.getBookReview());
 
-    public void addBook(BookDto bookDto) throws BookExistException {
-        if (bookDto == null)
-            throw new RuntimeException("");
-        if (doesBookExist(bookDto.getBookIsbn())) {
-            throw new BookExistException("Book Already Exists");
-        }
-        Book book = new Book();
-        book.setBookCost(bookDto.getBookCost());
-        book.setBookDescription(bookDto.getBookDescription());
-        book.setBookGenre(bookDto.getBookGenre());
-        book.setBookIsbn(bookDto.getBookIsbn());
-        book.setBookName(bookDto.getBookName());
-        book.setBookLink(bookDto.getBookLink());
-        book.setBookReview(bookDto.getBookReview());
+		book = bookRepository.save(book);
+		System.out.println("Book saved");
+		if (book == null) {
+			throw new RuntimeException("");
+		}
 
-        book = bookRepository.save(book);
-        System.out.println("Book saved");
-        if (book == null) {
-            throw new RuntimeException("");
-        }
+	}
 
-    }
+	/**
+	 * method to remove book
+	 * 
+	 * @param id
+	 * @throws BookDoesNotExistException
+	 */
 
-    /**
-     * method to remove book
-     * @param id
-     * @throws BookDoesNotExistException
-     */
+	public void removeBook(Long id) throws BookDoesNotExistException {
+		Book book = getBookById(id);
+		if (book == null) {
+			throw new RuntimeException("");
+		}
+		if (!doesBookExist(book.getBookIsbn())) {
+			throw new BookDoesNotExistException("Book does not exist");
+		}
+		bookRepository.delete(book);
 
-    public void removeBook(Long id) throws BookDoesNotExistException {
-        Book book = getBookById(id);
-        if (book == null) {
-            throw new RuntimeException("");
-        }
-        if (!doesBookExist(book.getBookIsbn())) {
-            throw new BookDoesNotExistException("Book does not exist");
-        }
-        bookRepository.delete(book);
+	}
 
-    }
+	/**
+	 * method to update book
+	 * 
+	 * @param bookId,
+	 *            bookDto
+	 * @param bookDto
+	 * @throws BookDoesNotExistException
+	 */
 
-    /**
-     * method to update book
-     * @param bookId, bookDto
-     * @param bookDto
-     * @throws BookDoesNotExistException
-     */
+	public void updateBook(Long bookId, BookDto bookDto) throws BookDoesNotExistException {
+		Book bk = getBookById(bookId);
+		if (bookDto == null) {
+			throw new RuntimeException("");
+		}
+		if (bk == null) {
+			throw new BookDoesNotExistException("Book does not exist");
+		}
+		bk.setBookIsbn(bookDto.getBookIsbn());
+		bk.setBookCost(bookDto.getBookCost());
+		bk.setBookGenre(bookDto.getBookGenre());
+		bk.setBookDescription(bookDto.getBookDescription());
+		bk.setBookLink(bookDto.getBookLink());
+		bk.setBookRating(bookDto.getBookRating());
+		bk.setBookReview(bookDto.getBookReview());
+		bookRepository.saveAndFlush(bk);
+	}
 
-    public void updateBook(Long bookId, BookDto bookDto) throws BookDoesNotExistException {
-        Book bk = getBookById(bookId);
-        if (bookDto == null) {
-            throw new RuntimeException("");
-        }
-        if (bk == null) {
-            throw new BookDoesNotExistException("Book does not exist");
-        }
-        bk.setBookIsbn(bookDto.getBookIsbn());
-        bk.setBookCost(bookDto.getBookCost());
-        bk.setBookGenre(bookDto.getBookGenre());
-        bk.setBookDescription(bookDto.getBookDescription());
-        bk.setBookLink(bookDto.getBookLink());
-        bk.setBookRating(bookDto.getBookRating());
-        bk.setBookReview(bookDto.getBookReview());
-        bookRepository.saveAndFlush(bk);
-    }
+	/**
+	 * method to verify the book
+	 * 
+	 * @param id
+	 */
+	public void verifyBook(Long id, ChoiceDto choiceDto) {
+		Book book = getBookById(id);
+		System.out.println(book.getBookName());
+		System.out.println(book.getBookVerified());
+		if (choiceDto.getChoice().equalsIgnoreCase("y")) {
+			book.setBookVerified(true);
+			System.out.println("\n Service executed");
+			bookRepository.save(book);
+			System.out.println(book.getBookVerified());
+		}
 
-    /**
-     * method to verify the book
-     * @param id
-     */
-    public void verifyBook(Long id, ChoiceDto choiceDto) {
-        Book book = getBookById(id);
-        if(choiceDto.getChoice().equalsIgnoreCase("y"))
-        book.setBookVerified(true);
-        else book.setBookVerified(false);
-    }
-
+		else
+			book.setBookVerified(false);
+	}
 
 }

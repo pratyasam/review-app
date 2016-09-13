@@ -13,5 +13,5 @@ public interface SearchService {
 
     Map<String, Object> searchByGenre(SearchDto searchDto);
 
-    Map<String, Object> searchByRating(int rating);
+    Map<String, Object> searchByRating(float rating);
 }

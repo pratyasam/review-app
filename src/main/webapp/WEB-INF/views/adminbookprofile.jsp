@@ -27,30 +27,32 @@
 
 <body>
 <nav class="navbar navbackground">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#">ReviewApp</a> </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/reviewBook/addbook">Add Books</a></li>
-                        <li><a href="/reviewBook/addauthor">Add Authors</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Option <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/reviewBook/books">All Books</a></li>
-                        <li><a href="/reviewBook/authors">All Authors</a></li>
-                        <li><a href="/reviewBook/users">All Users</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Page 2 </a></li>
-                <li><a href="/reviewBook/logout"><span class="glyphicon glyphicon-log-in"></span> LogOut</a> </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#myNavbar">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName} ${userLastName}</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/reviewBook/home">Home</a></li>
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/reviewBook/addbook">Add Book</a></li>
+							<li><a href="/reviewBook/addauthor">Add Author</a></li>
+							<li><a href="/reviewBook/linkBookAndAuthor">Link Book and Author</a></li>
+						</ul></li>
+					<li><a href="/reviewBook/profile">Profile </a></li>
+					<li><a href="/reviewBook/logout"><span
+							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 <div class="container-fluid">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="col-lg-3" style="height:20%"><img src="/reviewBook/assets/img/book.jpg" style="height:100%; width:100%;"></div>
@@ -65,9 +67,9 @@
                     <%}%>
                 </div>
                 <div class="panel-body">
-                    <h4>Book Genre: </h4>
-                    <h4>Book Rating:</h4>
-                    <h4>Book Cost: </h4>
+                    <h4>Book Genre: ${book.bookGenre} </h4>
+                    <h4>Book Rating:${book.bookRating}</h4>
+                    <h4>Book Cost:${book.bookCost}</h4>
                     <h5>Book Link: <a href=#> Download <span class="fa  fa-arrow-circle-down"></span> </a></h5>
                     <div class="col-lg-12">
                         <div class="row ">
@@ -93,11 +95,11 @@
         </div>
         <div class="col-lg-12">
             <h3 class="text-center" style="border-bottom: 2px #CCC solid;">Book Description :</h3>
-            <p> xyz xyz xyz xyz xyz xyz.xyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyz</p>
+            <p> ${book.bookDescription}</p>
         </div>
         <div class="col-lg-12">
             <h3 class="text-center" style="border-bottom: 2px #CCC solid;">Editorial Review :</h3>
-            <p> xyz xyz xyz xyz xyz xyz.xyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyzxyz xyz xyz xyz xyz xyz</p>
+            <p>${book.bookReview}</p>
         </div>
         <div class="col-lg-12">
             <div class="jumbotron text-center">
@@ -113,7 +115,7 @@
         </div>
         <br>
         <div class="col-lg-12">
-            <form:form method="post" action="books/${book.bookId}/review" class="form-horizontal" modelAttribute="bookprofile">
+            <form:form method="post" action="${book.bookId}" class="form-horizontal" modelAttribute="bookprofile">
                 <fieldset>
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -144,7 +146,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Are you sure you want to delete?</h4> </div>
                 <div class="modal-body">
-                    <form:form method="delete" action="books/${book.bookId}" modelAttribute="delete">
+                    <form:form method="delete" action="${book.bookId}" modelAttribute="delete">
                         <fieldset>
                             <div class="form-group">
                                 <div class="col-lg-10 col-lg-offset-2">
@@ -173,7 +175,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">verify Book?</h4> </div>
                 <div class="modal-body">
-                    <form:form method="post" action="books/{bookId}/verifybooks" modelAttribute="verify">
+                    <form:form method="post" action="${book.bookId}/verifybooks" modelAttribute="verify">
                         <fieldset>
                             <div class="form-group">
                                 <div class="col-lg-10 col-lg-offset-2">

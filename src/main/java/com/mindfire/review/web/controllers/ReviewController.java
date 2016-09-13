@@ -27,9 +27,10 @@ public class ReviewController {
     private ReviewService reviewService;
 
 
-    @RequestMapping(value = "/books/{bookId}/review", method = RequestMethod.POST)
+    @RequestMapping(value = "/books/{bookId}", method = RequestMethod.POST)
     public String addBookReviewByUser(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("bookProfile") ReviewBookDto reviewBookDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("userName") == null) {
+       System.out.println("entered");
+    	if (httpSession.getAttribute("userName") == null) {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
@@ -37,7 +38,8 @@ public class ReviewController {
         }
         try {
             reviewService.addBookReview(reviewBookDto, (String) httpSession.getAttribute("userName"), bookId);
-            return "bookprofile";
+            System.out.println("review saved.");
+            return "redirect:/books/{bookId}";
         } catch (AlreadyReviewedException e) {
             model.addAttribute("alreadyReviewedException", e);
             return "redirect:/books/{bookId}";
@@ -50,7 +52,7 @@ public class ReviewController {
             return "redirect:/login";
         }
         if(bindingResult.hasErrors()){
-            return "redirect/allauthors/{authorId}";
+            return "redirect:/authors/{authorId}";
         }
         try {
             reviewService.addAuthorReview(reviewAuthorDto, authorId, (String) httpSession.getAttribute("userName"));
@@ -58,10 +60,10 @@ public class ReviewController {
         }
         catch (AlreadyReviewedException e){
             model.addAttribute("alreadyreviewedexception", e);
-            return "redirect:/allauthors/{authorId}";
+            return "redirect:/authors/{authorId}";
         }
     }
-    @RequestMapping(value = "/allauthors/{authorId}/{reviewAuthorId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/authors/{authorId}/{reviewAuthorId}", method = RequestMethod.DELETE)
     public String removeAuthorReviewByUser(@PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpSession httpSession, Model model){
         if(httpSession.getAttribute("userName") == null){
             return "redirect:/login";
@@ -69,13 +71,13 @@ public class ReviewController {
         if(httpSession.getAttribute("userName") == reviewService.getReviewAuthorById(reviewAuthorId).getUser().getUserName() || httpSession.getAttribute("role").equals("admin")) {
             try {
                 reviewService.removeAuthorReview(reviewAuthorId);
-                return "redirect:/allauthors/{authorId}";
+                return "redirect:/authors/{authorId}";
             } catch (ReviewDoesnotExistException e) {
                 model.addAttribute("reviewdoesnotexistexception", e);
-                return "redirect:/allauthors/{authorId}";
+                return "redirect:/authors/{authorId}";
             }
         }
-        return "redirect:/allauthors/{authorId}";
+        return "redirect:/authors/{authorId}";
     }
     @RequestMapping(value = "/books/{bookId}/{reviewBookId}", method = RequestMethod.DELETE)
     public String removeBookReviewByUser(@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpSession httpSession, Model model){
@@ -94,7 +96,7 @@ public class ReviewController {
         return "redirect:/books/{bookId}";
 
     }
-    @RequestMapping(value = "/allauthors/{authorId}/{reviewAuthorId}/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/authors/{authorId}/{reviewAuthorId}/update", method = RequestMethod.GET)
     public Object updateAuthorReviewByUser(@PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpSession httpSession){
         if(httpSession.getAttribute("userName") == null){
             return "redirect:/login";
@@ -105,21 +107,21 @@ public class ReviewController {
             modelAndView.addObject("reviewauthor", reviewService.getReviewAuthorById(reviewAuthorId));
             return modelAndView;
         }
-        return "redirect:/allauthors/{authorId}";
+        return "redirect:/authors/{authorId}";
 
     }
-    @RequestMapping(value = "/allauthors/{authorId}/{reviewAuthorId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/authors/{authorId}/{reviewAuthorId}", method = RequestMethod.PUT)
     public String updateAuthorReviewPost(@PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId,@Valid @ModelAttribute("authorprofile") ReviewAuthorDto reviewAuthorDto, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
-            return "redirect:/allauthors/{authorId}/{reviewAuthorId}/update";
+            return "redirect:/authors/{authorId}/{reviewAuthorId}/update";
         }
         try{
             reviewService.updateAuthorReview(reviewAuthorDto,reviewAuthorId);
-            return "redirect:/allauthors/{authorId}";
+            return "redirect:/authors/{authorId}";
         }
         catch (ReviewDoesnotExistException e){
             model.addAttribute("reviewdoesnotexist",e);
-            return "redirect:/allauthors/{authorId}/update";
+            return "redirect:/authors/{authorId}/update";
         }
     }
     @RequestMapping(value = "/books/{bookId}/{reviewBookId}/update", method = RequestMethod.GET)

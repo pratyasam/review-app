@@ -7,6 +7,8 @@ package com.mindfire.review.web.controllers;
 import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.SignupDto;
+import com.mindfire.review.web.models.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -51,17 +54,22 @@ public class UserController {
 
 	@RequestMapping(value = "/users/{userId}/update", method = RequestMethod.GET)
 	public Object updateUserGet(@PathVariable("userId") Long userId, HttpSession httpSession) {
+		if(httpSession.getAttribute("userName") != null && httpSession.getAttribute("userId")== userId){
 		ModelAndView modelAndView = new ModelAndView("userupdate");
+		modelAndView.addObject("user",userService.getUserById(userId));
 		modelAndView.addObject("userupdate", new SignupDto());
 		return modelAndView;
+		}
+		return null;
 	}
 
 	@RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
 	public Object updateUserPost(@PathVariable("userId") Long userId,
-			@Valid @ModelAttribute("userupdate") SignupDto signupDto, BindingResult bindingResult, Model model) {
+			@Valid @ModelAttribute("userupdate") SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
 		if (bindingResult.hasErrors()) {
 			return "userupdate";
 		}
+		if(httpSession.getAttribute("userName") != null && httpSession.getAttribute("userId")== userId){
 		try {
 			userService.updateUser(userId, signupDto);
 			return "userprofile";
@@ -69,6 +77,8 @@ public class UserController {
 			model.addAttribute("userdoesnotexist", e);
 			return "redirect:/users/{userId}";
 		}
+		}
+		return null;
 
 	}
 
@@ -77,7 +87,7 @@ public class UserController {
 		if (httpSession.getAttribute("userName") == null) {
 			return "redirect:/login";
 		}
-		if (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("normal")) {
+		if ((httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("normal")) && httpSession.getAttribute("userId")== userId) {
 			if (httpSession.getAttribute("role").equals("normal") && httpSession.getAttribute("userId") == userId) {
 				try {
 					userService.removeUser(userId);
@@ -96,15 +106,20 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String getProfile(HttpSession httpSession) {
+	public Object getProfile(HttpSession httpSession) {
 		if(httpSession.getAttribute("userName") != null){
 		if (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator")) {
-
-			return "admin";
+		    User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
+            ModelAndView modelAndView = new ModelAndView("admin");
+            modelAndView.addObject("user",user);
+			return modelAndView;
 		}
 		if (httpSession.getAttribute("role").equals("normal")) {
 
-			return "userprofile";
+			User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
+            ModelAndView modelAndView = new ModelAndView("userprofile");
+            modelAndView.addObject("user",user);
+			return modelAndView;
 		}
 		}
 

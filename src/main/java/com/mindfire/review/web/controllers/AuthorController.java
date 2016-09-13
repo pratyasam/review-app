@@ -1,13 +1,10 @@
 package com.mindfire.review.web.controllers;
 
 
-import com.mindfire.review.exceptions.AuthorExistenceException;
-import com.mindfire.review.services.AuthorService;
-import com.mindfire.review.services.ReviewService;
-import com.mindfire.review.web.dto.AuthorDto;
-import com.mindfire.review.web.dto.ChoiceDto;
-import com.mindfire.review.web.dto.ReviewAuthorDto;
-import com.mindfire.review.web.models.Book;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.services.AuthorService;
+import com.mindfire.review.services.ReviewService;
+import com.mindfire.review.web.dto.AuthorDto;
+import com.mindfire.review.web.dto.ChoiceDto;
+import com.mindfire.review.web.dto.ReviewAuthorDto;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
 
 /**
  * Created by pratyasa on 10/8/16.
@@ -84,8 +85,11 @@ public class AuthorController {
 
 
     @RequestMapping(value = "/authors" , method = RequestMethod.GET)
-    public String getAllAuthors(){
-        return "authors";
+    public ModelAndView getAllAuthors(){
+    	List<Author> authors= authorService.getAllAuthor();
+    	ModelAndView modelAndView =new ModelAndView("authors");
+    	modelAndView.addObject("authors", authors);
+        return modelAndView;
     }
 
     /**

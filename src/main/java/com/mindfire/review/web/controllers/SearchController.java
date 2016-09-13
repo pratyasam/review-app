@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class SearchController {
     @Autowired
     private SearchService searchService;
-    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/search",method = RequestMethod.POST)
     public String searchGet(@ModelAttribute("search")SearchDto searchDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return "null";

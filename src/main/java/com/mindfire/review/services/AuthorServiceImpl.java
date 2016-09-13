@@ -70,7 +70,7 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    public List<Author> getAuthorByRating(int rating) {
+    public List<Author> getAuthorByRating(float rating) {
         return authorRepository.findByAuthorRating(rating);
     }
 

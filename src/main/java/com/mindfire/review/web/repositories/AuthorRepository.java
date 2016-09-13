@@ -37,7 +37,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      * @param rating
      * @return
      */
-    List<Author> findByAuthorRating(int rating);
+    List<Author> findByAuthorRating(float rating);
 
     /**
      * @param name

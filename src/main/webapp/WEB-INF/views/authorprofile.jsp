@@ -107,7 +107,7 @@
         </div>
         <br>
         <div class="col-lg-12">
-            <form:form  method="post" action="allauthors/${author.authorId}/review" class="form-horizontal" modelAttribute="authorprofile">
+            <form:form  method="post" action="${author.authorId}/review" class="form-horizontal" modelAttribute="authorprofile">
                 <fieldset>
                     <div class="col-lg-12">
                         <div class="form-group">
