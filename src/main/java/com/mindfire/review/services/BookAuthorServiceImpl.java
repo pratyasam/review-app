@@ -1,5 +1,7 @@
 package com.mindfire.review.services;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class BookAuthorServiceImpl implements BookAuthorService {
 	 * @see com.mindfire.review.services.BookAuthorService#linkBookAndAuthor(com.mindfire.review.web.dto.BookAuthorLinkDto)
 	 */
 	@Override
-	public void linkBookAndAuthor(BookAuthorLinkDto bookAuthorLinkDto){
+	public void linkBookAndAuthor(BookAuthorLinkDto bookAuthorLinkDto) throws SQLIntegrityConstraintViolationException{
 		Book book = bookRepository.findByBookName(bookAuthorLinkDto.getBookName());
 		Author author = authorRepository.findByAuthorNameIgnoreCase(bookAuthorLinkDto.getAuthorName());
 		BookAuthor bookAuthor = new BookAuthor();

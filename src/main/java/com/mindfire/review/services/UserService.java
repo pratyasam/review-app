@@ -1,14 +1,18 @@
 package com.mindfire.review.services;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
 import com.mindfire.review.exceptions.LoginFailException;
 import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.exceptions.UserExistException;
 import com.mindfire.review.web.dto.SignupDto;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.ReviewBook;
 import com.mindfire.review.web.models.User;
-
-import java.util.List;
 
 public interface UserService {
 
@@ -21,9 +25,12 @@ public interface UserService {
     User getUser(String userName);
 
     /**
+     * @param i 
+     * @param pageno 
      * @return
      */
     List<User> getUsers();
+    Page<User> getUsers(int pageno, int size);
 
     /**
      * @param firstName
@@ -50,6 +57,20 @@ public interface UserService {
      */
 
     List<ReviewAuthor> getAuthorReviewByUser(String user);
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    List<Author> getAuthorReviewedByUser(String user);
+    /**
+     * 
+     * @param user
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<Author> getAuthorReviewedByUser(String user, int pageno, int size);
 
     /**
      * @param user
@@ -57,6 +78,20 @@ public interface UserService {
      */
 
     List<ReviewBook> getBookReviewByUser(String user);
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    List<Book> getBookReviewedByUser(String user);
+    /**
+     * 
+     * @param user
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<Book> getBookReviewedByUser(String user, int pageno, int size);
 
     /**
      * @param userName

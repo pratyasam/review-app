@@ -5,7 +5,13 @@
   Time: 1:33 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@page import="com.mindfire.review.web.models.Book"%>
+<%@page import="com.mindfire.review.web.dto.BookAuthorListDto"%>
+<%@page import="com.mindfire.review.web.models.Author"%>
+<%@page import="java.util.List"%>
+<%@page import="com.mindfire.review.web.models.ReviewAuthor"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
 
 <head>
@@ -22,9 +28,29 @@
 <link href='https://fonts.googleapis.com/css?family=Bree+Serif'
 	rel='stylesheet' type='text/css'>
 </head>
+<style>
+.sidebar-box {
+	max-height: 120px;
+	position: relative;
+	overflow: hidden;
+}
+
+.sidebar-box .read-more {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	margin: 0;
+	padding: 30px 0;
+	/* "transparent" only works here because == rgba(0,0,0,0) */
+	background-image: linear-gradient(to bottom, transparent, grey);
+}
+
+</style>
 
 <body>
-	<nav class="navbar navbar-inverse">
+	<nav class="navbar navbar-default navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -32,8 +58,8 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">${userFirstName}
-					${userLastName}</a>
+				<a class="navbar-brand" href="#">${user.firstName}
+					${user.lastName}</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -41,9 +67,16 @@
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Update Info</a></li>
-							<li><a href="#">Delete Account</a></li>
-
+							<li><a href="/reviewBook/users/${user.userId}">Update
+									Info</a></li>
+							<form:form action="${user.userId}" method="delete"
+								modelAttribute="delete">
+								<fieldset>
+									<div class="form-group">
+										<li><a href="#">Delete Account</a></li>
+									</div>
+								</fieldset>
+							</form:form>
 						</ul></li>
 					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
@@ -55,12 +88,13 @@
 		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-6">
 			<div class="row">
 				<div class="col-sm-4 col-lg-4 pad">
-					<img src="/reviewBook/assets/img/download.jpg" alt="image" style="width:100%;">
+					<img src="/reviewBook/assets/img/download.jpg" alt="image"
+						style="width: 100%;">
 				</div>
 				<div class="col-sm-8 col-lg-8 pad">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3>${userFirstName}${userLastName}</h3>
+							<h3>${user.firstName} ${user.lastName}</h3>
 						</div>
 						<div class="panel-body">
 							<p>User Name: ${user.userName}</p>
@@ -85,6 +119,133 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-lg-12 text-center">
+				<h4 style="border-bottom: 2px #CCC solid;">Books Reviewed by
+					${user.firstName} ${user.lastName} :</h4>
+				<div class="row">
+					<div class="col-lg-12">
+						<%
+							for (BookAuthorListDto b : (List<BookAuthorListDto>) request.getAttribute("books")) {
+								List<Author> authorList = b.getAuthorList();
+								Book book = b.getBook();
+						%>
+						<div class="col-lg-6">
+							<div class="row">
+								<div class="col-lg-4" style="padding: 2px;">
+									<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
+										style="width: 100%; height: 200px;" />
+								</div>
+
+								<div class="col-lg-8">
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<a href="/reviewBook/books/<%=book.getBookId()%>">
+												<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=book.getBookName()%></p>
+											</a>
+											<%
+												for (Author a : authorList) {
+											%>
+											<h6><%=a.getAuthorName()%></h6>
+											<%
+												}
+											%>
+											<span class="glyphicon glyphicon-star"></span><span
+												class="glyphicon glyphicon-star"></span><span
+												class="glyphicon glyphicon-star"></span><span
+												class="glyphicon glyphicon-star"></span><span
+												class="glyphicon glyphicon-star"></span> <br>
+											<div class="sidebar-box">
+												<p><%=book.getBookDescription()%></p>
+												<p class="read-more"></p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<%
+							}
+						%>
+						<br> <br>
+						<div
+							class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center">
+							<%if(((List<BookAuthorListDto>)request.getAttribute("books")).size() !=0){ %>
+							
+							<ul class="pagination">
+								<%
+									for (int i = 1; i <= (int) request.getAttribute("totalpagesb"); i++) {
+								%>
+								<li><a
+									href="/reviewBook/users/${user.userId}?pagenob=<%= i%>&pagenoa=1"><%=i%></a></li>
+								<%
+									}
+								%>
+							</ul>
+							<%} %>
+							<%if(((List<BookAuthorListDto>)request.getAttribute("books")).size() ==0){ %>
+							<h3> No Books Reviewed Yet !</h3>
+							<%} %>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 text-center">
+							<h4 style="border-bottom: 2px #CCC solid;">Authors Reviewed by
+					${user.firstName} ${user.lastName} :</h4>
+						<div class="row">
+							<%
+								for (Author a : (List<Author>) request.getAttribute("authors")) {
+							%>
+							<div class="col-lg-6">
+								<div class="row">
+									<div class="col-lg-4" style="padding: 2px;">
+										<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
+											style="width: 100%" />
+									</div>
+
+									<div class="col-lg-8">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
+													<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
+												</a> <span class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span> <br>
+												<div class="sidebar-box">
+													<p><%=a.getAuthorDescription()%></p>
+													<p class="read-more"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<%
+								}
+							%>
+
+
+						</div>
+						<div class="col-lg-12 text-center">
+						<% if(((List<Author>)request.getAttribute("authors")).size() != 0){
+							System.out.println("author list not empty");%>
+							<ul class="pagination">
+								<%
+									for (int j = 1; j <= (int) request.getAttribute("totalpagesa"); j++) {
+								%>
+								<li><a href="/reviewBook/users/${user.userId}?pagenob=1&pagenoa<%=j%>"><%=j%></a></li>
+								<%
+									}
+								%>
+							</ul>
+							<%} %>
+							<% if(((List<Author>)request.getAttribute("authors")).size() == 0){ %>
+							<h3> No Authors Reviewed Yet.</h3>
+							<%} %>
+						</div>
+					</div>
 			<jsp:include page='contact.jsp' />
 			<div class="col-lg-12">
 				<div class="footer text-center">

@@ -1,11 +1,28 @@
 package com.mindfire.review.web.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookAuthorService;
 import com.mindfire.review.services.BookService;
-import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.BookAuthorLinkDto;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.BookDto;
@@ -13,21 +30,8 @@ import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mindfire.review.web.models.ReviewBook;
+import com.mindfire.review.web.models.User;
 
 /**
  * Created by pratyasa on 3/8/16.
@@ -130,12 +134,12 @@ public class BookController {
 	 * @return
 	 */
 	@RequestMapping(value = "/books", method = RequestMethod.GET)
-	public Object getAllBooks(HttpSession httpSession) {
-		List<Book> books = bookService.getVerifiedBook(true);
-
+	public Object getAllBooks(@RequestParam(value = "pageno", defaultValue="1") int pageno,HttpSession httpSession) {
+		Page<Book> books = bookService.getVerifiedBook(true, pageno,6);
+        int totalPages = books.getTotalPages();
 		List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>();
 
-		for (Book b : books) {
+		for (Book b : books.getContent()) {
 
 			BookAuthorListDto bookAuthorListDto2 = new BookAuthorListDto();
 			List<Author> authors = bookService.getAuthorByBook(b.getBookName());
@@ -146,12 +150,9 @@ public class BookController {
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
 			System.out.println("entered admin page");
-			List<Book> bookList = bookService.getBooks(); // TODO Add
-															// pagination
+			List<Book> bookList = bookService.getBooks(pageno,6).getContent(); 
+															
 			List<BookAuthorListDto> bookAuthorListDto3 = new ArrayList<>();
-			System.out.println(bookList.get(0).getBookName());
-			System.out.println(bookList.get(1).getBookName());
-			System.out.println(bookList.get(2).getBookName());
 			for (Book b : bookList) {
 				BookAuthorListDto bookAuthorListDto4 = new BookAuthorListDto();
 				List<Author> authorList = bookService.getAuthorByBook(b.getBookName());
@@ -160,12 +161,14 @@ public class BookController {
 				bookAuthorListDto3.add(bookAuthorListDto4);
 			}
 			ModelAndView modelAndView = new ModelAndView("adminbooks");
+			modelAndView.addObject("totalpages",totalPages);
 			modelAndView.addObject("bookauthorlist",bookAuthorListDto3);
 
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView("books");
 		modelAndView.addObject("bookauthorlist", bookAuthorListDto);
+		modelAndView.addObject("totalpages",totalPages);
 		return modelAndView;
 	}
 
@@ -173,18 +176,27 @@ public class BookController {
 	 * returns single book page for all
 	 *
 	 * @param bookId
-	 * @return
+	 * @returny
 	 */
 	@RequestMapping(value = "/books/{bookId}", method = RequestMethod.GET)
-	public Object getBook(@PathVariable("bookId") Long bookId, HttpSession httpSession) {
-		List<Author> author = bookService.getAuthorByBook(bookService.getBookById(bookId).getBookName());
+	public Object getBook(@RequestParam(value="pagenou", defaultValue="1") int pagenou,@RequestParam(value="pagenor", defaultValue="1") int pagenor,@PathVariable("bookId") Long bookId, HttpSession httpSession) {
+		String name = bookService.getBookById(bookId).getBookName();
+		List<Author> author = bookService.getAuthorByBook(name);
+		Page<ReviewBook> reviewBooks = bookService.getBookReviewByBook(name,pagenor,6);
+		Page<User> users = bookService.getUserByBookReview(name, pagenou,6);
+		int totalPagesr =reviewBooks.getTotalPages();
+		int totalPagesu = users.getTotalPages();
 
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
-
+		
 			ModelAndView modelAndView = new ModelAndView("adminbookprofile");
 			modelAndView.addObject("book", bookService.getBookById(bookId));
 			modelAndView.addObject("authors", author);
+			modelAndView.addObject("users", users);
+			modelAndView.addObject("reviews",reviewBooks.getContent());
+			modelAndView.addObject("totalpagesr", totalPagesr);
+			modelAndView.addObject("totalpagesu", totalPagesu);
 			modelAndView.addObject("updatebook", new BookDto());
 			modelAndView.addObject("delete", new ChoiceDto());
 			modelAndView.addObject("verify", new ChoiceDto());
@@ -194,9 +206,14 @@ public class BookController {
 		}
 
 		ModelAndView modelAndView = new ModelAndView("bookprofile");
+		modelAndView.addObject("reviews",reviewBooks.getContent());
 		modelAndView.addObject("book", bookService.getBookById(bookId));
+		modelAndView.addObject("users", users);
+		modelAndView.addObject("totalpagesr", totalPagesr);
+		modelAndView.addObject("totalpagesu", totalPagesu);
 		modelAndView.addObject("authors", author);
 		modelAndView.addObject("bookprofile", new ReviewBookDto());
+		modelAndView.addObject("delete", new ChoiceDto());
 		return modelAndView;
 	}
 
@@ -273,12 +290,12 @@ public class BookController {
 	}
 
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.GET)
-	public Object getBookAuthorLinkPage(HttpSession httpSession) {
+	public Object getBookAuthorLinkPage(@RequestParam("pageno") int pageno,HttpSession httpSession) {
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
 			ModelAndView modelAndView = new ModelAndView("bookauthorlink", "bookauthorlink", new BookAuthorLinkDto());
-			List<Book> books = bookService.getBooks();
-			List<Author> authors = authorService.getAllAuthor();
+			List<Book> books = bookService.getBooks(pageno, 6).getContent();
+			List<Author> authors = authorService.getAllAuthor(pageno,6).getContent();
 			List<String> bookList = new ArrayList<>();
 			List<String> authorList = new ArrayList<>();
 			for (Book b : books) {
@@ -296,8 +313,14 @@ public class BookController {
 
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.POST)
 	public String postBookAuthorLinkPage(@ModelAttribute("bookauthorlink") BookAuthorLinkDto bookAuthorLinkDto) {
+		try{
 		bookAuthorService.linkBookAndAuthor(bookAuthorLinkDto);
 		return "redirect:/linkBookAndAuthor";
+		}
+		finally{
+			System.out.println("caught duplicate enteries");
+			return "redirect:/linkBookAndAuthor";
+		}
 	}
 
 }

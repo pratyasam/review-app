@@ -4,12 +4,14 @@
  */
 package com.mindfire.review.web.controllers;
 
-import com.mindfire.review.exceptions.UserDoesNotExistException;
-import com.mindfire.review.services.UserService;
-import com.mindfire.review.web.dto.SignupDto;
-import com.mindfire.review.web.models.User;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +19,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import com.mindfire.review.exceptions.UserDoesNotExistException;
+import com.mindfire.review.services.BookService;
+import com.mindfire.review.services.UserService;
+import com.mindfire.review.web.dto.BookAuthorListDto;
+import com.mindfire.review.web.dto.ChoiceDto;
+import com.mindfire.review.web.dto.SignupDto;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
+import com.mindfire.review.web.models.User;
 
 /**
  * 
@@ -30,23 +39,44 @@ import javax.validation.Valid;
 public class UserController {
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private BookService bookService;
+	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public Object getUsers(HttpSession httpSession) {
+	public Object getUsers(@RequestParam(value = "pageno", defaultValue="1") int pageno,HttpSession httpSession) {
 
 		if (httpSession.getAttribute("userName") != null && httpSession.getAttribute("role").equals("admin")) {
+			Page<User> users = userService.getUsers(pageno, 6);
 			ModelAndView modelAndView = new ModelAndView("users");
-			modelAndView.addObject("users", userService.getUsers());
+			modelAndView.addObject("userslist", users.getContent());
+			modelAndView.addObject("totalpages",users.getTotalPages());
 			return modelAndView;
 		}
 		return "redirect:/profile";
 	}
 
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
-	public Object getUser(@PathVariable("userId") Long userId, HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && httpSession.getAttribute("role").equals("admin")) {
+	public Object getUser(@RequestParam(value = "pagenob", defaultValue="1") int pagenob, @RequestParam(value = "pagenoa", defaultValue="1") int pagenoa, @PathVariable("userId") Long userId, HttpSession httpSession) {
+		if ((httpSession.getAttribute("userName") != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute("userName") != null && httpSession.getAttribute("userId").equals(userId))) {
+			Page<Book> bookList = userService.getBookReviewedByUser(userService.getUserById(userId).getUserName(), pagenob, 4);
+			Page<Author> authorList = userService.getAuthorReviewedByUser(userService.getUserById(userId).getUserName(), pagenoa, 4);
+			int totalpagesb = bookList.getTotalPages();
+			int totalpagesa = authorList.getTotalPages();
+			List<BookAuthorListDto> ba = new ArrayList<>();
+			for (Book b:bookList.getContent()){
+				BookAuthorListDto bookAuthorListDto = new BookAuthorListDto();
+				List<Author> a = bookService.getAuthorByBook(b.getBookName());
+				bookAuthorListDto.setAuthorList(a);
+				bookAuthorListDto.setBook(b);
+				ba.add(bookAuthorListDto);
+			}
 			ModelAndView modelAndView = new ModelAndView("userprofile");
+			modelAndView.addObject("books", ba);
+			modelAndView.addObject("authors", authorList.getContent());
+		    modelAndView.addObject("totalpagesb", totalpagesb);
+		    modelAndView.addObject("totalpagesa", totalpagesa);
 			modelAndView.addObject("user", userService.getUserById(userId));
+			modelAndView.addObject("delete", new ChoiceDto());
 			return modelAndView;
 		}
 		return null;
@@ -54,6 +84,7 @@ public class UserController {
 
 	@RequestMapping(value = "/users/{userId}/update", method = RequestMethod.GET)
 	public Object updateUserGet(@PathVariable("userId") Long userId, HttpSession httpSession) {
+		
 		if(httpSession.getAttribute("userName") != null && httpSession.getAttribute("userId")== userId){
 		ModelAndView modelAndView = new ModelAndView("userupdate");
 		modelAndView.addObject("user",userService.getUserById(userId));
@@ -83,7 +114,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
-	public String removeAccout(@PathVariable("userId") Long userId, HttpSession httpSession, Model model) {
+	public String removeAccout(@PathVariable("userId") Long userId, HttpSession httpSession, Model model, @ModelAttribute("delete") ChoiceDto choiceDto) {
 		if (httpSession.getAttribute("userName") == null) {
 			return "redirect:/login";
 		}
@@ -112,14 +143,13 @@ public class UserController {
 		    User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
             ModelAndView modelAndView = new ModelAndView("admin");
             modelAndView.addObject("user",user);
-			return modelAndView;
+            Long userId = (Long)httpSession.getAttribute("userId");
+			return "redirect:/users/" + userId;
 		}
 		if (httpSession.getAttribute("role").equals("normal")) {
 
-			User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
-            ModelAndView modelAndView = new ModelAndView("userprofile");
-            modelAndView.addObject("user",user);
-			return modelAndView;
+			Long userId = (Long)httpSession.getAttribute("userId");
+			return "redirect:/users/" + userId;
 		}
 		}
 

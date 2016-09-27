@@ -1,23 +1,29 @@
 package com.mindfire.review.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
+import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
-import com.mindfire.review.web.models.*;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
+import com.mindfire.review.web.models.BookAuthor;
+import com.mindfire.review.web.models.ReviewAuthor;
+import com.mindfire.review.web.models.ReviewBook;
+import com.mindfire.review.web.models.User;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
 import com.mindfire.review.web.repositories.BookRepository;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -52,6 +58,13 @@ public class BookServiceImpl implements BookService {
 	 * @param size
 	 * @return
 	 */
+	public Page<Book> getBooks(int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return bookRepository.findAll(page);
+	}
+	/**
+	 * 
+	 */
 	public List<Book> getBooks() {
 		return bookRepository.findAll();
 	}
@@ -63,8 +76,38 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
-	public List<Book> getBookByGenre(String genre) {
-		return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, true);
+	public Page<Book> getBookByGenre(String genre, boolean choice,int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, choice, page);
+	}
+	/**
+	 * 
+	 * @param genre
+	 * @param choice
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	public Page<Book> getBookByGenreAdmin(String genre,int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return bookRepository.findByBookGenreContainsIgnoreCase(genre, page);
+	}
+	/**
+	 * 
+	 * @param genre
+	 * @return
+	 */
+	public List<Book> getBookByGenre(String genre,boolean choice) {
+		return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, choice);
+	}
+	/**
+	 * 
+	 * @param genre
+	 * @param choice
+	 * @return
+	 */
+	public List<Book> getBookByGenreAdmin(String genre) {
+		return bookRepository.findByBookGenreContainsIgnoreCase(genre);
 	}
 
 	/**
@@ -74,6 +117,15 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	public Page<Book> getBookByRating(float rating, int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return bookRepository.findByBookRating(rating, page);
+	}
+	/**
+	 * 
+	 * @param rating
+	 * @return
+	 */
 	public List<Book> getBookByRating(float rating) {
 		return bookRepository.findByBookRating(rating);
 	}
@@ -96,6 +148,14 @@ public class BookServiceImpl implements BookService {
 	 */
 
 	public List<Book> getBookByNameLike(String name) {
+		return bookRepository.findByBookNameContainsIgnoreCaseAndBookVerified(name, true);
+	}
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public List<Book> getBookByNameLikeAdmin(String name) {
 		return bookRepository.findByBookNameContainsIgnoreCase(name);
 	}
 
@@ -114,6 +174,24 @@ public class BookServiceImpl implements BookService {
 			list.add(ba.getAuthor());
 		}
 		return list;
+	}
+	/**
+	 * 
+	 * @param name
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	public Page<Author> getAuthorByBook(String name, int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		Book book = getBookByName(name);
+		List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
+		List<Author> list = new ArrayList<>();
+		for (BookAuthor ba : list1) {
+			list.add(ba.getAuthor());
+		}
+		PageImpl<Author> authors = new PageImpl<>(list, page, size);
+		return authors;
 	}
 
 	/**
@@ -135,6 +213,19 @@ public class BookServiceImpl implements BookService {
 	public List<ReviewBook> getBookReviewByBook(String name) {
 		return reviewBookRepository.findByBook(getBookByName(name));
 	}
+	/**
+	 * 
+	 * @param name
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	public Page<ReviewBook> getBookReviewByBook(String name, int pageno, int size) {
+		Pageable page =Utility.buildPageRequest(size, pageno);
+		List<ReviewBook> list = reviewBookRepository.findByBook(getBookByName(name));
+		PageImpl<ReviewBook> bookReview = new PageImpl<>(list, page, size);
+		return bookReview;
+	}
 
 	/**
 	 * get the list of reviews on authors of a book
@@ -152,9 +243,38 @@ public class BookServiceImpl implements BookService {
 		}
 		return reviewAuthorList;
 	}
+	/**
+	 * 
+	 * @param name
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	public Page<ReviewAuthor> getAuthorReviewByBook(String name, int pageno, int size) {
+		List<Author> authorList = getAuthorByBook(name);
+		List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
+		List<ReviewAuthor> reviewAuthorList1;
+		for (Author a : authorList) {
+			reviewAuthorList1 = reviewAuthorRepository.findByAuthor(a);
+			reviewAuthorList.addAll(reviewAuthorList1);
+		}
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		PageImpl<ReviewAuthor> authorReview = new PageImpl<>(reviewAuthorList, page, size);
+		return authorReview;
+	}
 
 	/**
 	 * get verified books in the form of list
+	 * 
+	 * @param verified
+	 * @return
+	 */
+	public Page<Book> getVerifiedBook(boolean verified, int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return bookRepository.findByBookVerified(verified, page);
+	}
+	
+	/**
 	 * 
 	 * @param verified
 	 * @return
@@ -177,6 +297,16 @@ public class BookServiceImpl implements BookService {
 			users.add(r.getUser());
 		}
 		return users;
+	}
+	public Page<User> getUserByBookReview(String name, int pageno, int size) {
+		List<User> users = new ArrayList<>();
+		List<ReviewBook> reviewBooks = getBookReviewByBook(name);
+		for (ReviewBook r : reviewBooks) {
+			users.add(r.getUser());
+		}
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		PageImpl<User> userPage = new PageImpl<>(users, page, size);
+		return userPage;
 	}
 
 	/**

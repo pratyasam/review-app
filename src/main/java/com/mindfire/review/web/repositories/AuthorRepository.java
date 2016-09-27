@@ -3,11 +3,14 @@
  */
 package com.mindfire.review.web.repositories;
 
-import com.mindfire.review.web.models.Author;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import com.mindfire.review.web.models.Author;
 
 
 /**
@@ -19,6 +22,10 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      *
      */
     @Query(name = "Author.findAll")
+    Page<Author> findAll(Pageable page);
+    /**
+     * 
+     */
     List<Author> findAll();
 
     /**
@@ -31,13 +38,25 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      * @param genre
      * @return
      */
+    Page<Author> findByAuthorGenreContainsIgnoreCase(String genre, Pageable page);
+    /**
+     * 
+     * @param genre
+     * @return
+     */
     List<Author> findByAuthorGenreContainsIgnoreCase(String genre);
 
     /**
      * @param rating
      * @return
      */
-    List<Author> findByAuthorRating(float rating);
+    Page<Author> findByAuthorRating(float rating,Pageable page);
+    /**
+     * 
+     * @param rating
+     * @return
+     */
+   List<Author> findByAuthorRating(float rating);
 
     /**
      * @param name

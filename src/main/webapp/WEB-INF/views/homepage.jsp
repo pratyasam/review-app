@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
 
 <head>
@@ -22,6 +23,11 @@
 	rel='stylesheet' type='text/css'>
 </head>
 <style>
+.carousel-inner>.item>img, .carousel-inner>.item>a>img {
+	width: 90%;
+	margin: auto;
+}
+
 .hero {
 	position: relative;
 	height: 640px;
@@ -85,6 +91,10 @@ a {
 	position: relative;
 }
 
+.overlay2 a {
+	color: white;
+}
+
 .overlay2 {
 	height: 0%;
 	width: 100%;
@@ -117,7 +127,8 @@ a {
 		overflow-y: auto;
 	}
 	.overlay2 a {
-		font-size: 20px
+		font-size: 20px;
+		color: white;
 	}
 	.overlay2 .closebtn {
 		font-size: 40px;
@@ -146,23 +157,23 @@ a {
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
 			<div class="form">
-				<form action="#">
+				<form:form action="search" method = "get" modelAttribute="search">
 					<fieldset>
 						<div class="col-lg-6 col-lg-offset-3">
 							<div class="form-group">
-								<input type="text" class="form-control" id="search"
-									placeholder="Search Authors or Books"> <br> <br>
+								<form:input path="searchParam" type="text" class="form-control" id="search"
+									placeholder="Search Authors or Books"/> <br> <br>
 								<div class="col-lg-10 col-lg-offset-2">
 									<button type="submit" class="btn btn-primary">Submit</button>
 								</div>
 							</div>
 						</div>
 					</fieldset>
-				</form>
+				</form:form>
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid" style="padding: 0px;">
+	<div class="container-fluid">
 		<div class="hero row">
 			<div class="container">
 				<%
@@ -177,17 +188,17 @@ a {
 								<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 									class="icon-bar"></span>
 							</button>
-							<a class="navbar-brand" href="#">ReviewApp</a>
+							<a class="navbar-brand" href="/">ReviewApp</a>
 						</div>
-						<div class="collapse navbar-collapse" id="myNavbar1">
+						<div class="collapse navbar-collapse" id="myNavbar">
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="#"><i class="fa fa-search fa-2x"
 										onclick="openNav()"></i> </a></li>
 								<li><a href="home">Home</a></li>
 
-								<li><a href="login"><span
+								<li><a href="/reviewBook/login"><span
 										class="glyphicon glyphicon-log-in"></span> LogIn</a></li>
-								<li><a href="signup"><span
+								<li><a href="/reviewBook/signup"><span
 										class="glyphicon glyphicon-user"></span> SignUp</a></li>
 							</ul>
 						</div>
@@ -215,8 +226,8 @@ a {
 								<li><a href="#"><i class="fa fa-search fa-2x"
 										onclick="openNav()"></i> </a></li>
 								<li><a href="home">Home</a></li>
-								<li><a href="profile">Profile</a></li>
-								<li><a href="profile">Hello User</a></li>
+								<li><a href="/reviewBook/profile">Profile</a></li>
+								<li><a href="/reviewBook/profile">Hello User</a></li>
 								<li>
 									<div class="user">
 										<a><img src="/reviewBook/assets/img/user.png"
@@ -258,40 +269,40 @@ a {
 					</h3>
 				</div>
 				<div class="book-background" style="padding: 50px;">
-					<div class="col-lg-2 col-md-2 col-sm-2" style="height: 30%">
-						<div style="border: 2px solid #ccc;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12"">
+						<div style="border: 1px solid #ccc;">
 							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 100%;">
+								style="width: 100%; height: 220px;">
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2" style="height: 30%">
-						<div style="border: 2px solid #ccc;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc;">
 							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 100%;">
+								style="width: 100%; height: 220px;">
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2" style="height: 30%">
-						<div style="border: 2px solid #ccc;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc;">
 							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 100%;">
+								style="width: 100%; height: 220px;">
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2" style="height: 30%">
-						<div style="border: 2px solid #ccc;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc;">
 							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 100%;">
+								style="width: 100%; height: 220px;">
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2" style="height: 30%">
-						<div style="border: 2px solid #ccc;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc;">
 							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 100%;">
+								style="width: 100%; height: 220px;">
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2" style="height: 30%">
-						<div style="border: 2px solid #ccc;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc;">
 							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 100%;">
+								style="width: 100%; height: 220px;">
 						</div>
 					</div>
 				</div>
@@ -309,81 +320,69 @@ a {
 					</h3>
 				</div>
 				<div class="content" style="padding: 50px;">
-					<div class="col-lg-2 col-md-2 col-sm-2">
-						<div style="border: 2px solid #ccc; background-color: white;">
-							<div style="height: 40%; padding: 10px;">
-								<div style="padding: 30px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc; background-color: white;">
+							<div style="padding: 10px;">
+								<div>
 									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%;">
+										alt="book" style="width: 100%; height: 200px;">
 								</div>
-								<div class="text-center" style="font-size: 150%;">
-									<b>Author Name</b>
-								</div>
+								<div class="text-center">Author Name</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2">
-						<div style="border: 2px solid #ccc; background-color: white;">
-							<div style="height: 40%; padding: 10px;">
-								<div style="padding: 30px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc; background-color: white;">
+							<div style="padding: 10px;">
+								<div>
 									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%;">
+										alt="book" style="width: 100%; height: 200px;">
 								</div>
-								<div class="text-center" style="font-size: 150%;">
-									<b>Author Name</b>
-								</div>
+								<div class="text-center">Author Name</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2">
-						<div style="border: 2px solid #ccc; background-color: white;">
-							<div style="height: 40%; padding: 10px;">
-								<div style="padding: 30px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc; background-color: white;">
+							<div style="padding: 10px;">
+								<div>
 									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%;">
+										alt="book" style="width: 100%; height: 200px;">
 								</div>
-								<div class="text-center" style="font-size: 150%;">
-									<b>Author Name</b>
-								</div>
+								<div class="text-center">Author Name</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2">
-						<div style="border: 2px solid #ccc; background-color: white;">
-							<div style="height: 40%; padding: 10px;">
-								<div style="padding: 30px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc; background-color: white;">
+							<div style="padding: 10px;">
+								<div>
 									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%;">
+										alt="book" style="width: 100%; height: 200px;">
 								</div>
-								<div class="text-center" style="font-size: 150%;">
-									<b>Author Name</b>
-								</div>
+								<div class="text-center">Author Name</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2">
-						<div style="border: 2px solid #ccc; background-color: white;">
-							<div style="height: 40%; padding: 10px;">
-								<div style="padding: 30px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc; background-color: white;">
+							<div style="padding: 10px;">
+								<div>
 									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%;">
+										alt="book" style="width: 100%; height: 200px;">
 								</div>
-								<div class="text-center" style="font-size: 150%;">
-									<b>Author Name</b>
-								</div>
+								<div class="text-center">Author Name</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2">
-						<div style="border: 2px solid #ccc; background-color: white;">
-							<div style="height: 40%; padding: 10px;">
-								<div style="padding: 30px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+						<div style="border: 1px solid #ccc; background-color: white;">
+							<div style="padding: 10px;">
+								<div>
 									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%;">
+										alt="book" style="width: 100%; height: 200px;">
 								</div>
-								<div class="text-center" style="font-size: 150%;">
-									<b>Author Name</b>
-								</div>
+								<div class="text-center">Author Name</div>
 							</div>
 						</div>
 					</div>
@@ -397,24 +396,121 @@ a {
 			<br> <br> <br> <br> <br> <br>
 		</div>
 
-		<div class="col-lg-6 col-lg-offset-3" style="padding: 0px;">
-			<br>
-			<br>
-			<br>
-			<iframe width="100%" height="415"
-				src="https://www.youtube.com/embed/OVMsoDBO1jA?list=PLnkWWmhVvhc00tAQ4J7a1dpPlwI78JJxq"
-				frameborder="0" allowfullscreen></iframe>
-				<br>
-				<br>
-				<br>
-		</div>
-		<jsp:include page='contact.jsp'/>
-		<div class="col-lg-12">
-			<div class="footer text-center">
-				<br> <br> <small>Copyright &copy;
-					Pratyasha</small> <br> <br>
+		<div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0px;">
+			<br> <br> <br>
+			<div class="col-lg-6 ">
+				<iframe width="100%" height="415"
+					src="https://www.youtube.com/embed/OVMsoDBO1jA?list=PLnkWWmhVvhc00tAQ4J7a1dpPlwI78JJxq"
+					frameborder="0" allowfullscreen></iframe>
+			</div>
+			<div class="col-lg-6">
+				<ul>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
 			</div>
 		</div>
+		<br> <br> <br>
+		<div class="col-lg-12 col-md-12 col-sm-12">
+			<br>
+			<div id="myCarousel" class="carousel" data-ride="carousel">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+					<li data-target="#myCarousel" data-slide-to="1"></li>
+					<li data-target="#myCarousel" data-slide-to="2"></li>
+					<li data-target="#myCarousel" data-slide-to="3"></li>
+					<li data-target="#myCarousel" data-slide-to="4"></li>
+					<li data-target="#myCarousel" data-slide-to="5">
+					<li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox">
+
+					<div class="item active">
+						<img src="/reviewBook/assets/img/abg9.jpg" alt="Chania"
+							width="460" height="345">
+						<div class="carousel-caption">
+							<h3>Chania</h3>
+							<p>The atmosphere in Chania has a touch of Florence and
+								Venice.</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<img src="/reviewBook/assets/img/abg9.jpg" alt="Chania"
+							width="460" height="345">
+						<div class="carousel-caption">
+							<h3>Chania</h3>
+							<p>The atmosphere in Chania has a touch of Florence and
+								Venice.</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<img src="/reviewBook/assets/img/cover3.jpg" alt="Flower"
+							width="460" height="345">
+						<div class="carousel-caption">
+							<h3>Flowers</h3>
+							<p>Beatiful flowers in Kolymbari, Crete.</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<img src="/reviewBook/assets/img/abg9.jpg" alt="Flower"
+							width="460" height="345">
+						<div class="carousel-caption">
+							<h3>Flowers</h3>
+							<p>Beatiful flowers in Kolymbari, Crete.</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<img src="/reviewBook/assets/img/cover3.jpg" alt="Flower"
+							width="460" height="345">
+						<div class="carousel-caption">
+							<h3>Flowers</h3>
+							<p>Beatiful flowers in Kolymbari, Crete.</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<img src="/reviewBook/assets/img/abg9.jpg" alt="Flower"
+							width="460" height="345">
+						<div class="carousel-caption">
+							<h3>Flowers</h3>
+							<p>Beatiful flowers in Kolymbari, Crete.</p>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- Left and right controls -->
+				<a class="left carousel-control" href="#myCarousel" role="button"
+					data-slide="prev"> <span
+					class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a> <a class="right carousel-control" href="#myCarousel" role="button"
+					data-slide="next"> <span
+					class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+
+	</div>
+	<br>
+	<jsp:include page='contact.jsp' />
+	<div class="col-lg-12">
+		<div class="footer text-center">
+			<br> <br> <small>Copyright &copy; Pratyasha</small> <br>
+			<br>
+		</div>
+	</div>
 	</div>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

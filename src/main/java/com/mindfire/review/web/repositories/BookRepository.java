@@ -3,64 +3,113 @@
  */
 package com.mindfire.review.web.repositories;
 
+import java.util.List;
 
-import com.mindfire.review.web.models.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.mindfire.review.web.models.Book;
 
 /**
  * @author pratyasa
  */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    @Query(name = "Book.findAll")
-    List<Book> findAll();
+	@Query(name = "Book.findAll")
+	Page<Book> findAll(Pageable page);
 
-    /**
-     * @param name
-     * @return
-     */
-    List<Book> findByBookNameContainsIgnoreCase(String name);
+	/**
+	 * 
+	 */
+	List<Book> findAll();
 
-    /**
-     *
-     * @param name
-     * @return
-     */
+	/**
+	 * @param name
+	 * @return
+	 */
+	List<Book> findByBookNameContainsIgnoreCaseAndBookVerified(String name, boolean bool);
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	List<Book> findByBookNameContainsIgnoreCase(String name);
+	
 
-    Book findByBookName(String name);
-    /**
-     * @param genre
-     * @return
-     */
-    List<Book> findByBookGenreContainsIgnoreCaseAndBookVerified(String genre, boolean verified);
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 
-    /**
-     * @param isbn
-     * @return
-     */
-    Book findByBookIsbn(String isbn);
+	Book findByBookName(String name);
 
-    /**
-     * @param rating
-     * @return
-     */
-    List<Book> findByBookRating(float rating);
+	/**
+	 * @param genre
+	 * @return
+	 */
+	Page<Book> findByBookGenreContainsIgnoreCaseAndBookVerified(String genre, boolean verified, Pageable page);
+	/**
+	 * 
+	 * @param genre
+	 * @param page
+	 * @return
+	 */
+	Page<Book> findByBookGenreContainsIgnoreCase(String genre, Pageable page);
 
-    /**
-     * @param verified
-     * @return List<@Book>
-     */
-    List<Book> findByBookVerified(boolean verified);
+	/**
+	 * 
+	 * @param genre
+	 * @param verified
+	 * @return
+	 */
+	List<Book> findByBookGenreContainsIgnoreCaseAndBookVerified(String genre, boolean verified);
+	/**
+	 * 
+	 * @param genre
+	 * @return
+	 */
+	List<Book> findByBookGenreContainsIgnoreCase(String genre);
 
-    /**
-     * @param id
-     * @return
-     */
-    Book findOne(Long id);
+	/**
+	 * @param isbn
+	 * @return
+	 */
+	Book findByBookIsbn(String isbn);
 
+	/**
+	 * @param rating
+	 * @return
+	 */
+	Page<Book> findByBookRating(float rating, Pageable page);
+
+	/**
+	 * 
+	 * @param rating
+	 * @return
+	 */
+	List<Book> findByBookRating(float rating);
+
+	/**
+	 * @param verified
+	 * @return List<@Book>
+	 */
+	Page<Book> findByBookVerified(boolean verified, Pageable page);
+
+	/**
+	 * 
+	 * @param verified
+	 * @return
+	 */
+	List<Book> findByBookVerified(boolean verified);
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	Book findOne(Long id);
 
 }

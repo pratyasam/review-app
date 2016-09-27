@@ -71,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void removeBookReview(Long reviewId) throws ReviewDoesnotExistException {
         if (reviewBookRepository.findOne(reviewId) == null) {
-            throw new ReviewDoesnotExistException("The Review doesn't exit");
+            throw new ReviewDoesnotExistException("The Review doesn't exist");
         }
         reviewBookRepository.delete(reviewBookRepository.findByReviewBookId(reviewId));
     }
@@ -131,10 +131,17 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public void removeAuthorReview(Long reviewAuthorId) throws ReviewDoesnotExistException {
-        if (reviewAuthorRepository.findOne(reviewAuthorId) == null) {
+    	
+    	System.out.println("Review - " + reviewAuthorId);
+    	
+    	// Fetch the author from the DB
+    	ReviewAuthor reviewAuthor = reviewAuthorRepository.findOne(reviewAuthorId);
+    	
+        if (reviewAuthor == null) {
             throw new ReviewDoesnotExistException("The Author Review doesn't exist.");
         }
-        reviewAuthorRepository.delete(reviewAuthorRepository.findOne(reviewAuthorId));
+        
+        reviewAuthorRepository.delete(reviewAuthor);
     }
 
     /**

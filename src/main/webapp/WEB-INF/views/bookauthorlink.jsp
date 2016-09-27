@@ -21,7 +21,7 @@ select, select.form-control {
 }
 </style>
 <body>
-	<nav class="navbar navbackground">
+	<nav class="navbar navbar-default navbackground">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse"

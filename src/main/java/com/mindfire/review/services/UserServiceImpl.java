@@ -1,19 +1,28 @@
 package com.mindfire.review.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.mindfire.review.exceptions.LoginFailException;
 import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.exceptions.UserExistException;
+import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.SignupDto;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.ReviewBook;
 import com.mindfire.review.web.models.User;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
 import com.mindfire.review.web.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author pratyasa
@@ -21,233 +30,311 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private ReviewAuthorRepository reviewAuthorRepository;
+	@Autowired
+	private ReviewAuthorRepository reviewAuthorRepository;
 
-    @Autowired
-    private ReviewBookRepository reviewBookRepository;
+	@Autowired
+	private ReviewBookRepository reviewBookRepository;
 
-    /**
-     * get user by user name
-     *
-     * @param userName
-     * @return
-     */
+	/**
+	 * get user by user name
+	 *
+	 * @param userName
+	 * @return
+	 */
 
+	public User getUser(String userName) {
+		return userRepository.findByUserName(userName);
+	}
 
-    public User getUser(String userName) {
-        return userRepository.findByUserName(userName);
-    }
+	/**
+	 * get the list of all registered users
+	 *
+	 * @return
+	 */
 
-    /**
-     * get the list of all registered users
-     *
-     * @return
-     */
+	public List<User> getUsers() {
+		return userRepository.findAll();
+	}
+	/**
+	 * 
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
 
+	public Page<User> getUsers(int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return userRepository.findAll(page);
+	}
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
+	/**
+	 * get users with the same first name
+	 *
+	 * @param firstName
+	 * @return
+	 */
 
-    /**
-     * get users with the same first name
-     *
-     * @param firstName
-     * @return
-     */
+	public List<User> getUserFirstName(String firstName) {
+		return userRepository.findByFirstNameIgnoreCase(firstName);
+	}
+	public Page<User> getUserFirstName(String firstName, int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return userRepository.findByFirstNameIgnoreCase(firstName, page);
+	}
 
+	/**
+	 * get users with the same last name
+	 *
+	 * @param lastName
+	 * @return
+	 */
 
-    public List<User> getUserFirstName(String firstName) {
-        return userRepository.findByFirstNameIgnoreCase(firstName);
-    }
+	public List<User> getUserlastName(String lastName) {
+		return userRepository.findByLastNameIgnoreCase(lastName);
+	}
+	/**
+	 * 
+	 * @param lastName
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	public Page<User> getUserlastName(String lastName, int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return userRepository.findByLastNameIgnoreCase(lastName, page);
+	}
 
-    /**
-     * get users with the same last name
-     *
-     * @param lastName
-     * @return
-     */
+	/**
+	 * get the list of users according to the role
+	 *
+	 * @param type
+	 * @return
+	 */
 
-    public List<User> getUserlastName(String lastName) {
-        return userRepository.findByLastNameIgnoreCase(lastName);
-    }
+	public List<User> getUserByType(String type) {
+		return userRepository.findByRoleIgnoreCase(type);
+	}
+	public Page<User> getUserByType(String type, int pageno, int size) {
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		return userRepository.findByRoleIgnoreCase(type, page);
+	}
 
-    /**
-     * get the list of users according to the role
-     *
-     * @param type
-     * @return
-     */
+	/**
+	 * get all the reviews tmade by a user on the authors
+	 *
+	 * @param user
+	 * @return
+	 */
 
+	public List<ReviewAuthor> getAuthorReviewByUser(String user) {
+		User userName = getUser(user);
+		return reviewAuthorRepository.findByUser(userName);
 
-    public List<User> getUserByType(String type) {
-        return userRepository.findByRoleIgnoreCase(type);
-    }
+	}
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public List<Author> getAuthorReviewedByUser(String user) {
+		User userName = getUser(user);
+		List<ReviewAuthor> reviewAuthors = reviewAuthorRepository.findByUser(userName);
+		List<Author> authors = new ArrayList<>();
+		for(ReviewAuthor ra : reviewAuthors){
+			authors.add(ra.getAuthor());
+		}
+		return authors;
 
-    /**
-     * get all the reviews tmade by a user on the authors
-     *
-     * @param user
-     * @return
-     */
+	}
+	public Page<Author> getAuthorReviewedByUser(String user, int pageno, int size) {
+		User userName = getUser(user);
+		List<ReviewAuthor> reviewAuthors = reviewAuthorRepository.findByUser(userName);
+		List<Author> authors = new ArrayList<>();
+		for(ReviewAuthor ra : reviewAuthors){
+			authors.add(ra.getAuthor());
+		}
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		PageImpl<Author> pageImpl = new PageImpl<>(authors,page, size);
+		return pageImpl;
 
+	}
 
-    public List<ReviewAuthor> getAuthorReviewByUser(String user) {
-        User userName = getUser(user);
-        return reviewAuthorRepository.findByUser(userName);
+	/**
+	 * get a user by user Id
+	 *
+	 * @param userId
+	 * @return
+	 */
 
-    }
+	public User getUserById(Long userId) {
+		return userRepository.findOne(userId);
+	}
 
-    /**
-     * get a user by user Id
-     *
-     * @param userId
-     * @return
-     */
+	/**
+	 * get all the reviews made a user on the books
+	 *
+	 * @param user
+	 * @return
+	 */
 
-    public User getUserById(Long userId) {
-        return userRepository.findOne(userId);
-    }
+	public List<ReviewBook> getBookReviewByUser(String user) {
+		User userName = getUser(user);
+		return reviewBookRepository.findByUser(userName);
+	}
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public List<Book> getBookReviewedByUser(String user) {
+		User userName = getUser(user);
+		List<ReviewBook> reviewBooks = reviewBookRepository.findByUser(userName);
+		List<Book> books = new ArrayList<>();
+		for(ReviewBook rb : reviewBooks){
+			books.add(rb.getBook());
+		}
+		return books;
+	}
+	/**
+	 * 
+	 * @param user
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	public Page<Book> getBookReviewedByUser(String user, int pageno, int size) {
+		User userName = getUser(user);
+		List<ReviewBook> reviewBooks = reviewBookRepository.findByUser(userName);
+		List<Book> books = new ArrayList<>();
+		for(ReviewBook rb : reviewBooks){
+			books.add(rb.getBook());
+		}
+		Pageable page = Utility.buildPageRequest(size, pageno);
+		PageImpl<Book> pageImpl = new PageImpl<>(books,page,size);
+		return pageImpl;
+	}
 
-    /**
-     * get all the reviews made a user on the books
-     *
-     * @param user
-     * @return
-     */
+	/**
+	 * check whether the username is available or not
+	 *
+	 * @param userName
+	 * @return
+	 */
 
+	public Boolean doesUserNameExist(String userName) {
+		if (getUser(userName) != null)
+			return true;
+		else
+			return false;
+	}
 
-    public List<ReviewBook> getBookReviewByUser(String user) {
-        User userName = getUser(user);
-        return reviewBookRepository.findByUser(userName);
-    }
+	/**
+	 * method to add user
+	 *
+	 * @param signupDto
+	 * @throws UserExistException
+	 */
 
-    /**
-     * check whether the username is available or not
-     *
-     * @param userName
-     * @return
-     */
+	public void addUser(SignupDto signupDto) throws UserExistException {
+		if (signupDto == null)
+			throw new RuntimeException("");
 
+		if (doesUserNameExist(signupDto.getUserName())) {
+			throw new UserExistException("User already exists");
+		}
+		User user = new User();
+		user.setFirstName(signupDto.getFirstName());
+		user.setLastName(signupDto.getLastName());
+		user.setUserName(signupDto.getUserName());
+		user.setUserPassword(DigestUtils.sha256Hex(signupDto.getPassword()));
+		user.setUserGender(signupDto.getGender());
+		user = userRepository.save(user);
+		if (user == null) {
+			throw new RuntimeException("");
+		}
+	}
 
-    public Boolean doesUserNameExist(String userName) {
-        if (getUser(userName) != null)
-            return true;
-        else
-            return false;
-    }
+	/**
+	 * method to delete a user
+	 *
+	 * @param userId
+	 * @throws UserDoesNotExistException
+	 */
 
-    /**
-     * method to add user
-     *
-     * @param signupDto
-     * @throws UserExistException
-     */
+	public void removeUser(Long userId) throws UserDoesNotExistException {
+		User user = userRepository.findOne(userId);
+		if (!doesUserNameExist(user.getUserName())) {
+			throw new UserDoesNotExistException("User does not exist");
+		}
+		userRepository.delete(user);
 
+	}
 
-    public void addUser(SignupDto signupDto) throws UserExistException {
-        if (signupDto == null)
-            throw new RuntimeException("");
+	/**
+	 * method to update user info
+	 *
+	 * @param userId
+	 * @param signupDto
+	 * @throws UserDoesNotExistException
+	 */
 
-        if (doesUserNameExist(signupDto.getUserName())) {
-            throw new UserExistException("User already exists");
-        }
-        User user = new User();
-        user.setFirstName(signupDto.getFirstName());
-        user.setLastName(signupDto.getLastName());
-        user.setUserName(signupDto.getUserName());
-        user.setUserPassword(signupDto.getPassword());
-        user.setUserGender(signupDto.getGender());
-        user = userRepository.save(user);
-        if (user == null) {
-            throw new RuntimeException("");
-        }
-    }
+	public void updateUser(Long userId, SignupDto signupDto) throws UserDoesNotExistException {
+		User user = userRepository.findOne(userId);
+		if (!doesUserNameExist(user.getUserName())) {
+			throw new UserDoesNotExistException("User does not exist");
+		}
+		user.setFirstName(signupDto.getFirstName());
+		user.setLastName(signupDto.getLastName());
+		user.setUserName(signupDto.getUserName());
+		user.setUserGender(signupDto.getGender());
+		user.setUserPassword(DigestUtils.sha256Hex(signupDto.getPassword()));
+		user = userRepository.save(user);
+	}
 
-    /**
-     * method to delete a user
-     *
-     * @param userId
-     * @throws UserDoesNotExistException
-     */
+	/**
+	 * method to change the role of a user
+	 *
+	 * @param userId
+	 * @throws UserDoesNotExistException
+	 */
 
+	public void changeRoleToModerator(Long userId) throws UserDoesNotExistException {
+		User user = userRepository.findOne(userId);
+		user.setRole("moderator");
+		userRepository.save(user);
+	}
 
-    public void removeUser(Long userId) throws UserDoesNotExistException {
-        User user = userRepository.findOne(userId);
-        if (!doesUserNameExist(user.getUserName())) {
-            throw new UserDoesNotExistException("User does not exist");
-        }
-        userRepository.delete(user);
+	/**
+	 * method to make user an admin
+	 *
+	 * @param userId
+	 * @throws UserDoesNotExistException
+	 */
 
-    }
+	public void changeRoleToAdmin(Long userId) throws UserDoesNotExistException {
+		User user = userRepository.findOne(userId);
+		user.setRole("admin");
+		userRepository.save(user);
+	}
 
-    /**
-     * method to update user info
-     *
-     * @param userId
-     * @param signupDto
-     * @throws UserDoesNotExistException
-     */
+	/**
+	 * to authenticate login
+	 *
+	 * @param userName
+	 * @param password
+	 * @return
+	 * @throws LoginFailException
+	 */
 
-
-    public void updateUser(Long userId, SignupDto signupDto) throws UserDoesNotExistException {
-        User user = userRepository.findOne(userId);
-        if (!doesUserNameExist(user.getUserName())) {
-            throw new UserDoesNotExistException("User does not exist");
-        }
-        user.setFirstName(signupDto.getFirstName());
-        user.setLastName(signupDto.getLastName());
-        user.setUserName(signupDto.getUserName());
-        user.setUserGender(signupDto.getGender());
-        user.setUserPassword(signupDto.getPassword());
-        user = userRepository.save(user);
-    }
-
-    /**
-     * method to change the rolse of a user
-     *
-     * @param userId
-     * @throws UserDoesNotExistException
-     */
-
-    public void changeRoleToModerator(Long userId) throws UserDoesNotExistException {
-        User user = userRepository.findOne(userId);
-        user.setRole("moderator");
-        userRepository.save(user);
-    }
-
-    /**
-     * method to make user an admin
-     *
-     * @param userId
-     * @throws UserDoesNotExistException
-     */
-
-    public void changeRoleToAdmin(Long userId) throws UserDoesNotExistException {
-        User user = userRepository.findOne(userId);
-        user.setRole("admin");
-        userRepository.save(user);
-    }
-
-    /**
-     * to authenticate login
-     *
-     * @param userName
-     * @param password
-     * @return
-     * @throws LoginFailException
-     */
-
-
-    public User loginAuthenticate(String userName, String password) throws LoginFailException {
-        User user = userRepository.findByUserNameAndUserPassword(userName, password);
-        if (user != null)
-            return user;
-        else
-            throw new LoginFailException("Invalid User Name or Password");
-    }
+	public User loginAuthenticate(String userName, String password) throws LoginFailException {
+		User user = userRepository.findByUserNameAndUserPassword(userName, DigestUtils.sha256Hex(password));
+		if (user != null)
+			return user;
+		else
+			throw new LoginFailException("Invalid User Name or Password");
+	}
 }

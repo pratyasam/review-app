@@ -4,10 +4,11 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
 
 <head>
-<title>${name} Genre</title>
+<title>${name}Genre</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -79,6 +80,37 @@ ul {
 	list-style-type: none;
 }
 
+.overlay2 a {
+	color: white;
+}
+
+.overlay2 {
+	height: 0%;
+	width: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.9);
+	overflow-y: hidden;
+	transition: 0.5s;
+}
+
+.overlay2-content {
+	position: relative;
+	top: 25%;
+	width: 100%;
+	text-align: center;
+	margin-top: 30px;
+}
+
+.overlay2 .closebtn {
+	position: absolute;
+	top: 20px;
+	right: 45px;
+	font-size: 60px;
+}
+
 @media screen and (max-height: 450px) {
 	.sidenav {
 		padding-top: 15px;
@@ -86,25 +118,39 @@ ul {
 	.sidenav a {
 		font-size: 18px;
 	}
+	.overlay2 {
+		overflow-y: auto;
+	}
+	.overlay2 a {
+		font-size: 20px;
+		color: white;
+	}
+	.overlay2 .closebtn {
+		font-size: 40px;
+		top: 15px;
+		right: 35px;
+	}
 }
 </style>
 
 <body>
 	<%
-		if (session.getAttribute("userName") != null) {
+		if (session.getAttribute("userName") != null && session.getAttribute("role").equals("normal")) {
 	%>
-	<nav class="navbar navbackground main">
+	<nav class="navbar navbar-default navbackground main">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#myNavbar1">
+					data-target="#myNavbar">
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">ReviewApp</a>
 			</div>
-			<div class="collapse navbar-collapse" id="myNavbar1">
+			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#"><i class="fa fa-search fa-2x"
+							onclick="openNav()"></i> </a></li>
 					<li><a href="#">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
@@ -129,7 +175,7 @@ ul {
 		if (session.getAttribute("userName") != null && (session.getAttribute("role").equals("admin")
 				|| session.getAttribute("role").equals("moderator"))) {
 	%>
-	<nav class="navbar navbackground">
+	<nav class="navbar navbar-default navbackground">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -142,6 +188,8 @@ ul {
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#"><i class="fa fa-search fa-2x"
+							onclick="openNav()"></i> </a></li>
 					<li><a href="/reviewBook/home">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
@@ -171,7 +219,7 @@ ul {
 	<%
 		if (session.getAttribute("userName") == null) {
 	%>
-	<nav class="navbar navbackground main">
+	<nav class="navbar navbar-default navbackground main">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -183,6 +231,8 @@ ul {
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#"><i class="fa fa-search fa-2x"
+							onclick="openNav()"></i> </a></li>
 					<li><a href="/reviewBook/home">Home</a></li>
 					<li><a href="/reviewBook/login"><span
 							class="glyphicon glyphicon-log-in"></span> LogIn</a></li>
@@ -194,30 +244,69 @@ ul {
 	</nav>
 	<%
 		}
+		int x = 1;
 	%>
 
 
 	<div id="mySidenav" class="sidenav" style="padding: 10px;">
 		<h3>Genres :</h3>
 		<ul style="list-style-type: none; padding: 0px;">
-			<li><a href="/reviewBook/genre/Action and Adventure">Action and Adventure</a></li>
-			<li><a href="/reviewBook/genre/Art Architecture and Photography">Art Architecture and Photography</a></li>
-			<li><a href="/reviewBook/genre/Biographies">Biographies</a></li>
-			<li><a href="/reviewBook/genre/Children's">Children's</a></li>
-			<li><a href="/reviewBook/genre/Anthologies">Anthologies</a></li>
-			<li><a href="/reviewBook/genre/Classics">Classics</a></li>
-			<li><a href="/reviewBook/genre/Fantasy">Fantasy</a></li>
-			<li><a href="/reviewBook/genre/Horror">Horror</a></li>
-			<li><a href="/reviewBook/genre/Poetry">Poetry</a></li>
-			<li><a href="/reviewBook/genre/Health and Lifestyle"> Health and Lifestyle</a></li>
-			<li><a href="/reviewBook/genre/History">History</a></li>
-			<li><a href="/reviewBook/genre/Politics and Philosophy">Politics and Philosophy</a></li>
-			<li><a href="/reviewBook/genre/Romance">Romance</a></li>
-			<li><a href="/reviewBook/genre/Young Adult">Young Adult</a></li>
-			<li><a href="/reviewBook/genre/Science Fiction">Science Fiction</a></li>
-			<li><a href="/reviewBook/genre/Travel">Travel</a></li>
+			<li><a
+				href="/reviewBook/genre/Action and Adventure?pagenob=<%=x%>&pagenoa=<%=x%>">Action
+					and Adventure</a></li>
+			<li><a
+				href="/reviewBook/genre/Art Architecture And Photography?pagenob=<%=x%>&pagenoa=<%=x%>">Art
+					Architecture and Photography</a></li>
+			<li><a
+				href="/reviewBook/genre/Biographies?pagenob=<%=x%>&pagenoa=<%=x%>">Biographies</a></li>
+			<li><a
+				href="/reviewBook/genre/Children's?pagenob=<%=x%>&pagenoa=<%=x%>">Children's</a></li>
+			<li><a
+				href="/reviewBook/genre/Anthologies?pagenob=<%=x%>&pagenoa=<%=x%>">Anthologies</a></li>
+			<li><a
+				href="/reviewBook/genre/Classics?pagenob=<%=x%>&pagenoa=<%=x%>">Classics</a></li>
+			<li><a
+				href="/reviewBook/genre/Fantasy?pagenob=<%=x%>&pagenoa=<%=x%>">Fantasy</a></li>
+			<li><a
+				href="/reviewBook/genre/Horror?pagenob=<%=x%>&pagenoa=<%=x%>">Horror</a></li>
+			<li><a
+				href="/reviewBook/genre/Poetry?pagenob=<%=x%>&pagenoa=<%=x%>">Poetry</a></li>
+			<li><a
+				href="/reviewBook/genre/Health And Lifestyle?pagenob=<%=x%>&pagenoa=<%=x%>">
+					Health and Lifestyle</a></li>
+			<li><a
+				href="/reviewBook/genre/History?pagenob=<%=x%>&pagenoa=<%=x%>">History</a></li>
+			<li><a
+				href="/reviewBook/genre/Romance?pagenob=<%=x%>&pagenoa=<%=x%>">Romance</a></li>
+			<li><a
+				href="/reviewBook/genre/Young Adult?pagenob=<%=x%>&pagenoa=<%=x%>">Young
+					Adult</a></li>
+			<li><a
+				href="/reviewBook/genre/Science Fiction?pagenob=<%=x%>&pagenoa=<%=x%>">Science
+					Fiction</a></li>
+			<li><a
+				href="/reviewBook/genre/Travel?pagenob=<%=x%>&pagenoa=<%=x%>">Travel</a></li>
 		</ul>
-
+		<div id="myNav" class="overlay2">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<div class="overlay2-content">
+				<div class="form">
+				<form:form action="search" method = "get" modelAttribute="search">
+					<fieldset>
+						<div class="col-lg-6 col-lg-offset-3">
+							<div class="form-group">
+								<form:input path="searchParam" type="text" class="form-control" id="search"
+									placeholder="Search Authors or Books"/> <br> <br>
+								<div class="col-lg-10 col-lg-offset-2">
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</form:form>
+				</div>
+			</div>
+		</div>
 
 	</div>
 
@@ -249,7 +338,7 @@ ul {
 							<div class="col-lg-8">
 								<div class="panel panel-default">
 									<div class="panel-body">
-										<a href="#">
+										<a href="/reviewBook/books/<%=book.getBookId()%>">
 											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=book.getBookName()%></p>
 										</a>
 										<%
@@ -282,60 +371,107 @@ ul {
 
 					</div>
 					<div class="col-lg-12 text-center">
+						<%
+							if (((List<BookAuthorListDto>) request.getAttribute("booklist")).size() != 0) {
+						%>
 						<ul class="pagination">
-							<li><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
+							<%
+								for (int i = 1; i <= (int) request.getAttribute("totalpagesb"); i++) {
+							%>
+							<li><a href="/reviewBook/books?pagenob=<%=i%>&pagenoa=1"><%=i%></a></li>
+							<%
+								}
+							%>
 						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-12">
-				<div class="col-lg-12" style="padding: 0px;">
-					<div class="well well-md text-center">
-						<h5>
-							Author Results for <b>${name}</b>
-						</h5>
+						<%
+							}
+						%>
+						<%
+							if (((List<BookAuthorListDto>) request.getAttribute("booklist")).size() == 0) {
+						%>
+						<h3>No Book To Show !</h3>
+						<%
+							}
+						%>
 					</div>
 				</div>
 				<div class="col-lg-12">
-					<div class="row">
-						<%
-							for (Author a : (List<Author>) request.getAttribute("authors")) {
-						%>
-						<div class="col-lg-6">
-							<div class="row">
-								<div class="col-lg-4" style="padding: 2px;">
-									<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
-										style="width: 100%" />
-								</div>
+					<div class="col-lg-12" style="padding: 0px;">
+						<div class="well well-md text-center">
+							<h5>
+								Author Results for <b>${name}</b>
+							</h5>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="row">
+							<%
+								for (Author a : (List<Author>) request.getAttribute("authors")) {
+							%>
+							<div class="col-lg-6">
+								<div class="row">
+									<div class="col-lg-4" style="padding: 2px;">
+										<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
+											style="width: 100%" />
+									</div>
 
-								<div class="col-lg-8">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
-												<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
-											</a> <span class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span> <br>
-											<div class="sidebar-box">
-												<p><%=a.getAuthorDescription()%></p>
-												<p class="read-more"></p>
+									<div class="col-lg-8">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
+													<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
+												</a> <span class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span><span
+													class="glyphicon glyphicon-star"></span> <br>
+												<div class="sidebar-box">
+													<p><%=a.getAuthorDescription()%></p>
+													<p class="read-more"></p>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+							<%
+								}
+							%>
+
+
 						</div>
-						<%
-							}
-						%>
-
-
+						<div class="col-lg-12 text-center">
+							<%
+								if (((List<Author>) request.getAttribute("authors")).size() != 0) {
+							%>
+							<ul class="pagination">
+								<%
+									for (int j = 1; j <= (int) request.getAttribute("totalpagesa"); j++) {
+								%>
+								<li><a href="/reviewBook/books?pagenob=1&pagenoa<%=j%>"><%=j%></a></li>
+								<%
+									}
+								%>
+							</ul>
+							<%
+								}
+							%>
+							<%
+								if (((List<Author>) request.getAttribute("authors")).size() == 0) {
+							%>
+							<h3>No Authors To Show !</h3>
+							<%
+								}
+							%>
+						</div>
+					</div>
+					<br> <br>
+					<jsp:include page='contact.jsp' />
+					<div class="col-lg-12">
+						<div class="footer text-center">
+							<br> <br> <small>Copyright &copy; Pratyasha</small> <br>
+							<br>
+						</div>
 					</div>
 				</div>
 
@@ -638,6 +774,15 @@ ul {
 					src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 				<script type="text/javascript"
 					src="/reviewBook/assets/js/animation.js"></script>
+				<script>
+					function openNav() {
+						document.getElementById("myNav").style.height = "100%";
+					}
+
+					function closeNav() {
+						document.getElementById("myNav").style.height = "0%";
+					}
+				</script>
 </body>
 
 </html>

@@ -1,11 +1,18 @@
 package com.mindfire.review.services;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.mindfire.review.exceptions.AuthorExistenceException;
 import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.ChoiceDto;
-import com.mindfire.review.web.models.*;
-
-import java.util.List;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
+import com.mindfire.review.web.models.ReviewAuthor;
+import com.mindfire.review.web.models.ReviewBook;
+import com.mindfire.review.web.models.User;
 
 public interface AuthorService {
 
@@ -13,6 +20,12 @@ public interface AuthorService {
      * @return
      */
 
+    Page<Author> getAllAuthor(int pageno, int size);
+  
+    /**
+     * 
+     * @return
+     */
     List<Author> getAllAuthor();
 
     /**
@@ -34,6 +47,13 @@ public interface AuthorService {
      * @return
      */
 
+    Page<Author> getAuthorByRating(float rating, int pageno, int size);
+   
+    /**
+     * 
+     * @param rating
+     * @return
+     */
     List<Author> getAuthorByRating(float rating);
 
     /**
@@ -41,6 +61,13 @@ public interface AuthorService {
      * @return
      */
 
+    Page<Author> getAuthorByGenre(String genre, int pageno, int size);
+
+    /**
+     * 
+     * @param genre
+     * @return
+     */
     List<Author> getAuthorByGenre(String genre);
 
     /**
@@ -49,6 +76,22 @@ public interface AuthorService {
      */
 
     List<ReviewAuthor> getAuthorReviewByAuthorName(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<ReviewAuthor> getAuthorReviewByAuthorName(String name, int pageno, int size);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<ReviewBook> getBookReviewByAuthorName(String name, int pageno, int size);
 
     /**
      * @param name
@@ -63,12 +106,28 @@ public interface AuthorService {
      */
 
     List<User> getUserByAuthor(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<User> getUserByAuthor(String name, int pageno, int size);
 
     /**
      * @param name
      * @return
      */
     List<ReviewBook> getBookReviewByAuthorName(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<Book> getBookByAuthor(String name, int pageno, int size);
 
     /**
      *
@@ -97,6 +156,6 @@ public interface AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void removeAuthor(Long authorId, ChoiceDto choiceDto) throws AuthorExistenceException;
+    public void removeAuthor(Long authorId) throws AuthorExistenceException;
 
 }

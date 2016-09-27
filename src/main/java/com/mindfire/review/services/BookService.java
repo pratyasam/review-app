@@ -1,20 +1,30 @@
 package com.mindfire.review.services;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
-import com.mindfire.review.web.models.*;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
+import com.mindfire.review.web.models.ReviewAuthor;
+import com.mindfire.review.web.models.ReviewBook;
+import com.mindfire.review.web.models.User;
 
 public interface BookService {
+	/**
+	 * 
+	 * @return
+	 */
+	 List<Book> getBooks();
 
     /**
      * @return
      */
-    List<Book> getBooks();
+    Page<Book> getBooks(int pageno, int size);
 
     /**
      * @param id
@@ -26,9 +36,35 @@ public interface BookService {
      * @param genre
      * @return
      */
-    List<Book> getBookByGenre(String genre);
+    Page<Book> getBookByGenre(String genre, boolean choice,int pageno, int size);
+    /**
+     * 
+     * @param genre
+     * @param pageno
+     * @param size
+     * @return
+     */
+    public Page<Book> getBookByGenreAdmin(String genre,int pageno, int size);
+    /**
+     * 
+     * @param genre
+     * @return
+     */
+    List<Book> getBookByGenre(String genre, boolean choice);
+    /**
+     * 
+     * @param genre
+     * @return
+     */
+    List<Book> getBookByGenreAdmin(String genre);
 
     /**
+     * @param rating
+     * @return
+     */
+    Page<Book> getBookByRating(float rating, int pageno, int size);
+    /**
+     * 
      * @param rating
      * @return
      */
@@ -45,12 +81,26 @@ public interface BookService {
      * @return
      */
     List<Book> getBookByNameLike(String name);
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    List<Book> getBookByNameLikeAdmin(String name);
 
     /**
      * @param name
      * @return
      */
     List<Author> getAuthorByBook(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<Author> getAuthorByBook(String name, int pageno, int size);
 
     /**
      *
@@ -64,12 +114,28 @@ public interface BookService {
      * @return
      */
     List<ReviewBook> getBookReviewByBook(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<ReviewBook> getBookReviewByBook(String name, int pageno, int size);
 
     /**
      * @param name
      * @return
      */
     List<User> getUserByBookReview(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<User> getUserByBookReview(String name, int pageno, int size);
 
     /**
      * @param isbn
@@ -99,13 +165,28 @@ public interface BookService {
      * @param verified
      * @return
      */
-    public List<Book> getVerifiedBook(boolean verified);
+   Page<Book> getVerifiedBook(boolean verified, int pageno, int size);
+   /**
+    * 
+    * @param verified
+    * @return
+    */
+   List<Book> getVerifiedBook(boolean verified);
+
 
     /**
      * @param name
      * @return
      */
     public List<ReviewAuthor> getAuthorReviewByBook(String name);
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    Page<ReviewAuthor> getAuthorReviewByBook(String name, int pageno, int size);
 
     /**
      * @param id

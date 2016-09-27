@@ -144,9 +144,6 @@
 									</div>
 								</div>
 
-								<div class="footer text-center ">
-									<small>Copyright &copy; Pratyasha</small>
-								</div>
 							</fieldset>
 						</form:form>
 						<br>

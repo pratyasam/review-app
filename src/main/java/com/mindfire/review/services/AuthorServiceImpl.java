@@ -1,24 +1,38 @@
-package com.mindfire.review.services;
+ package com.mindfire.review.services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.ChoiceDto;
-import com.mindfire.review.web.models.*;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
+import com.mindfire.review.web.models.BookAuthor;
+import com.mindfire.review.web.models.ReviewAuthor;
+import com.mindfire.review.web.models.ReviewBook;
+import com.mindfire.review.web.models.User;
 import com.mindfire.review.web.repositories.AuthorRepository;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import ch.qos.logback.classic.pattern.Util;
 
 /**
  * @author pratyasa
  */
 @Service
 public class AuthorServiceImpl implements AuthorService {
+	
 
     @Autowired
     private AuthorRepository authorRepository;
@@ -36,9 +50,18 @@ public class AuthorServiceImpl implements AuthorService {
      * @return List<Author>
      */
     @Override
+    public Page<Author> getAllAuthor(int pageno, int size) {
+    	Pageable page = Utility.buildPageRequest(size, pageno);
+        return authorRepository.findAll(page);
+    }
+    /**
+     * 
+     */
+    @Override
     public List<Author> getAllAuthor() {
         return authorRepository.findAll();
     }
+    
 
     /**
      * to get the author or authors with the same name
@@ -70,8 +93,18 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
+    public Page<Author> getAuthorByRating(float rating,int pageno, int size) {
+    	Pageable page = Utility.buildPageRequest(size, pageno);
+        return authorRepository.findByAuthorRating(rating, page);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    @Override
     public List<Author> getAuthorByRating(float rating) {
-        return authorRepository.findByAuthorRating(rating);
+    	 return authorRepository.findByAuthorRating(rating);
     }
 
     /**
@@ -82,7 +115,20 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    public List<Author> getAuthorByGenre(String genre) {return authorRepository.findByAuthorGenreContainsIgnoreCase(genre);}
+    public Page<Author> getAuthorByGenre(String genre, int pageno, int size) {
+    	Pageable page = Utility.buildPageRequest(size, pageno);
+    	return authorRepository.findByAuthorGenreContainsIgnoreCase(genre, page);}
+    /**
+     * 
+     * @param genre
+     * @param page
+     * @return
+     */
+   
+    @Override
+    public List<Author> getAuthorByGenre(String genre) {
+    	return authorRepository.findByAuthorGenreContainsIgnoreCase(genre);}
+
 
     /**
      * to get all the reviews on the author
@@ -93,6 +139,20 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<ReviewAuthor> getAuthorReviewByAuthorName(String name) {return reviewAuthorRepository.findByAuthor(getAuthorByName(name));}
+    /**
+     * 
+     * @param name
+     * @param pageno
+     * @param size
+     * @return
+     */
+    @Override
+    public Page<ReviewAuthor> getAuthorReviewByAuthorName(String name, int pageno, int size) {
+    	Pageable page = Utility.buildPageRequest(size, pageno);
+    	List<ReviewAuthor> reviewAuthors = reviewAuthorRepository.findByAuthor(getAuthorByName(name));
+    	PageImpl< ReviewAuthor> pageImpl = new PageImpl<>(reviewAuthors,page, size);
+    	return pageImpl;
+    	}
 
     /**
      * to get the author by the Id
@@ -119,6 +179,19 @@ public class AuthorServiceImpl implements AuthorService {
         }
         return reviewBookList;
     }
+    @Override
+    public Page<ReviewBook> getBookReviewByAuthorName(String name, int pageno, int size) {
+        List<Book> bookList = getBookByAuthor(name);
+        List<ReviewBook> reviewBookList = new ArrayList<>();
+        List<ReviewBook> reviewBookList1;
+        for (Book b : bookList) {
+            reviewBookList1 = reviewBookRepository.findByBook(b);
+            reviewBookList.addAll(reviewBookList1);
+        }
+        Pageable page = Utility.buildPageRequest(size, pageno);
+        PageImpl<ReviewBook> pageImpl = new PageImpl<>(reviewBookList,page, size);
+        return pageImpl;
+    }
 
     /**
      * to get the list of books authored by the author
@@ -135,6 +208,21 @@ public class AuthorServiceImpl implements AuthorService {
         }
         return book;
     }
+   /**
+    * 
+    */
+    @Override
+    public Page<Book> getBookByAuthor(String name, int pageno, int size) {
+       List<BookAuthor> list = bookAuthorRepository.findByAuthor(authorRepository.findByAuthorNameIgnoreCase(name));
+        List<Book> book = new ArrayList<>();
+        for(BookAuthor ba : list){
+        	book.add(ba.getBook());
+        }
+        Pageable page = Utility.buildPageRequest(size, pageno);
+        PageImpl< Book> pageImpl = new PageImpl<>(book,page,size);
+        return pageImpl;
+    }
+
 
     /**
      * to get all the users who have commented on the books by the author
@@ -151,6 +239,20 @@ public class AuthorServiceImpl implements AuthorService {
             users.addAll(bookService.getUserByBookReview(b.getBookName()));
         }
         return users;
+    }
+    /**
+     * 
+     */
+    @Override
+    public Page<User> getUserByAuthor(String name, int pageno, int size) {
+        List<User> users = new ArrayList<>();
+        List<Book> books = getBookByAuthor(name);
+        for (Book b : books) {
+            users.addAll(bookService.getUserByBookReview(b.getBookName()));
+        }
+        Pageable page = Utility.buildPageRequest(size, pageno);
+        PageImpl<User> pageImpl = new PageImpl<>(users,page,size);
+        return pageImpl;
     }
 
     /**
@@ -202,15 +304,15 @@ public class AuthorServiceImpl implements AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void removeAuthor(Long authorId, ChoiceDto choiceDto) throws AuthorExistenceException{
+    public void removeAuthor(Long authorId) throws AuthorExistenceException{
         Author author = authorRepository.findOne(authorId);
         if(author == null){
             throw new AuthorExistenceException("Author does not exist");
         }
-        if(choiceDto.getChoice().equalsIgnoreCase("Y")) {
+        
             authorRepository.delete(author);
             System.out.println("Author deleted");
-        }
+       
     }
 
 }

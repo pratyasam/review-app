@@ -17,7 +17,7 @@ public class SignupDto {
     @Size(min = 3, max = 20, message = "User name should be between 3 and 20")
     private String userName;
     @NotNull(message = "Password cannot be Blank")
-    @Size(min = 6, max = 50, message = "password should be between 6 and 50")
+    @Size(min = 6, max = 64, message = "password should be between 6 and 64")
     private String password;
     @NotNull
     private String gender;

@@ -16,7 +16,7 @@
 	href="/reviewBook/assets/css/font-awesome.min.css">
 </head>
 <body>
-	<nav class="navbar navbackground">
+	<nav class="navbar navbar-default navbackground">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -56,8 +56,9 @@
 		<div class="row">
 			<div
 				class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+				
 				<%
-					for (User u : (List<User>) request.getAttribute("users")) {
+					for (User u : (List<User>) request.getAttribute("userslist")) {
 				%>
 				<div class="col-lg-6 col-md-6 col-sm-6">
 					<div class="col-lg-4" style="padding: 2px;">
@@ -89,6 +90,19 @@
 				<%
 					}
 				%>
+				<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+				<ul class="pagination text-center">
+						<%
+							for (int i = 1; i <= (int) request.getAttribute("totalpages"); i++) {
+						%>
+						<li><a
+							href="/reviewBook/users?pageno=<%= i%>"><%=i%></a></li>
+						<%
+							}
+						%>
+					</ul>
+					</div>
+					
 			</div>
 		</div>
 		<jsp:include page='contact.jsp' />
@@ -99,6 +113,10 @@
 			</div>
 		</div>
 	</div>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </body>
 </html>

@@ -3,12 +3,15 @@
  */
 package com.mindfire.review.web.repositories;
 
-import com.mindfire.review.web.models.User;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.mindfire.review.web.models.User;
 
 /**
  * @author pratyasa
@@ -21,12 +24,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @Query(name = "User.findAll")
     List<User> findAll();
+    /**
+     * 
+     */
+    @Query(name = "User.findAll")
+    Page<User> findAll(Pageable page);
 
     /**
      * @param firstName
      * @return
      */
     List<User> findByFirstNameIgnoreCase(String firstName);
+    /**
+     * 
+     * @param firstName
+     * @param page
+     * @return
+     */
+    Page<User> findByFirstNameIgnoreCase(String firstName, Pageable page);
 
     /**
      * @param lastName
@@ -34,12 +49,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
 
     List<User> findByLastNameIgnoreCase(String lastName);
-
     /**
-     * @param name
+     * 
+     * @param lastName
+     * @param page
      * @return
      */
-    List<User> findByUserNameIgnoreCaseContaining(String name);
+    Page<User> findByLastNameIgnoreCase(String lastName, Pageable page);
 
     /**
      * @param name
@@ -59,6 +75,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return
      */
     List<User> findByRoleIgnoreCase(String type);
+    /**
+     * @param type
+     * @param page
+     * @return
+     */
+    Page<User> findByRoleIgnoreCase(String type, Pageable page);
 
     /**
      * @param id
