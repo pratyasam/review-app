@@ -77,7 +77,7 @@
 												</span>
 												<form:input path="bookName" type="text"
 													cssClass="form-control" id="inputBookName"
-													placeholder="Book Name" required="required" />
+													 required="required" />
 											</div>
 										</div>
 									</div>
@@ -90,7 +90,7 @@
 												</span>
 												<form:textarea path="bookDescription"
 													cssClass="form-control" id="inputBookDescription"
-													placeholder="Insert Book Description here"
+													
 													required="required" rows="3" cols="10" maxlength="4005"></form:textarea>
 											</div>
 										</div>
@@ -104,7 +104,7 @@
 												</span>
 												<form:input path="bookGenre" type="text"
 													cssClass="form-control" id="inputBookGenre"
-													placeholder="BookGenre" required="required" />
+													required="required" />
 											</div>
 										</div>
 									</div>
@@ -117,7 +117,7 @@
 												</span>
 												<form:input path="bookIsbn" type="text"
 													cssClass="form-control" id="inputBookIsbn"
-													placeholder="Book ISBN" required="required" />
+													required="required" />
 											</div>
 										</div>
 									</div>
@@ -130,7 +130,7 @@
 												</span>
 												<form:input path="bookRating" type="number"
 													cssClass="form-control" id="inputBookRating"
-													placeholder="Book Rating between 1-5" max="5" min="1"
+													 max="5" min="1"
 													step="0.1" required="required" />
 											</div>
 										</div>
@@ -144,7 +144,7 @@
 												</span>
 												<form:input path="bookCost" type="number"
 													cssClass="form-control" id="inputBookCost"
-													placeholder="Book Cost" step="0.01" required="required"
+													 step="0.01" required="required"
 													min="1" />
 											</div>
 										</div>
@@ -158,7 +158,7 @@
 												</span>
 												<form:input path="bookLink" type="text"
 													cssClass="form-control" id="inputBookLink"
-													placeholder="Book Link" />
+													 />
 											</div>
 										</div>
 									</div>
@@ -170,7 +170,7 @@
 													class="fa fa-bookmark fa-2x"></span>
 												</span>
 												<form:textarea path="bookReview" cssClass="form-control"
-													id="inputBookReview" placeholder="Insert Book Review here"
+													id="inputBookReview" 
 													required="required" rows="3" cols="10" maxlength="4005"></form:textarea>
 											</div>
 										</div>

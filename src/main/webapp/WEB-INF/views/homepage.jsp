@@ -157,19 +157,20 @@ a {
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
 			<div class="form">
-				<form:form action="search" method = "get" modelAttribute="search">
+				<form action="search" method="get">
 					<fieldset>
 						<div class="col-lg-6 col-lg-offset-3">
 							<div class="form-group">
-								<form:input path="searchParam" type="text" class="form-control" id="search"
-									placeholder="Search Authors or Books"/> <br> <br>
+								<input name="query" type="text" class="form-control" id="search"
+									placeholder="Search Authors or Books" /> <input name="page"
+									value="1" type="hidden" /> <br> <br>
 								<div class="col-lg-10 col-lg-offset-2">
 									<button type="submit" class="btn btn-primary">Submit</button>
 								</div>
 							</div>
 						</div>
 					</fieldset>
-				</form:form>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -262,10 +263,10 @@ a {
 		</div>
 		<br>
 		<div class="col-lg-12" style="padding: 0px;">
-			<div class="row" style="padding: 50px;">
+			<div class="row">
 				<div class="text-center">
 					<h3>
-						<b>New Books</b>
+						<b>New Books !</b>
 					</h3>
 				</div>
 				<div class="book-background" style="padding: 50px;">
@@ -307,6 +308,7 @@ a {
 					</div>
 				</div>
 			</div>
+			<br><br><br>
 			<div class="col-lg-2 col-lg-offset-5">
 				<a href="/reviewBook/books" class="btn btn-default">+More Books</a>
 			</div>

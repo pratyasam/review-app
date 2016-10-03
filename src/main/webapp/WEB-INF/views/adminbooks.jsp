@@ -3,7 +3,7 @@
 <%@ page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
@@ -171,25 +171,27 @@ ul {
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
 			<div class="form">
-				<form:form action="search" method = "get" modelAttribute="search">
+				<form action="search" method="get">
 					<fieldset>
 						<div class="col-lg-6 col-lg-offset-3">
 							<div class="form-group">
-								<form:input path="searchParam" type="text" class="form-control" id="search"
-									placeholder="Search Authors or Books"/> <br> <br>
+								<input name="query" type="text" class="form-control" id="search" placeholder="Search Authors or Books" />
+								<input name="page" value="1" type="hidden" />
+								<br> <br>
 								<div class="col-lg-10 col-lg-offset-2">
 									<button type="submit" class="btn btn-primary">Submit</button>
 								</div>
 							</div>
 						</div>
 					</fieldset>
-				</form:form>
+					</form>
 			</div>
 		</div>
 	</div>
 	<div class="container-fluid">
 		<div id="mySidenav" class="sidenav col-lg-3 col-md-3
-			hidden-xs" style="padding: 10px;">
+			hidden-xs"
+			style="padding: 10px;">
 
 			<h3>Genres :</h3>
 			<ul style="list-style-type: none; padding: 0px;">

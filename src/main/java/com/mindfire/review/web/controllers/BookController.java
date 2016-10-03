@@ -28,6 +28,7 @@ import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
+import com.mindfire.review.web.dto.SearchDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewBook;
@@ -163,12 +164,13 @@ public class BookController {
 			ModelAndView modelAndView = new ModelAndView("adminbooks");
 			modelAndView.addObject("totalpages",totalPages);
 			modelAndView.addObject("bookauthorlist",bookAuthorListDto3);
-
+			modelAndView.addObject("search", new SearchDto());
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView("books");
 		modelAndView.addObject("bookauthorlist", bookAuthorListDto);
 		modelAndView.addObject("totalpages",totalPages);
+		modelAndView.addObject("search", new SearchDto());
 		return modelAndView;
 	}
 
@@ -186,10 +188,13 @@ public class BookController {
 		Page<User> users = bookService.getUserByBookReview(name, pagenou,6);
 		int totalPagesr =reviewBooks.getTotalPages();
 		int totalPagesu = users.getTotalPages();
-
+		ReviewBookDto reviewBookDto = new ReviewBookDto();
+		
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
-		
+			if(httpSession.getAttribute("review") != null){
+				reviewBookDto = (ReviewBookDto) httpSession.getAttribute("review");
+			}
 			ModelAndView modelAndView = new ModelAndView("adminbookprofile");
 			modelAndView.addObject("book", bookService.getBookById(bookId));
 			modelAndView.addObject("authors", author);
@@ -200,7 +205,7 @@ public class BookController {
 			modelAndView.addObject("updatebook", new BookDto());
 			modelAndView.addObject("delete", new ChoiceDto());
 			modelAndView.addObject("verify", new ChoiceDto());
-			modelAndView.addObject("bookprofile", new ReviewBookDto());
+			modelAndView.addObject("bookprofile", reviewBookDto);
 
 			return modelAndView;
 		}
@@ -212,7 +217,13 @@ public class BookController {
 		modelAndView.addObject("totalpagesr", totalPagesr);
 		modelAndView.addObject("totalpagesu", totalPagesu);
 		modelAndView.addObject("authors", author);
-		modelAndView.addObject("bookprofile", new ReviewBookDto());
+		
+		
+		if(httpSession.getAttribute("review") != null){
+			reviewBookDto = (ReviewBookDto) httpSession.getAttribute("review");
+		}
+		
+		modelAndView.addObject("bookprofile", reviewBookDto);
 		modelAndView.addObject("delete", new ChoiceDto());
 		return modelAndView;
 	}
@@ -229,8 +240,18 @@ public class BookController {
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
 			ModelAndView modelAndView = new ModelAndView("bookupdate");
-			modelAndView.addObject("bookupdate", bookService.getBookById(bookId));
-			modelAndView.addObject("bookupdatedto", new BookDto());
+			Book book = bookService.getBookById(bookId);
+			modelAndView.addObject("book", book);
+			BookDto bookDto = new BookDto();
+			bookDto.setBookCost(book.getBookCost());
+			bookDto.setBookDescription(book.getBookDescription());
+			bookDto.setBookGenre(book.getBookGenre());
+			bookDto.setBookIsbn(book.getBookIsbn());
+			bookDto.setBookLink(book.getBookLink());
+			bookDto.setBookName(book.getBookName());
+			bookDto.setBookRating(book.getBookRating());
+			bookDto.setBookReview(book.getBookReview());
+			modelAndView.addObject("bookupdatedto",bookDto);
 			return modelAndView;
 		} else {
 			return "redirect:/login";
@@ -257,7 +278,7 @@ public class BookController {
 		}
 		try {
 			bookService.updateBook(bookId, bookDto);
-			return "redirect:/books";
+			return "redirect:/books/{bookId}";
 		} catch (BookDoesNotExistException b) {
 			model.addAttribute("BookDoesNotExist", b);
 			return "authorupdate";

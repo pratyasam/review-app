@@ -23,7 +23,6 @@ public class HomeController {
     @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
     public Object home(HttpSession httpSession) {
          ModelAndView modelAndView = new ModelAndView("homepage");
-         modelAndView.addObject("search", new SearchDto());
          return modelAndView;
     }
 

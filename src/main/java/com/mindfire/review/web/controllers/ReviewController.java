@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -29,9 +30,18 @@ public class ReviewController {
 
 
     @RequestMapping(value = "/books/{bookId}", method = RequestMethod.POST)
-    public String addBookReviewByUser(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("bookProfile") ReviewBookDto reviewBookDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+    public String addBookReviewByUser(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("bookProfile") ReviewBookDto reviewBookDto, BindingResult bindingResult, Model model, HttpSession httpSession, HttpServletRequest httpServletRequest) {
        System.out.println("entered");
     	if (httpSession.getAttribute("userName") == null) {
+    		String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		if(httpSession.getAttribute("review") != null){
+    			httpSession.removeAttribute("review");
+    		}
+    		if(reviewBookDto != null)
+    			httpSession.setAttribute("review", reviewBookDto);
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
@@ -48,8 +58,17 @@ public class ReviewController {
     }
 
     @RequestMapping(value = "/authors/{authorId}", method = RequestMethod.POST)
-    public String addAuthorReviewByUser(@PathVariable("authorId") Long authorId, @Valid @ModelAttribute("authorprofile")ReviewAuthorDto reviewAuthorDto, BindingResult bindingResult, Model model, HttpSession httpSession){
+    public String addAuthorReviewByUser(HttpServletRequest httpServletRequest, @PathVariable("authorId") Long authorId, @Valid @ModelAttribute("authorprofile")ReviewAuthorDto reviewAuthorDto, BindingResult bindingResult, Model model, HttpSession httpSession){
         if(httpSession.getAttribute("userName") == null){
+        	String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		if(httpSession.getAttribute("review") != null){
+    			httpSession.removeAttribute("review");
+    		}
+    		if(reviewAuthorDto != null)
+    			httpSession.setAttribute("review", reviewAuthorDto);
             return "redirect:/login";
         }
         if(bindingResult.hasErrors()){

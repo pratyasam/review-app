@@ -3,7 +3,7 @@
 <%@ page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
@@ -40,7 +40,7 @@
 }
 
 .sidenav {
-	height: 185%;
+	height: 188%;
 	position: absolute;
 	z-index: 1;
 	left: 0;
@@ -201,19 +201,20 @@ ul {
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
 			<div class="form">
-				<form:form action="search" method = "get" modelAttribute="search">
+				<form action="search" method="get">
 					<fieldset>
 						<div class="col-lg-6 col-lg-offset-3">
 							<div class="form-group">
-								<form:input path="searchParam" type="text" class="form-control" id="search"
-									placeholder="Search Authors or Books"/> <br> <br>
+								<input name="query" type="text" class="form-control" id="search"
+									placeholder="Search Authors or Books" /> <input name="page"
+									value="1" type="hidden" /> <br> <br>
 								<div class="col-lg-10 col-lg-offset-2">
 									<button type="submit" class="btn btn-primary">Submit</button>
 								</div>
 							</div>
 						</div>
 					</fieldset>
-				</form:form>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -266,6 +267,7 @@ ul {
 			<div class="row col-lg-8 col-lg-offset-2">
 				<div class="col-xs-12">
 					<%
+					   
 						for (BookAuthorListDto bal : (List<BookAuthorListDto>) request.getAttribute("bookauthorlist")) {
 							Book book = bal.getBook();
 							List<Author> authors = bal.getAuthorList();
@@ -278,9 +280,9 @@ ul {
 
 							<div class="col-lg-8">
 								<div class="panel panel-default">
-									<div class="panel-body">
+									<div class="panel-body" >
 										<a href="/reviewBook/books/<%=book.getBookId()%>">
-											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=book.getBookName()%></p>
+											<div style="font-size: 120%; border-bottom: 2px #CCC solid; overflow : hidden ;text-overflow: ellipsis;"><%=book.getBookName()%></div>
 										</a>
 										<%
 											for (Author a : authors) {
@@ -295,8 +297,9 @@ ul {
 											class="glyphicon glyphicon-star"></span><span
 											class="glyphicon glyphicon-star"></span> <br>
 										<div class="sidebar-box">
+										<p class="read-more"></p>
 											<p><%=book.getBookDescription()%></p>
-											<p class="read-more"></p>
+											
 										</div>
 									</div>
 								</div>
@@ -304,11 +307,12 @@ ul {
 						</div>
 					</div>
 					<%
+					    
 						}
 					%>
 					<br> <br>
 					<div
-						class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center">
+						class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center"">
 						<%
 							if (((List<BookAuthorListDto>) request.getAttribute("bookauthorlist")).size() != 0) {
 						%>

@@ -27,6 +27,7 @@ import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewAuthorDto;
+import com.mindfire.review.web.dto.SearchDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewAuthor;
@@ -101,6 +102,7 @@ public class AuthorController {
     	ModelAndView modelAndView =new ModelAndView("authors");
     	modelAndView.addObject("totalpage",totalPage);
     	modelAndView.addObject("authors", authors);
+    	modelAndView.addObject("search", new SearchDto());
         return modelAndView;
     }
 
@@ -121,6 +123,7 @@ public class AuthorController {
         int totalpagesb = book.getTotalPages();
         int totalpagesu = users.getTotalPages();
         List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>();
+        ReviewAuthorDto reviewAuthorDto = new ReviewAuthorDto();
 
 		for (Book b : book.getContent()) {
 
@@ -131,10 +134,13 @@ public class AuthorController {
 			bookAuthorListDto.add(bookAuthorListDto2);
 		}
         if(httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))){
-            ModelAndView modelAndView = new ModelAndView("adminauthorprofile");
+           if(httpSession.getAttribute("review") != null){
+        	   reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute("review");
+           }
+        	ModelAndView modelAndView = new ModelAndView("adminauthorprofile");
             modelAndView.addObject("author",authorService.getAuthorById(authorId));
             modelAndView.addObject("delete",new ChoiceDto());;
-            modelAndView.addObject("authorprofile",new ReviewAuthorDto());
+            modelAndView.addObject("authorprofile",reviewAuthorDto);
             modelAndView.addObject("reviews",reviewAuthors.getContent());
             modelAndView.addObject("books",bookAuthorListDto);
             modelAndView.addObject("delete", new ChoiceDto());
@@ -146,11 +152,13 @@ public class AuthorController {
             System.out.println("Admin");
             return modelAndView;
         }
+        if(httpSession.getAttribute("review") != null){
+     	   reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute("review");
+        }
        ModelAndView modelAndView = new ModelAndView("authorprofile");
         modelAndView.addObject("author",authorService.getAuthorById(authorId));
-        modelAndView.addObject("authorprofile",new ReviewAuthorDto());
+        modelAndView.addObject("authorprofile",reviewAuthorDto);
         modelAndView.addObject("reviews",reviewAuthors.getContent());
-        modelAndView.addObject("delete", new ChoiceDto());
         modelAndView.addObject("users", users.getContent());
         modelAndView.addObject("books",bookAuthorListDto);
         modelAndView.addObject("totalpagesr",totalpagesr);
@@ -171,11 +179,17 @@ public class AuthorController {
     public Object updateAuthorGet(@PathVariable("authorId") Long authorId ,HttpSession httpSession){
         if(httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))){
             ModelAndView modelAndView = new ModelAndView("authorupdate");
-            modelAndView.addObject("author", authorService.getAuthorById(authorId));
-            modelAndView.addObject("authorupdatedto", new AuthorDto());
+            modelAndView.addObject("author",authorService.getAuthorById(authorId));
+            Author author = authorService.getAuthorById(authorId);
+            AuthorDto authorDto =  new AuthorDto();
+            authorDto.setAuthorDescription(author.getAuthorDescription());
+            authorDto.setAuthorGenre(author.getAuthorGenre());
+            authorDto.setAuthorName(author.getAuthorName());
+            authorDto.setAuthorRating(author.getAuthorRating());
+            modelAndView.addObject("authorupdatedto",authorDto);
             return modelAndView;
         }
-        return "redirect:/login";
+        return "redirect:/authors/{authorId}";
     }
 
     /**

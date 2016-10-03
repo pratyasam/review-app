@@ -91,7 +91,7 @@
 												</span>
 												<form:input type="text" path="authorName"
 													cssClass="form-control" id="inputAuthorName"
-													placeholder="Author Name" required="required" />
+													 required="required" />
 											</div>
 										</div>
 									</div>
@@ -103,8 +103,7 @@
 													class="fa fa-bookmark fa-2x"></span>
 												</span>
 												<form:textarea cssClass="form-control"
-													path="authorDescription" id="inputAuthorDescription"
-													placeholder="Insert Author Description here"
+													path="authorDescription" id="inputAuthorDescription" value="xyx xyx xyx yxy yxyx"
 													required="required" rows="3" cols="10" maxlength="4005"></form:textarea>
 											</div>
 										</div>
@@ -118,7 +117,7 @@
 												</span>
 												<form:input type="text" cssClass="form-control"
 													path="authorGenre" id="inputAuthorGenre"
-													placeholder="Author Genre" required="required" />
+													 required="required" />
 											</div>
 										</div>
 									</div>

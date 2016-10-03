@@ -27,6 +27,7 @@ import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.ChoiceDto;
+import com.mindfire.review.web.dto.SearchDto;
 import com.mindfire.review.web.dto.SignupDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
@@ -50,6 +51,7 @@ public class UserController {
 			ModelAndView modelAndView = new ModelAndView("users");
 			modelAndView.addObject("userslist", users.getContent());
 			modelAndView.addObject("totalpages",users.getTotalPages());
+			modelAndView.addObject("search", new SearchDto());
 			return modelAndView;
 		}
 		return "redirect:/profile";
@@ -155,5 +157,26 @@ public class UserController {
 
 		return "redirect:/";
 	}
+	@RequestMapping(value = "/profile", method = RequestMethod.POST)
+	public Object postProfile(HttpSession httpSession) {
+		if(httpSession.getAttribute("userName") != null){
+			if (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator")) {
+			    User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
+	            ModelAndView modelAndView = new ModelAndView("admin");
+	            modelAndView.addObject("user",user);
+	            Long userId = (Long)httpSession.getAttribute("userId");
+				return "redirect:/users/" + userId;
+			}
+			if (httpSession.getAttribute("role").equals("normal")) {
+
+				Long userId = (Long)httpSession.getAttribute("userId");
+				return "redirect:/users/" + userId;
+			}
+			}
+
+			return "redirect:/";
+		
+	}
+	
 
 }

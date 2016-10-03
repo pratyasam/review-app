@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.web.dto.BookAuthorListDto;
+import com.mindfire.review.web.dto.SearchDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 
@@ -59,6 +60,7 @@ public class GenreController {
 		modelAndView.addObject("name",genreName);
 		modelAndView.addObject("totalpagesb", totalPagesBook);
 		modelAndView.addObject("totalpagesa", totalPagesAuthor);
+		modelAndView.addObject("search", new SearchDto());
 		return modelAndView;
 	}
 

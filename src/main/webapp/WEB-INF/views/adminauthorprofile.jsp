@@ -53,7 +53,7 @@
 
 <body>
 	<nav class="navbar navbar-default navbackground">
-		<div class="container-fluid">
+		
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
 					data-target="#myNavbar">
@@ -79,7 +79,7 @@
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 				</ul>
 			</div>
-		</div>
+		
 	</nav>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
@@ -93,8 +93,8 @@
 						<h3>${author.authorName}</h3>
 					</div>
 					<div class="panel-body">
-						<h4>Author Genre: ${author.authorGenre}</h4>
-						<h4>Author Rating:${author.authorRating}</h4>
+						<h4>Genre: ${author.authorGenre}</h4>
+						<h4>Rating:${author.authorRating}</h4>
 						<div class="col-lg-12">
 							<div class="row ">
 								<div class="col-lg-6 col-md-6">
@@ -117,12 +117,12 @@
 				</div>
 			</div>
 			<div class="col-lg-12">
-				<h4 class="text-center" style="border-bottom: 2px #CCC solid;">Author
+				<h4 class="text-center" style="border-bottom: 2px #CCC solid;">
 					Description :</h4>
 				<p>${author.authorDescription}</p>
 			</div>
 			<div class="col-lg-12 text-center">
-				<h4 style="border-bottom: 2px #CCC solid;">Books By Author Name</h4>
+				<h4 style="border-bottom: 2px #CCC solid;">Books By ${author.authorName}</h4>
 				<div class="row">
 					<div class="col-lg-12">
 						<%

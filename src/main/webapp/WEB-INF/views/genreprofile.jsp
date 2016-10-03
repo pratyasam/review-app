@@ -4,7 +4,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
 
 <head>
@@ -291,19 +291,20 @@ ul {
 			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 			<div class="overlay2-content">
 				<div class="form">
-				<form:form action="search" method = "get" modelAttribute="search">
-					<fieldset>
-						<div class="col-lg-6 col-lg-offset-3">
-							<div class="form-group">
-								<form:input path="searchParam" type="text" class="form-control" id="search"
-									placeholder="Search Authors or Books"/> <br> <br>
-								<div class="col-lg-10 col-lg-offset-2">
-									<button type="submit" class="btn btn-primary">Submit</button>
+					<form action="search" method="get">
+						<fieldset>
+							<div class="col-lg-6 col-lg-offset-3">
+								<div class="form-group">
+									<input name="query" type="text" class="form-control"
+										id="search" placeholder="Search Authors or Books" /> <input
+										name="page" value="1" type="hidden" /> <br> <br>
+									<div class="col-lg-10 col-lg-offset-2">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									</div>
 								</div>
 							</div>
-						</div>
-					</fieldset>
-				</form:form>
+						</fieldset>
+					</form>
 				</div>
 			</div>
 		</div>

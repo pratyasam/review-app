@@ -58,7 +58,12 @@ public class LoginController {
             httpSession.setAttribute("userLastName", user.getLastName());
             httpSession.setAttribute("role", user.getRole());
             httpSession.setAttribute("userId", user.getUserId());
-
+            
+            if(httpSession.getAttribute("url") != null){
+            	String url = (String)httpSession.getAttribute("url");
+            	url = url.replaceFirst("/reviewBook", "");
+            	return "redirect:/" + url;
+            }
             return "redirect:/";
 
         } catch (LoginFailException lex) {

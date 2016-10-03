@@ -364,9 +364,10 @@
 						<div class="form-group">
 							<div class="col-lg-10 col-lg-offset-2">
 								<button type="reset" class="btn btn-default pull-right">
-									Cancel</button>
+									Home</button>
 								<button type="submit" class="btn btn-primary pull-right">
 									Submit</button>
+									<a href="http://google.com" class="button">Go to Google</a>
 							</div>
 						</div>
 					</fieldset>

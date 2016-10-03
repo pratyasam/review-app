@@ -1,12 +1,15 @@
 package com.mindfire.review;
 
 
+import javax.servlet.Filter;
+import javax.servlet.ServletRegistration.Dynamic;
+
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.multipart.support.MultipartFilter;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-
-import javax.servlet.Filter;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -35,4 +38,5 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 //        registration.setInitParameter("defaultHtmlEscape", "true");
 //        registration.setInitParameter("spring.profiles.active", "default");
 //    }
+  
 }

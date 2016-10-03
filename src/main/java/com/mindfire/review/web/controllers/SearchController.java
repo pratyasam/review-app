@@ -33,17 +33,15 @@ public class SearchController {
 	private SearchService searchService;
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public Object searchPost(@ModelAttribute("search") SearchDto searchDto, BindingResult bindingResult, HttpSession httpSession, @RequestParam(value="pagenoa", defaultValue="1") int pagenoa, @RequestParam(value="pagenou", defaultValue="1") int pagenou, @RequestParam(value="pagenob", defaultValue="1") int pagenob) {
-		if (bindingResult.hasErrors()) {
-			return null;
-		}
+	public Object searchPost(HttpSession httpSession,@RequestParam(value = "query") String searchParam, @RequestParam(value="pagenoa", defaultValue="1") int pagenoa, @RequestParam(value="pagenou", defaultValue="1") int pagenou, @RequestParam(value="pagenob", defaultValue="1") int pagenob) {
 		Map<String, Object> map = new HashMap<>();
 		String role = "normal";
 		
 		if(httpSession.getAttribute("role") != null){
 			role = (String)httpSession.getAttribute("role");
 		}
-		
+		SearchDto searchDto = new SearchDto();
+		searchDto.setSearchParam(searchParam);
 		map = searchService.search(searchDto, role,pagenoa, pagenob, pagenou);
 		Page<Author> authorList = (Page<Author>) map.get("authors");
 		Page<Book> bookList = (Page<Book>) map.get("books");

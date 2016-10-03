@@ -132,7 +132,7 @@
 								</div>
 								<div class="col-lg-4 col-md-4">
 									<div class="col-lg-10 col-lg-offset-2">
-										<a class="btn btn-default" href="books/${book.bookId}/update">
+										<a class="btn btn-default" href="/reviewBook/books/${book.bookId}/update">
 											Update</a>
 									</div>
 								</div>
