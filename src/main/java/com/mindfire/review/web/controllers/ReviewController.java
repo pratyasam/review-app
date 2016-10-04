@@ -164,7 +164,7 @@ public class ReviewController {
         return "redirect:/authors/{authorId}";
 
     }
-    @RequestMapping(value = "/authors/{authorId}/reviews/{reviewBookId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}", method = RequestMethod.PUT)
     public String updateAuthorReviewPost(@PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId,@Valid @ModelAttribute("authorprofile") ReviewAuthorDto reviewAuthorDto, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
             return "redirect:/authors/{authorId}/{reviewAuthorId}/update";
@@ -205,6 +205,89 @@ public class ReviewController {
             return "redirect:/books/{bookId}/{reviewBookId}/update";
         }
     }
+    
+    @RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}/addlike", method = RequestMethod.GET)
+    public Object addLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpServletRequest httpServletRequest, Model model){
+    	String userName = (String) httpSession.getAttribute("userName");
+		if(userName==null){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		
+		try{
+			reviewService.addLikeForBookReview(userName, reviewBookId);
+			return "redirect:/books/{bookId}";
+			}
+			catch (AlreadyReviewedException e) {
+				model.addAttribute("exception", e);
+				return "redirect:/books/{bookId}";
+			}
+    }
+    
+	@RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}/deletelike", method = RequestMethod.GET)
+	public Object deleteLike(HttpSession httpSession,@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpServletRequest httpServletRequest, Model model){
+		String userName = (String) httpSession.getAttribute("userName");
+		if(userName == (null)){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		
+		try{
+			reviewService.removeLikeForBookReview(userName, reviewBookId);;
+			return "redirect:/books/{bookId}";
+			}
+			catch (ReviewDoesnotExistException e) {
+				model.addAttribute("exception", e);
+				return "redirect:/books/{bookId}";
+			}
+	}
+	
+	@RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}/addlike", method = RequestMethod.GET)
+    public Object addAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpServletRequest httpServletRequest, Model model){
+    	String userName = (String) httpSession.getAttribute("userName");
+		if(userName == null){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		try{
+		reviewService.addLikeForAuthorReview(userName, reviewAuthorId);
+		return "redirect:/authors/{authorId}";
+		}
+		catch (AlreadyReviewedException e) {
+			model.addAttribute("exception", e);
+			return "redirect:/authors/{authorId}";
+		}
+    }
+	
+	@RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}/deletelike", method = RequestMethod.GET)
+	public Object deleteAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpServletRequest httpServletRequest, Model model){
+		String userName = (String) httpSession.getAttribute("userName");
+		if(userName==null){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		
+		try{
+			reviewService.removeLikeForAuthorReview(userName, reviewAuthorId);
+			return "redirect:/authors/{authorId}";
+			}
+			catch (ReviewDoesnotExistException e) {
+				model.addAttribute("exception", e);
+				return "/authors/{authorId}";
+			}
+	}
 
 
 }

@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
+import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
@@ -193,5 +195,38 @@ public interface BookService {
      * @param choiceDto
      */
     public void verifyBook(Long id, ChoiceDto choiceDto);
+    
+    /**
+     * 
+     * @param userName
+     * @param bookId
+     * @throws AlreadyReviewedException
+     */
+    
+    void addBookLikeByUser(String userName, Long bookId)throws AlreadyReviewedException;
+    
+    /**
+     * 
+     * @param bookLikeId
+     * @throws ReviewDoesnotExistException
+     */
+    
+    void removeBookLikeByUser(String userName, Long bookId) throws ReviewDoesnotExistException;
+    
+    /**
+     * 
+     * @param bookId
+     * @return
+     */
+    
+    int getNumberOfBookLikesByUsers(Long bookId);
+    
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    
+    int getTotalBookReviewByBook(String name);
 
 }

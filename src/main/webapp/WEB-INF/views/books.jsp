@@ -19,6 +19,8 @@
 	href="assets/css/home-pagestyle.css">
 <link href='https://fonts.googleapis.com/css?family=Bree+Serif'
 	rel='stylesheet' type='text/css'>
+	
+<link href="assets/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
 </head>
 <style>
 .sidebar-box {
@@ -329,7 +331,7 @@ ul {
 							}
 						%>
 						<%
-							if (((List<BookAuthorListDto>) request.getAttribute("bookauthorlist")).size() != 0) {
+							if (((List<BookAuthorListDto>) request.getAttribute("bookauthorlist")).size() == 0) {
 						%>
 						<h3>No Books !</h3>
 						<%
@@ -633,6 +635,7 @@ ul {
 
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="/reviewBook/assets/js/star-rating.js" type="text/javascript"></script>
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>

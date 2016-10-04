@@ -10,18 +10,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.AuthorLike;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.BookAuthor;
 import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.ReviewBook;
 import com.mindfire.review.web.models.User;
+import com.mindfire.review.web.repositories.AuthorLikeRepository;
 import com.mindfire.review.web.repositories.AuthorRepository;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
+import com.mindfire.review.web.repositories.BookLikeRepository;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
 
@@ -44,6 +49,10 @@ public class AuthorServiceImpl implements AuthorService {
     private ReviewBookRepository reviewBookRepository;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AuthorLikeRepository authorLikeRepository;
 
     /**
      * get the list of all the authors
@@ -139,6 +148,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<ReviewAuthor> getAuthorReviewByAuthorName(String name) {return reviewAuthorRepository.findByAuthor(getAuthorByName(name));}
+    
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    
+    @Override
+    public int getTotalAuthorReviewByAuthorName(String name) {return reviewAuthorRepository.findByAuthor(getAuthorByName(name)).size();}
     /**
      * 
      * @param name
@@ -313,6 +331,60 @@ public class AuthorServiceImpl implements AuthorService {
             authorRepository.delete(author);
             System.out.println("Author deleted");
        
+    }
+     /**
+      * 
+      * @param userName
+      * @param authorId
+      * @throws AlreadyReviewedException
+      */
+    
+    public void addAuthorLikeByUser(String userName, Long authorId) throws AlreadyReviewedException{
+    	User user = userService.getUser(userName);
+    	Author author = getAuthorById(authorId);
+    	 if(authorLikeRepository.findByAuthorAndUser(author, user) != null){
+    		 throw new AlreadyReviewedException("already liked the author");
+    	 }
+    	 
+    	 AuthorLike authorLike = new AuthorLike();
+    	 authorLike.setAuthor(author);
+    	 authorLike.setUser(user);
+    	 authorLike = authorLikeRepository.save(authorLike);
+    	 System.out.println("author liked");
+    	 
+    	 if(authorLike == null){
+    		 throw new RuntimeException("");
+    	 }
+    }
+    
+    /**
+     * 
+     * @param authorLikeId
+     * @throws ReviewDoesnotExistException
+     */
+    
+    public void removeAuthorLikeByUser(String userName, Long authorId) throws ReviewDoesnotExistException{
+    	
+    	User user = userService.getUser(userName);
+    	Author author = getAuthorById(authorId);
+    	AuthorLike authorLike = authorLikeRepository.findByAuthorAndUser(author, user);
+    	
+    	if(authorLike == null){
+    		throw new ReviewDoesnotExistException("the author like doesnot exist.");
+    	}
+    	
+    	authorLikeRepository.delete(authorLike);
+    }
+    
+    /**
+     * 
+     * @param authorId
+     * @return
+     */
+    
+    public int getNumberOfLikesByUser(Long authorId){
+    	Author author = getAuthorById(authorId);
+    	return authorLikeRepository.findByAuthor(author).size();
     }
 
 }

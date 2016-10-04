@@ -1,3 +1,4 @@
+<%@page import="com.mindfire.review.web.dto.ReviewAuthorLikesDto"%>
 <%@page import="com.mindfire.review.web.models.Author"%>
 <%@page import="com.mindfire.review.web.dto.BookAuthorListDto"%>
 <%@page import="com.mindfire.review.web.models.Book"%>
@@ -160,9 +161,27 @@
 	%>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-12 col-xs-12">
-			<div class="col-lg-3" style="height: 20%">
-				<img src="/reviewBook/assets/img/book.jpg"
-					style="height: 100%; width: 100%;">
+					<div class="col-lg-3">
+				<div class="row">
+					<div class="col-lg-12" style="height: 20%">
+						<img src="/reviewBook/assets/img/book.jpg"
+							style="height: 100%; width: 100%;">
+					</div>
+					<div class="nav">
+						<div class="col-lg-12 col-md-12 col-xs-12">
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/authors/${author.authorId}/addlike "> <i
+									class="fa fa-thumbs-up fa-2x"></i>
+								</a>
+							</div>
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/authors/${author.authorId}/deletelike "> <i
+									class="fa fa-thumbs-down fa-2x"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col-lg-9">
 				<div class="panel panel-default">
@@ -172,6 +191,18 @@
 					<div class="panel-body">
 						<h4>Author Genre: ${author.authorGenre}</h4>
 						<h4>Author Rating:${author.authorRating}</h4>
+					</div>
+					<div class="panel-footer">
+						<div class="row nav">
+							<div class="col-lg-12 col-md-12 col-xs-12">
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-weixin fa-lg"></i> ${totalreviews}
+								</div>
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-heart-o fa-lg"></i> ${totallikes}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -271,10 +302,13 @@
 				<div class="jumbotron text-center">
 					<h3>Community Reviews</h3>
 					<%
-						for (ReviewAuthor ra : (List<ReviewAuthor>) request.getAttribute("reviews")) {
+						for (ReviewAuthorLikesDto rd : (List<ReviewAuthorLikesDto>) request.getAttribute("reviews")) {
 					%>
 					<%
-						request.setAttribute("authorId", ra.getAuthor().getAuthorId());
+					        ReviewAuthor ra = rd.getReviewAuthor();
+					        int likes = rd.getLikes();
+					        int dislikes = rd.getDislikes();
+						    request.setAttribute("authorId", ra.getAuthor().getAuthorId());
 							request.setAttribute("reviewId", ra.getReviewAuthorId());
 					%>
 					<div class="media">
@@ -306,10 +340,10 @@
 					<div class="row nav">
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="col-lg-6 col-xs-4 well">
-										<i class="fa fa-thumbs-up fa-2x"></i>
+										<a href="/reviewBook/authors/${authorId}/reviews/${reviewId}/addlike"><i class="fa fa-thumbs-up fa-2x"><%= likes %></i></a>
 									</div>
 									<div class="col-lg-6 col-xs-4 well">
-										<i class="fa fa-thumbs-down fa-2x"></i>
+										<a href="/reviewBook/authors/${authorId}/reviews/${reviewId}/deletelike"><i class="fa fa-thumbs-down fa-2x"><%= dislikes %></i></a>
 									</div>
 								</div>
 							</div>

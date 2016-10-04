@@ -4,6 +4,7 @@ package com.mindfire.review.web.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -19,14 +20,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.ReviewService;
+import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewAuthorDto;
+import com.mindfire.review.web.dto.ReviewAuthorLikesDto;
 import com.mindfire.review.web.dto.SearchDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
@@ -45,6 +50,8 @@ public class AuthorController {
     private AuthorService authorService;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private UserService userService;
 
     /**
      * to get the add author page by the admin or moderator
@@ -124,6 +131,16 @@ public class AuthorController {
         int totalpagesu = users.getTotalPages();
         List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>();
         ReviewAuthorDto reviewAuthorDto = new ReviewAuthorDto();
+        User user = userService.getUser((String)httpSession.getAttribute("userName"));
+        List<ReviewAuthorLikesDto> reviewAuthorLikesDtos = new ArrayList<>();
+        
+        for( ReviewAuthor ra : reviewAuthors.getContent()){
+        	ReviewAuthorLikesDto reviewAuthorLikesDto2 = new ReviewAuthorLikesDto();
+        	reviewAuthorLikesDto2.setLikes(reviewService.getNumberOfReviewLikesByAuthor(ra));
+        	reviewAuthorLikesDto2.setDislikes(reviewService.getNumberOfReviewDislikesByAuthor(ra));
+        	reviewAuthorLikesDto2.setReviewAuthor(ra);
+        	reviewAuthorLikesDtos.add(reviewAuthorLikesDto2);
+        }
 
 		for (Book b : book.getContent()) {
 
@@ -133,6 +150,7 @@ public class AuthorController {
 			bookAuthorListDto2.setBook(b);
 			bookAuthorListDto.add(bookAuthorListDto2);
 		}
+		
         if(httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator"))){
            if(httpSession.getAttribute("review") != null){
         	   reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute("review");
@@ -141,7 +159,7 @@ public class AuthorController {
             modelAndView.addObject("author",authorService.getAuthorById(authorId));
             modelAndView.addObject("delete",new ChoiceDto());;
             modelAndView.addObject("authorprofile",reviewAuthorDto);
-            modelAndView.addObject("reviews",reviewAuthors.getContent());
+            modelAndView.addObject("reviews",reviewAuthorLikesDtos);
             modelAndView.addObject("books",bookAuthorListDto);
             modelAndView.addObject("delete", new ChoiceDto());
             modelAndView.addObject("authorId",authorId);
@@ -149,6 +167,10 @@ public class AuthorController {
             modelAndView.addObject("totalpagesr",totalpagesr);
             modelAndView.addObject("totalpagesb", totalpagesb);
             modelAndView.addObject("totalpagesu", totalpagesu);
+            modelAndView.addObject("totalreviews", authorService.getTotalAuthorReviewByAuthorName(authorName));
+            modelAndView.addObject("totallikes", authorService.getNumberOfLikesByUser(authorId));
+            
+            
             System.out.println("Admin");
             return modelAndView;
         }
@@ -158,12 +180,16 @@ public class AuthorController {
        ModelAndView modelAndView = new ModelAndView("authorprofile");
         modelAndView.addObject("author",authorService.getAuthorById(authorId));
         modelAndView.addObject("authorprofile",reviewAuthorDto);
-        modelAndView.addObject("reviews",reviewAuthors.getContent());
+        modelAndView.addObject("reviews",reviewAuthorLikesDtos);
         modelAndView.addObject("users", users.getContent());
         modelAndView.addObject("books",bookAuthorListDto);
         modelAndView.addObject("totalpagesr",totalpagesr);
         modelAndView.addObject("totalpagesb", totalpagesb);
         modelAndView.addObject("totalpagesu", totalpagesu);
+        modelAndView.addObject("delete", new ChoiceDto());
+        modelAndView.addObject("totalreviews", authorService.getTotalAuthorReviewByAuthorName(authorName));
+        modelAndView.addObject("totallikes", authorService.getNumberOfLikesByUser(authorId));
+       
         System.out.println("User");
         return modelAndView;
     }
@@ -191,6 +217,65 @@ public class AuthorController {
         }
         return "redirect:/authors/{authorId}";
     }
+    
+    /**
+     * 
+     * @param httpSession
+     * @param bookId
+     * @param httpServletRequest
+     * @param model
+     * @return
+     */
+    
+    @RequestMapping(value = "/authors/{authorId}/addlike", method = RequestMethod.GET)
+    public Object addAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long bookId, HttpServletRequest httpServletRequest, Model model){
+    	String userName = (String) httpSession.getAttribute("userName");
+		if(userName == null){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		try{
+		authorService.addAuthorLikeByUser(userName, bookId);
+		return "redirect:/authors/{authorId}";
+		}
+		catch (AlreadyReviewedException e) {
+			model.addAttribute("exception", e);
+			return "redirect:/authors/{authorId}";
+		}
+    }
+    
+    /**
+     * 
+     * @param httpSession
+     * @param bookId
+     * @param httpServletRequest
+     * @param model
+     * @return
+     */
+    
+    @RequestMapping(value = "/authors/{authorId}/deletelike", method = RequestMethod.GET)
+	public Object deleteLike(HttpSession httpSession, @PathVariable("authorId") Long bookId, HttpServletRequest httpServletRequest, Model model){
+		String userName = (String) httpSession.getAttribute("userName");
+		if(userName==null){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		
+		try{
+			authorService.removeAuthorLikeByUser(userName, bookId);
+			return "redirect:/authors/{authorId}";
+			}
+			catch (ReviewDoesnotExistException e) {
+				model.addAttribute("exception", e);
+				return "/authors/{authorId}";
+			}
+	}
 
     /**
      * to post the updated info by the admin and the moderator

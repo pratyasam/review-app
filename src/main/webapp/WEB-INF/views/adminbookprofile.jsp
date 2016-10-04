@@ -49,7 +49,6 @@
 	/* "transparent" only works here because == rgba(0,0,0,0) */
 	background-image: linear-gradient(to bottom, transparent, grey);
 }
-
 </style>
 
 <body>
@@ -84,9 +83,27 @@
 	</nav>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
-			<div class="col-lg-3" style="height: 20%">
-				<img src="/reviewBook/assets/img/book.jpg"
-					style="height: 100%; width: 100%;">
+			<div class="col-lg-3">
+				<div class="row">
+					<div class="col-lg-12" style="height: 20%">
+						<img src="/reviewBook/assets/img/book.jpg"
+							style="height: 100%; width: 100%;">
+					</div>
+					<div class="nav">
+						<div class="col-lg-12 col-md-12 col-xs-12">
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/books/${book.bookId}/addlike "> <i
+									class="fa fa-thumbs-o-up fa-lg"></i>
+								</a>
+							</div>
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/books/${book.bookId}/deletelike "> <i
+									class="fa fa-thumbs-o-down fa-lg"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col-lg-9">
 				<div class="panel panel-default">
@@ -132,13 +149,26 @@
 								</div>
 								<div class="col-lg-4 col-md-4">
 									<div class="col-lg-10 col-lg-offset-2">
-										<a class="btn btn-default" href="/reviewBook/books/${book.bookId}/update">
-											Update</a>
+										<a class="btn btn-default"
+											href="/reviewBook/books/${book.bookId}/update"> Update</a>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div class="panel-footer">
+						<div class="row nav">
+							<div class="col-lg-12 col-md-12 col-xs-12">
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-weixin fa-lg"></i> ${totalreviews}
+								</div>
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-heart-o fa-lg"></i> ${totallikes}
+								</div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 			<div class="col-lg-12">
@@ -192,21 +222,24 @@
 									<p><%=rb.getReviewText()%></p>
 								</div>
 								<div class="row nav">
-									<div class="col-lg-12 col-md-12 col-sm-12">
-										<div class="col-lg-6 col-xs-4 well">
-											<i class="fa fa-thumbs-up fa-2x"></i>
-										</div>
-										<div class="col-lg-6 col-xs-4 well">
-											<i class="fa fa-thumbs-down fa-2x"></i>
-										</div>
+								<div class="col-lg-12 col-md-12 col-sm-12">
+									<div class="col-lg-6 col-xs-4 well">
+										<a href="/reviewBook/books/${bookId}/reviews/${reviewId}/addlike"><i class="fa fa-thumbs-up fa-2x"><%= likes %></i></a>
+									</div>
+									<div class="col-lg-6 col-xs-4 well">
+										<a href="/reviewBook/books/${bookId}/reviews/${reviewId}/deletelike"><i class="fa fa-thumbs-down fa-2x"><%= dislikes %></i></a>
 									</div>
 								</div>
+							</div>
+
 							</div>
 						</div>
 						<%
 							}
 						%>
-						<%if(((List<ReviewBook>)request.getAttribute("reviews")).size() !=0){ %>
+						<%
+							if (((List<ReviewBook>) request.getAttribute("reviews")).size() != 0) {
+						%>
 						<ul class="pagination">
 							<%
 								for (int i = 1; i <= (int) request.getAttribute("totalpagesr"); i++) {
@@ -217,11 +250,17 @@
 								}
 							%>
 						</ul>
-						<%}%>
-						<% if(((List<ReviewBook>)request.getAttribute("reviews")).size() ==0){%>
+						<%
+							}
+						%>
+						<%
+							if (((List<ReviewBook>) request.getAttribute("reviews")).size() == 0) {
+						%>
 						<h3>No Book Reviews Found !</h3>
-						<%} %>
-						
+						<%
+							}
+						%>
+
 					</div>
 				</div>
 				<br>

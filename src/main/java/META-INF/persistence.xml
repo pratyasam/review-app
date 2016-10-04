@@ -11,6 +11,10 @@
         <class>com.mindfire.review.web.models.ReviewBook</class>
         <class>com.mindfire.review.web.models.ReviewAuthor</class>
         <class>com.mindfire.review.web.models.User</class>
+        <class>com.mindfire.review.web.models.ReviewAuthorLike</class>
+        <class>com.mindfire.review.web.models.ReviewBookLike</class>
+        <class>com.mindfire.review.web.models.BookLike</class>
+        <class>com.mindfire.review.web.models.AuthorLike</class>
 
     </persistence-unit>
 </persistence>

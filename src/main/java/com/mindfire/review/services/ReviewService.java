@@ -4,8 +4,8 @@ import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.web.dto.ReviewAuthorDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
-import com.mindfire.review.web.models.ReviewAuthor;
-import com.mindfire.review.web.models.ReviewBook;
+import com.mindfire.review.web.models.*;
+
 
 /**
  * Created by pratyasa on 10/8/16.
@@ -80,4 +80,84 @@ public interface ReviewService {
      */
 
      ReviewBook getReviewBookById(Long reviewBookId);
+     /**
+      * 
+      * @param user
+      * @return
+      */
+     
+     int getNumberOfAuthorReviewsLikedByTheUser(User user);
+     
+     /**
+      * 
+      * @param user
+      * @return
+      */
+     
+     int getNumberOfBookReviewsLikedByTheUser(User user);
+     
+     /**
+      * 
+      * @param userName
+      * @param reviewAuthorId
+      * @throws AlreadyReviewedException
+      */
+     
+     void addLikeForAuthorReview(String userName, Long reviewAuthorId) throws AlreadyReviewedException;
+     
+     /**
+      * 
+      * @param reviewAuthorLikeId
+      */
+     
+     void removeLikeForAuthorReview(String userName, Long reviewAuthorId) throws ReviewDoesnotExistException;
+     
+     /**
+      * 
+      * @param userName
+      * @param reviewBookId
+      * @throws AlreadyReviewedException
+      */
+     
+     void addLikeForBookReview(String userName, Long reviewBookId) throws AlreadyReviewedException;
+     
+     /**
+      * 
+      * @param reviewBookLikeId
+      * @throws ReviewDoesnotExistException
+      */
+     
+     void removeLikeForBookReview(String userName, Long reviewBookId) throws ReviewDoesnotExistException;
+     
+     /**
+      * 
+      * @param book
+      * @return
+      */
+     
+     int getNumberOfReviewLikesByBook(ReviewBook reviewBook);
+     
+     /**
+      * 
+      * @param author
+      * @return
+      */
+     
+     int getNumberOfReviewLikesByAuthor(ReviewAuthor reviewAuthor);
+     
+     /**
+      * 
+      * @param book
+      * @return
+      */
+     
+     int getNumberOfReviewDislikesByBook(ReviewBook reviewBook);
+     
+     /**
+      * 
+      * @param author
+      * @return
+      */
+     
+     int getNumberOfReviewDislikesByAuthor(ReviewAuthor reviewAuthor);
 }

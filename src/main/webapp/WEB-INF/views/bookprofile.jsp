@@ -1,3 +1,4 @@
+<%@page import="com.mindfire.review.web.dto.ReviewBookLikesDto"%>
 <%@page import="com.mindfire.review.web.models.ReviewBook"%>
 <%@ page import="com.mindfire.review.web.models.Author"%>
 <%@ page import="java.util.List"%>
@@ -46,7 +47,6 @@
 	/* "transparent" only works here because == rgba(0,0,0,0) */
 	background-image: linear-gradient(to bottom, transparent, grey);
 }
-
 </style>
 
 <body>
@@ -114,16 +114,34 @@
 	%>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
-			<div class="col-lg-3" style="height: 20%">
-				<img src="/reviewBook/assets/img/book.jpg"
-					style="height: 100%; width: 100%;">
+			<div class="col-lg-3">
+				<div class="row">
+					<div class="col-lg-12" style="height: 20%">
+						<img src="/reviewBook/assets/img/book.jpg"
+							style="height: 100%; width: 100%;">
+					</div>
+					<div class="nav">
+						<div class="col-lg-12 col-md-12 col-xs-12">
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/books/${book.bookId}/addlike "> <i
+									class="fa fa-thumbs-o-up fa-lg"></i>
+								</a>
+							</div>
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/books/${book.bookId}/deletelike "> <i
+									class="fa fa-thumbs-o-down fa-lg"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col-lg-9">
 				<div class="panel panel-default">
 					<div class="panel-heading text-center">
 						<h3>${book.bookName}</h3>
 						<h4>${book.bookIsbn}</h4>
-						by : 
+						by :
 						<%
 							for (Author a : (List<Author>) request.getAttribute("authors")) {
 						%>
@@ -144,73 +162,103 @@
 							</a>
 						</h5>
 					</div>
-				</div>
-			</div>
-			<div class="col-lg-12">
-				<h3 class="text-center" style="border-bottom: 2px #CCC solid;">Book
-					Description :</h3>
-				<p>${book.bookDescription}</p>
-			</div>
-			<div class="col-lg-12">
-				<h3 class="text-center" style="border-bottom: 2px #CCC solid;">Editorial
-					Review :</h3>
-				<p>${book.bookReview}</p>
-			</div>
-			<div class="col-lg-12">
-				<div class="jumbotron text-center">
-					<h3>Community Reviews</h3>
-					<%
-						for (ReviewBook rb : (List<ReviewBook>) request.getAttribute("reviews")) {
-					%>
-					<%
-						request.setAttribute("bookId", rb.getBook().getBookId());
-							request.setAttribute("reviewId", rb.getReviewId());
-					%>
-										<div class="media">
-						<div class="media-left">
-							<img src="/reviewBook/assets/img/avatar.jpg" alt="avatar" class="media-object"
-								style="width: 60px">
+					<div class="panel-footer">
+						<div class="row nav">
+							<div class="col-lg-12 col-md-12 col-xs-12">
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-weixin fa-lg"></i> ${totalreviews}
+								</div>
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-heart-o fa-lg"></i> ${totallikes}
+								</div>
+							</div>
 						</div>
-						<div class="media-body">
-							<h4 class="media-heading"><%=rb.getUser().getFirstName()%>
-											reviewed:
-											<span class="edit"
-										style="text-align: right; padding-right: 10px;">
-										<form:form method="delete"
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<h3 class="text-center" style="border-bottom: 2px #CCC solid;">Book
+						Description :</h3>
+					<p>${book.bookDescription}</p>
+				</div>
+				<div class="col-lg-12">
+					<h3 class="text-center" style="border-bottom: 2px #CCC solid;">Editorial
+						Review :</h3>
+					<p>${book.bookReview}</p>
+				</div>
+				<div class="col-lg-12">
+					<div class="jumbotron text-center">
+						<h3>Community Reviews</h3>
+						<%
+							for (ReviewBookLikesDto reviewBookLikesDto : (List<ReviewBookLikesDto>) request.getAttribute("reviews")) {
+						%>
+						<%
+						    ReviewBook rb = reviewBookLikesDto.getReviewBook();
+						int likes = reviewBookLikesDto.getLikes();
+						int dislikes = reviewBookLikesDto.getDislikes();
+							request.setAttribute("bookId", rb.getBook().getBookId());
+								request.setAttribute("reviewId", rb.getReviewId());
+						%>
+						<div class="media">
+							<div class="media-left">
+								<img src="/reviewBook/assets/img/avatar.jpg" alt="avatar"
+									class="media-object" style="width: 60px">
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%=rb.getUser().getFirstName()%>
+									reviewed: <span class="edit"
+										style="text-align: right; padding-right: 10px;"> <form:form
+											method="delete"
 											action="/reviewBook/books/${bookId}/reviews/${reviewId}"
 											modelAttribute="delete">
 											<form:button type="submit" class="btn btn-danger">Delete</form:button>
 										</form:form>
 									</span>
-											</h4>
-										<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span>
-											<br>
-											<p><%=rb.getReviewText()%></p>
+								</h4>
+								<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
+									class="glyphicon glyphicon-star"></span><span
+									class="glyphicon glyphicon-star"></span><span
+									class="glyphicon glyphicon-star"></span><span
+									class="glyphicon glyphicon-star"></span> <br>
+								<p><%=rb.getReviewText()%></p>
+							</div>
 						</div>
-					</div>
-						
+							<div class="row nav">
+								<div class="col-lg-12 col-md-12 col-sm-12">
+									<div class="col-lg-6 col-xs-4 well">
+										<a href="/reviewBook/books/${bookId}/reviews/${reviewId}/addlike"><i class="fa fa-thumbs-up fa-2x"><%= likes %></i></a>
+									</div>
+									<div class="col-lg-6 col-xs-4 well">
+										<a href="/reviewBook/books/${bookId}/reviews/${reviewId}/deletelike"><i class="fa fa-thumbs-down fa-2x"><%= dislikes %></i></a>
+									</div>
+								</div>
+							</div>
+
 						<%
 							}
 						%>
-						<%if(((List<ReviewBook>)request.getAttribute("reviews")).size() != 0){ %>
+						<%
+							if (((List<ReviewBook>) request.getAttribute("reviews")).size() != 0) {
+						%>
 						<ul class="pagination">
-						<%
-							for (int i = 1; i <= (int) request.getAttribute("totalpagesr"); i++) {
-						%>
-						<li><a
-							href="/reviewBook/books/${bookId}?pagenor=<%= i%>&pagenou=1"><%=i%></a></li>
+							<%
+								for (int i = 1; i <= (int) request.getAttribute("totalpagesr"); i++) {
+							%>
+							<li><a
+								href="/reviewBook/books/${bookId}?pagenor=<%= i%>&pagenou=1"><%=i%></a></li>
+							<%
+								}
+							%>
+						</ul>
 						<%
 							}
 						%>
-					</ul>
-					<%} %>
-					<%if(((List<ReviewBook>)request.getAttribute("reviews")).size() == 0){  %>
-					<h3> No Reviews !</h3>
-					<%} %>
+						<%
+							if (((List<ReviewBook>) request.getAttribute("reviews")).size() == 0) {
+						%>
+						<h3>No Reviews !</h3>
+						<%
+							}
+						%>
 					</div>
 				</div>
 				<br>
@@ -241,15 +289,14 @@
 						</fieldset>
 					</form:form>
 				</div>
-				<br>
-		<br>
-		<jsp:include page='contact.jsp' />
-		<div class="col-lg-12">
-			<div class="footer text-center">
-				<br> <br> <small>Copyright &copy; Pratyasha</small> <br>
-				<br>
-			</div>
-		</div>
+				<br> <br>
+				<jsp:include page='contact.jsp' />
+				<div class="col-lg-12">
+					<div class="footer text-center">
+						<br> <br> <small>Copyright &copy; Pratyasha</small> <br>
+						<br>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="particles"></div>

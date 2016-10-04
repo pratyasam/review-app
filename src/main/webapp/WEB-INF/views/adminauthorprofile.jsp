@@ -1,3 +1,4 @@
+<%@page import="com.mindfire.review.web.dto.ReviewAuthorLikesDto"%>
 <%@page import="com.mindfire.review.web.models.Book"%>
 <%@page import="com.mindfire.review.web.dto.BookAuthorListDto"%>
 <%@page import="com.mindfire.review.web.models.Author"%>
@@ -48,44 +49,61 @@
 	/* "transparent" only works here because == rgba(0,0,0,0) */
 	background-image: linear-gradient(to bottom, transparent, grey);
 }
-
 </style>
 
 <body>
 	<nav class="navbar navbar-default navbackground">
-		
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#myNavbar">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
-					${userLastName}</a>
-			</div>
-			<div class="collapse navbar-collapse" id="myNavbar">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/reviewBook/home">Home</a></li>
-					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="/reviewBook/addbook">Add Book</a></li>
-							<li><a href="/reviewBook/addauthor">Add Author</a></li>
-							<li><a href="/reviewBook/linkBookAndAuthor">Link Book
-									and Author</a></li>
-						</ul></li>
-					<li><a href="/reviewBook/profile">Profile </a></li>
-					<li><a href="/reviewBook/logout"><span
-							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-				</ul>
-			</div>
-		
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#myNavbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
+				${userLastName}</a>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/reviewBook/home">Home</a></li>
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/reviewBook/addbook">Add Book</a></li>
+						<li><a href="/reviewBook/addauthor">Add Author</a></li>
+						<li><a href="/reviewBook/linkBookAndAuthor">Link Book and
+								Author</a></li>
+					</ul></li>
+				<li><a href="/reviewBook/profile">Profile </a></li>
+				<li><a href="/reviewBook/logout"><span
+						class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+			</ul>
+		</div>
+
 	</nav>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
-			<div class="col-lg-3" style="height: 20%">
-				<img src="/reviewBook/assets/img/book.jpg"
-					style="height: 100%; width: 100%;">
+			<div class="col-lg-3">
+				<div class="row">
+					<div class="col-lg-12" style="height: 20%">
+						<img src="/reviewBook/assets/img/book.jpg"
+							style="height: 100%; width: 100%;">
+					</div>
+					<div class="nav">
+						<div class="col-lg-12 col-md-12 col-xs-12">
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/authors/${author.authorId}/addlike "> <i
+									class="fa fa-thumbs-o-up fa-lg"></i>
+								</a>
+							</div>
+							<div class="col-lg-6 col-md-6 col-xs-6 well">
+								<a href="/reviewBook/authors/${author.authorId}/deletelike "> <i
+									class="fa fa-thumbs-o-down fa-lg"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col-lg-9">
 				<div class="panel panel-default">
@@ -114,6 +132,18 @@
 							</div>
 						</div>
 					</div>
+					<div class="panel-footer">
+						<div class="row nav">
+							<div class="col-lg-12 col-md-12 col-xs-12">
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-weixin fa-lg"></i> ${totalreviews}
+								</div>
+								<div class="col-lg-6 col-md-6 col-xs-6 well">
+									<i class="fa fa-heart-o fa-lg"></i> ${totallikes}
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="col-lg-12">
@@ -122,7 +152,8 @@
 				<p>${author.authorDescription}</p>
 			</div>
 			<div class="col-lg-12 text-center">
-				<h4 style="border-bottom: 2px #CCC solid;">Books By ${author.authorName}</h4>
+				<h4 style="border-bottom: 2px #CCC solid;">Books By
+					${author.authorName}</h4>
 				<div class="row">
 					<div class="col-lg-12">
 						<%
@@ -170,7 +201,9 @@
 						<br> <br>
 						<div
 							class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center">
-							<%if(((List<BookAuthorListDto>)request.getAttribute("books")).size() != 0){ %>
+							<%
+								if (((List<BookAuthorListDto>) request.getAttribute("books")).size() != 0) {
+							%>
 							<ul class="pagination">
 								<%
 									for (int i = 1; i <= (int) request.getAttribute("totalpagesb"); i++) {
@@ -181,10 +214,16 @@
 									}
 								%>
 							</ul>
-							<%} %>
-							<% if(((List<BookAuthorListDto>)request.getAttribute("books")).size() != 0){%>
-							<h3> No Books To Show !</h3>
-							<%} %>
+							<%
+								}
+							%>
+							<%
+								if (((List<BookAuthorListDto>) request.getAttribute("books")).size() != 0) {
+							%>
+							<h3>No Books To Show !</h3>
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>
@@ -203,45 +242,46 @@
 				<div class="jumbotron text-center">
 					<h3>Community Reviews</h3>
 					<%
-						for (ReviewAuthor ra : (List<ReviewAuthor>) request.getAttribute("reviews")) {
+						for (ReviewAuthorLikesDto rd : (List<ReviewAuthorLikesDto>) request.getAttribute("reviews")) {
 					%>
 					<%
+					ReviewAuthor ra = rd.getReviewAuthor();
+			        int likes = rd.getLikes();
+			        int dislikes = rd.getDislikes();
 						request.setAttribute("authorId", ra.getAuthor().getAuthorId());
 							request.setAttribute("reviewId", ra.getReviewAuthorId());
 					%>
 					<div class="media">
 						<div class="media-left">
-							<img src="/reviewBook/assets/img/avatar.jpg" alt="avatar" class="media-object"
-								style="width: 60px">
+							<img src="/reviewBook/assets/img/avatar.jpg" alt="avatar"
+								class="media-object" style="width: 60px">
 						</div>
 						<div class="media-body">
 							<h4 class="media-heading"><%=ra.getUser().getFirstName()%>
-											reviewed:
-											<span class="edit"
-										style="text-align: right; padding-right: 10px;">
-										<form:form method="delete"
-											action="/reviewBook/authors/${authorId}/reviews/${reviewId}"
-											modelAttribute="delete">
-											<form:button type="submit" class="btn btn-danger"> Delete </form:button>
-										</form:form>
-									</span>
-											</h4>
-										<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span>
-											<br>
-											<p><%=ra.getReviewAuthorText()%></p>
+								reviewed: <span class="edit"
+									style="text-align: right; padding-right: 10px;"> <form:form
+										method="delete"
+										action="/reviewBook/authors/${authorId}/reviews/${reviewId}"
+										modelAttribute="delete">
+										<form:button type="submit" class="btn btn-danger"> Delete </form:button>
+									</form:form>
+								</span>
+							</h4>
+							<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
+								class="glyphicon glyphicon-star"></span><span
+								class="glyphicon glyphicon-star"></span><span
+								class="glyphicon glyphicon-star"></span><span
+								class="glyphicon glyphicon-star"></span> <br>
+							<p><%=ra.getReviewAuthorText()%></p>
 						</div>
 					</div>
 					<div class="row nav">
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="col-lg-6 col-xs-4 well">
-										<i class="fa fa-thumbs-up fa-2x"></i>
+										<a href="/reviewBook/authors/${authorId}/reviews/${reviewId}/addlike"><i class="fa fa-thumbs-up fa-2x"><%= likes %></i></a>
 									</div>
 									<div class="col-lg-6 col-xs-4 well">
-										<i class="fa fa-thumbs-down fa-2x"></i>
+										<a href="/reviewBook/authors/${authorId}/reviews/${reviewId}/deletelike"><i class="fa fa-thumbs-down fa-2x"><%= dislikes %></i></a>
 									</div>
 								</div>
 							</div>
@@ -250,7 +290,9 @@
 					<%
 						}
 					%>
-					<%if(((List<ReviewAuthor>)request.getAttribute("reviews")).size() != 0){ %>
+					<%
+						if (((List<ReviewAuthor>) request.getAttribute("reviews")).size() != 0) {
+					%>
 					<ul class="pagination">
 						<%
 							for (int i = 1; i <= (int) request.getAttribute("totalpagesr"); i++) {
@@ -261,10 +303,16 @@
 							}
 						%>
 					</ul>
-					<%} %>
-					<% if(((List<ReviewAuthor>)request.getAttribute("reviews")).size() == 0){ %>
-					<h3> No Reviews To Show !</h3>
-					<%} %>
+					<%
+						}
+					%>
+					<%
+						if (((List<ReviewAuthor>) request.getAttribute("reviews")).size() == 0) {
+					%>
+					<h3>No Reviews To Show !</h3>
+					<%
+						}
+					%>
 				</div>
 			</div>
 			<br>

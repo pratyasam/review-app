@@ -1,5 +1,7 @@
 package com.mindfire.review;
 
+import javax.servlet.MultipartConfigElement;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,5 +28,13 @@ class ApplicationConfig {
     	multipartResolver.setDefaultEncoding("UTF-8");
     	return multipartResolver;
     }
+    
+//    @Bean
+//    public MultipartConfigElement multipartConfigElement() {
+//        MultipartConfigFactory factory = new MultipartConfigFactory();
+//        factory.setMaxFileSize("128KB");
+//        factory.setMaxRequestSize("128KB");
+//        return factory.createMultipartConfig();
+//    }
 
 }

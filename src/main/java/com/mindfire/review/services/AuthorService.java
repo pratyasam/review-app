@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
@@ -157,5 +159,38 @@ public interface AuthorService {
      * @throws AuthorExistenceException
      */
     public void removeAuthor(Long authorId) throws AuthorExistenceException;
+    
+    /**
+     * 
+     * @param userName
+     * @param authorId
+     * @throws AlreadyReviewedException
+     */
+    
+    void addAuthorLikeByUser(String userName, Long authorId) throws AlreadyReviewedException;
+    
+    /**
+     * 
+     * @param authorLikeId
+     * @throws ReviewDoesnotExistException
+     */
+    
+    void removeAuthorLikeByUser(String userName, Long authorId) throws ReviewDoesnotExistException;
+    
+    /**
+     * 
+     * @param authorId
+     * @return
+     */
+    
+    int getNumberOfLikesByUser(Long authorId);
+    
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    
+    int getTotalAuthorReviewByAuthorName(String name);
 
 }

@@ -21,9 +21,6 @@ public class ReviewBook implements Serializable {
     @Column(name = "review_text", nullable = false, length = 4005)
     private String reviewText;
 
-//	//bi-directional many-to-one association to BookReview
-//	@OneToMany(mappedBy="review")
-//	private List<BookReview> bookReviews;
 
     //bi-directional many-to-one association to User
     @ManyToOne(fetch = FetchType.LAZY)

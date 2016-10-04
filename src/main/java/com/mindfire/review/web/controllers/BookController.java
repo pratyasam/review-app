@@ -3,6 +3,7 @@ package com.mindfire.review.web.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -18,16 +19,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
+import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookAuthorService;
 import com.mindfire.review.services.BookService;
+import com.mindfire.review.services.ReviewService;
 import com.mindfire.review.web.dto.BookAuthorLinkDto;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
+import com.mindfire.review.web.dto.ReviewBookLikesDto;
 import com.mindfire.review.web.dto.SearchDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
@@ -45,6 +50,8 @@ public class BookController {
 	private BookAuthorService bookAuthorService;
 	@Autowired
 	private AuthorService authorService;
+	@Autowired
+	private ReviewService reviewService;
 
 	/**
 	 * get book add page for moderator and admin
@@ -154,6 +161,7 @@ public class BookController {
 			List<Book> bookList = bookService.getBooks(pageno,6).getContent(); 
 															
 			List<BookAuthorListDto> bookAuthorListDto3 = new ArrayList<>();
+			
 			for (Book b : bookList) {
 				BookAuthorListDto bookAuthorListDto4 = new BookAuthorListDto();
 				List<Author> authorList = bookService.getAuthorByBook(b.getBookName());
@@ -190,6 +198,16 @@ public class BookController {
 		int totalPagesu = users.getTotalPages();
 		ReviewBookDto reviewBookDto = new ReviewBookDto();
 		
+		List<ReviewBookLikesDto> reviewBookLikesDtos = new ArrayList<>();
+		
+		for(ReviewBook rb : reviewBooks.getContent()){
+			 ReviewBookLikesDto reviewBookLikesDto2 = new ReviewBookLikesDto();
+			 reviewBookLikesDto2.setDislikes(reviewService.getNumberOfReviewDislikesByBook(rb));
+			 reviewBookLikesDto2.setLikes(reviewService.getNumberOfReviewLikesByBook(rb));
+			 reviewBookLikesDto2.setReviewBook(rb);
+			 reviewBookLikesDtos.add(reviewBookLikesDto2);
+		}
+		
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
 			if(httpSession.getAttribute("review") != null){
@@ -199,14 +217,15 @@ public class BookController {
 			modelAndView.addObject("book", bookService.getBookById(bookId));
 			modelAndView.addObject("authors", author);
 			modelAndView.addObject("users", users);
-			modelAndView.addObject("reviews",reviewBooks.getContent());
+			modelAndView.addObject("reviews",reviewBookLikesDtos);
 			modelAndView.addObject("totalpagesr", totalPagesr);
 			modelAndView.addObject("totalpagesu", totalPagesu);
 			modelAndView.addObject("updatebook", new BookDto());
 			modelAndView.addObject("delete", new ChoiceDto());
 			modelAndView.addObject("verify", new ChoiceDto());
 			modelAndView.addObject("bookprofile", reviewBookDto);
-
+            modelAndView.addObject("totallikes", bookService.getNumberOfBookLikesByUsers(bookId));
+            modelAndView.addObject("totalreviews", bookService.getTotalBookReviewByBook(name));
 			return modelAndView;
 		}
 
@@ -217,7 +236,9 @@ public class BookController {
 		modelAndView.addObject("totalpagesr", totalPagesr);
 		modelAndView.addObject("totalpagesu", totalPagesu);
 		modelAndView.addObject("authors", author);
-		
+		modelAndView.addObject("totallikes", bookService.getNumberOfBookLikesByUsers(bookId));
+		modelAndView.addObject("totalreviews", bookService.getTotalBookReviewByBook(name));
+		modelAndView.addObject("reviews",reviewBookLikesDtos);
 		
 		if(httpSession.getAttribute("review") != null){
 			reviewBookDto = (ReviewBookDto) httpSession.getAttribute("review");
@@ -226,6 +247,66 @@ public class BookController {
 		modelAndView.addObject("bookprofile", reviewBookDto);
 		modelAndView.addObject("delete", new ChoiceDto());
 		return modelAndView;
+	}
+	
+	/**
+	 * 
+	 * @param httpSession
+	 * @param bookId
+	 * @param httpServletRequest
+	 * @param model
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/books/{bookId}/addlike", method = RequestMethod.GET)
+	public Object addLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, HttpServletRequest httpServletRequest, Model model){
+		
+		String userName = (String) httpSession.getAttribute("userName");
+		if(userName==null){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		try{
+		bookService.addBookLikeByUser(userName, bookId);
+		return "redirect:/books/{bookId}";
+		}
+		catch (AlreadyReviewedException e) {
+			model.addAttribute("exception", e);
+			return "redirect:/books/{bookId}";
+		}
+	}
+	
+	/**
+	 * 
+	 * @param httpSession
+	 * @param bookId
+	 * @param httpServletRequest
+	 * @param model
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/books/{bookId}/deletelike", method = RequestMethod.GET)
+	public Object deleteLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, HttpServletRequest httpServletRequest, Model model){
+		String userName = (String) httpSession.getAttribute("userName");
+		if(userName == (null)){
+			String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
+    		 return "redirect:/login";
+		}
+		
+		try{
+			bookService.removeBookLikeByUser(userName, bookId);
+			return "redirect:/books/{bookId}";
+			}
+			catch (ReviewDoesnotExistException e) {
+				model.addAttribute("exception", e);
+				return "redirect:/books/{bookId}";
+			}
 	}
 
 	/**

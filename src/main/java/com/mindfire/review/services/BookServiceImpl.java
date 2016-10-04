@@ -9,18 +9,23 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.BookExistException;
+import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.AuthorLike;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.BookAuthor;
+import com.mindfire.review.web.models.BookLike;
 import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.ReviewBook;
 import com.mindfire.review.web.models.User;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
+import com.mindfire.review.web.repositories.BookLikeRepository;
 import com.mindfire.review.web.repositories.BookRepository;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
@@ -36,10 +41,13 @@ public class BookServiceImpl implements BookService {
 	private ReviewBookRepository reviewBookRepository;
 	@Autowired
 	private ReviewAuthorRepository reviewAuthorRepository;
+	@Autowired
+	private BookLikeRepository bookLikeRepository;
+	@Autowired
+	private UserService userService;
+	
 
-	public BookServiceImpl() {
-		super();
-	}
+
 
 	/**
 	 * get book by Id
@@ -212,6 +220,16 @@ public class BookServiceImpl implements BookService {
 
 	public List<ReviewBook> getBookReviewByBook(String name) {
 		return reviewBookRepository.findByBook(getBookByName(name));
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	
+	public int getTotalBookReviewByBook(String name) {
+		return reviewBookRepository.findByBook(getBookByName(name)).size();
 	}
 	/**
 	 * 
@@ -418,6 +436,63 @@ public class BookServiceImpl implements BookService {
 
 		else
 			book.setBookVerified(false);
+	}
+	
+	/**
+	 * 
+	 * @param userName
+	 * @param bookId
+	 * @throws AlreadyReviewedException
+	 */
+	
+	public void addBookLikeByUser(String userName, Long bookId)throws AlreadyReviewedException{
+		User user = userService.getUser(userName);
+		Book book = getBookById(bookId);
+		
+		if(bookLikeRepository.findByBookAndUser(book, user) != null){
+			throw new AlreadyReviewedException("Already liked the book");
+		}
+		
+		BookLike bookLike = new BookLike();
+	    bookLike.setBook(book);
+		bookLike.setUser(user);
+		bookLike = bookLikeRepository.save(bookLike);
+	    System.out.println("book liked.");
+	    
+	    if(bookLike == null){
+	    	throw new RuntimeException("");
+	    }
+		
+	}
+	
+	/**
+	 * 
+	 * @param bookLikeId
+	 * @throws ReviewDoesnotExistException
+	 */
+	
+	public void removeBookLikeByUser(String userName, Long bookId) throws ReviewDoesnotExistException{
+		
+		User user = userService.getUser(userName);
+		Book book = getBookById(bookId);
+		BookLike bookLike = bookLikeRepository.findByBookAndUser(book, user);
+		
+		if(bookLike == null){
+			throw new ReviewDoesnotExistException("the book like doesnot exist.");
+		}
+		
+		bookLikeRepository.delete(bookLike);
+	}
+	
+	/**
+	 * 
+	 * @param bookId
+	 * @return
+	 */
+	
+	public int getNumberOfBookLikesByUsers(Long bookId){
+		Book book = getBookById(bookId);
+		return bookLikeRepository.findByBook(book).size();
 	}
 
 }
