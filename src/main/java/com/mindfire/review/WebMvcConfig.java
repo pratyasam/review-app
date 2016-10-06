@@ -48,7 +48,6 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        //viewResolver.setViewClass(org.springframework.web.servlet.view.JstlView.class);
         viewResolver.setPrefix(VIEWS);
         viewResolver.setSuffix(".jsp");
         return viewResolver;
@@ -63,21 +62,13 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         return filter;
     }
 
+   
     @Bean
-    public MultipartResolver multipartResolver(){
+    public CommonsMultipartResolver multipartResolver(){
     	CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
     	multipartResolver.setMaxUploadSize(26214400L);
-    	multipartResolver.setDefaultEncoding("UTF-8");
     	return multipartResolver;
     }
-    
-//    @Bean
-//    public MultipartConfigElement multipartConfigElement() {
-//        MultipartConfigFactory factory = new MultipartConfigFactory();
-//        factory.setMaxFileSize("128KB");
-//        factory.setMaxRequestSize("128KB");
-//        return factory.createMultipartConfig();
-//    }
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

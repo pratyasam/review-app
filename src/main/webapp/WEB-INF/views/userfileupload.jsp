@@ -26,15 +26,14 @@
 					<h3>User Profile Picture Upload</h3>
 				</div>
 				<div class="panel-body">
-					<form:form action="/reviewBook/userupload" method="post"
-						enctype="multipart/form-data" modelAttribute="photofile">
+					
+					 <form action="/reviewBook/userupload" method="post" enctype="multipart/form-data">
 						<fieldset>
 							<div class="form-group">
 								<div class="col-lg-12">
 									<img id="photo" src="#"
 										style="height: 30%; width: 40%; display: none" /> <br> <br>
-									<label> <b>Select a file.</b></label> <form:input type="file"
-										name="uploadFile" path="file"  onchange="loadFile(event)"/>
+									<label> <b>Select a file.</b></label> <input type="file" name="file"  onchange="loadFile(event)"/>
 
 								</div>
 							</div>
@@ -42,13 +41,11 @@
 							<div class="form-group">
 								<div>
 
-									<button type="submit" class="btn btn-primary pull-right">
-										Submit</button>
+									<button type="submit" class="btn btn-primary pull-right">Submit</button>
 								</div>
 							</div>
 						</fieldset>
-					</form:form>
-
+					</form>
 					<a class="btn btn-default pull-right" href="/reviewBook/profile">profile</a>
 
 				</div>

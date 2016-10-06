@@ -4,15 +4,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UploadDto {
 	
-	private MultipartFile file;
+	private MultipartFile fileObject;
 
-	public MultipartFile getFile() {
-		return file;
+	public MultipartFile getFileObject() {
+		return fileObject;
 	}
 
-	public void setFile(MultipartFile file) {
-		this.file = file;
+	public void setFileObject(MultipartFile fileObject) {
+		this.fileObject = fileObject;
 	}
+
+
 	
 	
 
