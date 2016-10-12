@@ -19,13 +19,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.review.services.AuthorService;
+import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.UploadService;
-import com.mindfire.review.services.ValidationService;
+import com.mindfire.review.services.UserService;
+import com.mindfire.review.web.models.User;
 
 /**
  * @author pratyasa
@@ -37,14 +41,25 @@ public class UploadController {
 	@Autowired
 	private ServletContext servletContext;
 
-	private static final String UPLOAD_DIRECTORY = "/images";
+	@Autowired
+	private UploadService uploadService;
+
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private AuthorService authorService;
+	
+	@Autowired
+	private BookService bookService;
+
+	private final String UPLOAD_DIRECTORY = "/images";
 
 	@RequestMapping(value = "/userupload", method = RequestMethod.GET)
 	public Object uploadPage(HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
 
 		if (httpSession.getAttribute("userName") != null) {
 			ModelAndView modelAndView = new ModelAndView("userfileupload");
-			// modelAndView.addObject("photofile", new UploadDto());
 			return modelAndView;
 		} else {
 			String url = httpServletRequest.getRequestURI();
@@ -57,42 +72,92 @@ public class UploadController {
 	}
 
 	@RequestMapping(value = "/userupload", method = RequestMethod.POST)
-	public String saveFile(HttpServletRequest request,HttpSession httpSession, Model model ){
+	public String saveFile(HttpServletRequest request, HttpSession httpSession, Model model) {
 
-		if(!ServletFileUpload.isMultipartContent(request)){
+		User user = userService.getUser((String) httpSession.getAttribute("userName"));
+
+		if (!ServletFileUpload.isMultipartContent(request)) {
 			return "redirect:/userupload";
 		}
-		
+
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
 		/// Configure a repository (to ensure a secure temp location is used)
 		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 		factory.setRepository(repository);
-		
+
 		// Create a new file upload handler
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		
+
 		try {
 			List<FileItem> items = upload.parseRequest(request);
-			if(items.size() == 1){
+			if (items.size() == 1) {
 				FileItem file = items.get(0);
-//				ValidationService validationService = new ValidationService();
-//				validationService.validate(file, bindingResult);
-//				if(bindingResult.hasErrors())
-//					return "redirect:/userupload";
-					
-					model.addAttribute("photo", UploadService.simpleUpload(file, httpSession, true));
-					return "uploadsuccess";
-				
-			
+
+				String imageName = uploadService.simpleUpload(file, httpSession, true);
+				uploadService.uploadUserImage(user, imageName);
+				model.addAttribute("photo", imageName);
+				return "uploadsuccess";
+
 			}
-			} catch (FileUploadException e) {
-			// TODO Auto-generated catch block
+		} catch (FileUploadException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		
+
 		return ":redirect/userupload";
 	}
+	
+	@RequestMapping(value = "/{authorId}/authorupload", method = RequestMethod.GET)
+	public Object authorUploadPage(@PathVariable("authorId") int authorId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
+
+		if (httpSession.getAttribute("userName") != null) {
+			ModelAndView modelAndView = new ModelAndView("authorupload");
+			return modelAndView;
+		} else {
+			String url = httpServletRequest.getRequestURI();
+			System.out.println(url);
+			if (url != null)
+				httpSession.setAttribute("url", url);
+			return "redirect:/login";
+		}
+
+	}
+	
+	@RequestMapping(value = "/{authorId}/authorupload", method = RequestMethod.POST)
+	public String saveAuthorFile(HttpServletRequest request, HttpSession httpSession, Model model) {
+		if (!ServletFileUpload.isMultipartContent(request)) {
+			return "redirect:/authorupload";
+		}
+
+		// Create a factory for disk-based file items
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+
+		/// Configure a repository (to ensure a secure temp location is used)
+		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+		factory.setRepository(repository);
+
+		// Create a new file upload handler
+		ServletFileUpload upload = new ServletFileUpload(factory);
+
+		try {
+			List<FileItem> items = upload.parseRequest(request);
+			if (items.size() == 1) {
+				FileItem file = items.get(0);
+
+				String imageName = uploadService.simpleUpload(file, httpSession, true);
+				
+				model.addAttribute("photo", imageName);
+				return "redirect:/authors/{authorId}";
+
+			}
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+
+		return ":redirect/authorupload";
+	}
+	
 }

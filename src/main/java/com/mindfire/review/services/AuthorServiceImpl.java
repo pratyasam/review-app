@@ -61,6 +61,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Page<Author> getAllAuthor(int pageno, int size) {
     	Pageable page = Utility.buildPageRequest(size, pageno);
+    	
+    	
+       // System.out.println(authorRepository.findTop10ByAuthorLikesGreaterThanOrderByAuthorLikesDesc(0).size());
+    	
         return authorRepository.findAll(page);
     }
     /**
@@ -350,6 +354,9 @@ public class AuthorServiceImpl implements AuthorService {
     	 authorLike.setAuthor(author);
     	 authorLike.setUser(user);
     	 authorLike = authorLikeRepository.save(authorLike);
+    	 
+    	 author.setAuthorLikes(getNumberOfLikesByUser(authorId));
+    	 authorRepository.save(author);
     	 System.out.println("author liked");
     	 
     	 if(authorLike == null){
@@ -384,7 +391,10 @@ public class AuthorServiceImpl implements AuthorService {
     
     public int getNumberOfLikesByUser(Long authorId){
     	Author author = getAuthorById(authorId);
-    	return authorLikeRepository.findByAuthor(author).size();
+    	int likes = authorLikeRepository.findByAuthor(author).size();
+    	author.setAuthorLikes(likes);
+    	authorRepository.save(author);
+    	return likes;
     }
 
 }

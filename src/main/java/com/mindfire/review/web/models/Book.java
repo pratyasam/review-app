@@ -39,12 +39,18 @@ public class Book implements Serializable {
 
     @Column(name = "rating", nullable = false)
     private float bookRating;
+    
+    @Column(name = "likes")
+    private int bookLikes = 0;
 
     @Column(name = "review", nullable = false, length = 4005)
     private String bookReview;
 
     @Column(name = "verified", nullable = false)
     private boolean bookVerified = false;
+    
+    @Column(name = "image", length = 4005)
+    private String bookImage;
 
     //bi-directional many-to-one association to BookAuthor
     @OneToMany(mappedBy = "book")
@@ -158,6 +164,25 @@ public class Book implements Serializable {
 
         return bookAuthor;
     }
+
+	public int getBookLikes() {
+		return bookLikes;
+	}
+
+	public void setBookLikes(int bookLikes) {
+		this.bookLikes = bookLikes;
+	}
+
+	public String getBookImage() {
+		return bookImage;
+	}
+
+	public void setBookImage(String bookImage) {
+		this.bookImage = bookImage;
+	}
+    
+	
+    
 
 //	public List<BookReview> getBookReviews() {
 //		return this.bookReviews;

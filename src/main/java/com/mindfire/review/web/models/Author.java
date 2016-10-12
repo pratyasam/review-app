@@ -30,6 +30,12 @@ public class Author{
 
     @Column(name = "rating")
     private float authorRating;
+    
+    @Column(name = "likes")
+    private int authorLikes = 0;
+    
+    @Column(name = "image", length = 4005)
+    private String authorImage;
 
 
     //bi-directional many-to-one association to BookAuthor
@@ -101,5 +107,25 @@ public class Author{
 
         return bookAuthor;
     }
+
+	public int getAuthorLikes() {
+		return authorLikes;
+	}
+
+	public void setAuthorLikes(int authorLikes) {
+		this.authorLikes = authorLikes;
+	}
+
+	public String getAuthorImage() {
+		return authorImage;
+	}
+
+	public void setAuthorImage(String authorImage) {
+		this.authorImage = authorImage;
+	}
+	
+	
+    
+    
 
 }

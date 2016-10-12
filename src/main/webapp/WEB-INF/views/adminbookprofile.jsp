@@ -1,5 +1,6 @@
 <%@page import="com.mindfire.review.web.models.ReviewBook"%>
 <%@ page import="com.mindfire.review.web.models.Author"%>
+<%@page import="com.mindfire.review.web.dto.*"%>
 <%@ page import="java.util.List"%>
 <%--
   Created by IntelliJ IDEA.
@@ -185,9 +186,12 @@
 				<div class="jumbotron text-center">
 					<h3>Community Reviews</h3>
 					<%
-						for (ReviewBook rb : (List<ReviewBook>) request.getAttribute("reviews")) {
+						for (ReviewBookLikesDto reviewBookLikesDto : (List<ReviewBookLikesDto>) request.getAttribute("reviews")) {
 					%>
 					<%
+					ReviewBook rb = reviewBookLikesDto.getReviewBook();
+					int likes = reviewBookLikesDto.getLikes();
+					int dislikes = reviewBookLikesDto.getDislikes();
 						request.setAttribute("bookId", rb.getBook().getBookId());
 							request.setAttribute("reviewId", rb.getReviewId());
 					%>

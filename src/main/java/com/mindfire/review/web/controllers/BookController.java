@@ -392,12 +392,12 @@ public class BookController {
 	}
 
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.GET)
-	public Object getBookAuthorLinkPage(@RequestParam("pageno") int pageno,HttpSession httpSession) {
+	public Object getBookAuthorLinkPage(HttpSession httpSession) {
 		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
 				|| httpSession.getAttribute("role").equals("moderator"))) {
 			ModelAndView modelAndView = new ModelAndView("bookauthorlink", "bookauthorlink", new BookAuthorLinkDto());
-			List<Book> books = bookService.getBooks(pageno, 6).getContent();
-			List<Author> authors = authorService.getAllAuthor(pageno,6).getContent();
+			List<Book> books = bookService.getBooks();
+			List<Author> authors = authorService.getAllAuthor();
 			List<String> bookList = new ArrayList<>();
 			List<String> authorList = new ArrayList<>();
 			for (Book b : books) {
@@ -406,7 +406,7 @@ public class BookController {
 			for (Author a : authors) {
 				authorList.add(a.getAuthorName());
 			}
-			modelAndView.addObject("booklist", bookList);
+			modelAndView.addObject("booklist",bookList);
 			modelAndView.addObject("authorlist", authorList);
 			return modelAndView;
 		}

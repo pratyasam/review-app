@@ -457,6 +457,9 @@ public class BookServiceImpl implements BookService {
 	    bookLike.setBook(book);
 		bookLike.setUser(user);
 		bookLike = bookLikeRepository.save(bookLike);
+		
+		book.setBookLikes(getNumberOfBookLikesByUsers(bookId));
+		bookRepository.save(book);
 	    System.out.println("book liked.");
 	    
 	    if(bookLike == null){
@@ -492,7 +495,12 @@ public class BookServiceImpl implements BookService {
 	
 	public int getNumberOfBookLikesByUsers(Long bookId){
 		Book book = getBookById(bookId);
-		return bookLikeRepository.findByBook(book).size();
+		int likes = bookLikeRepository.findByBook(book).size();
+		
+		book.setBookLikes(likes);
+		bookRepository.save(book);
+		
+		return likes;
 	}
 
 }

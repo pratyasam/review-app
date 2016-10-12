@@ -69,6 +69,16 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      * @return
      */
     Author findOne(Long id);
+    
+    /**
+     * 
+     * @return
+     */
+    
+    List<Author> findTop10ByAuthorLikesGreaterThanOrderByAuthorLikesDesc(int likes);
+    
+//    @Query("SELECT  a FROM Author a WHERE a.likes > '0' ORDER BY a.likes DESC LIMIT 10")
+//    List<Author> findByTop();
 }
 
 

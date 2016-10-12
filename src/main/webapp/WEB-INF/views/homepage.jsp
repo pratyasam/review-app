@@ -21,6 +21,9 @@
 	href="assets/css/home-pagestyle.css">
 <link href='https://fonts.googleapis.com/css?family=Bree+Serif'
 	rel='stylesheet' type='text/css'>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 </head>
 <style>
 .carousel-inner>.item>img, .carousel-inner>.item>a>img {
@@ -156,22 +159,20 @@ a {
 	<div id="myNav" class="overlay2">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
-			<div class="form">
-				<form action="search" method="get">
-					<fieldset>
-						<div class="col-lg-6 col-lg-offset-3">
-							<div class="form-group">
-								<input name="query" type="text" class="form-control" id="search"
-									placeholder="Search Authors or Books" /> <input name="page"
-									value="1" type="hidden" /> <br> <br>
-								<div class="col-lg-10 col-lg-offset-2">
-									<button type="submit" class="btn btn-primary">Submit</button>
-								</div>
-							</div>
-						</div>
-					</fieldset>
-				</form>
+
+			<div class="col-lg-6 col-lg-offset-3">
+
+				<input name="query" type="text" id="search"
+					onkeyup="searchfunc(this.value)"
+					placeholder="Search Authors or Books" /><br> <br>
+
+
 			</div>
+			<br>
+			<br>
+
+
+			<div class="col-lg-6 col-lg-offset-3" id="result"></div>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -308,7 +309,7 @@ a {
 					</div>
 				</div>
 			</div>
-			<br><br><br>
+			<br> <br> <br>
 			<div class="col-lg-2 col-lg-offset-5">
 				<a href="/reviewBook/books" class="btn btn-default">+More Books</a>
 			</div>
@@ -514,10 +515,26 @@ a {
 		</div>
 	</div>
 	</div>
+
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#search').keyup(function(event) {
+				var searchParam = $('#search').value();
+				$.get('/reviewBook/search', {
+					searchParam : searchParam
+				}, function(data) {
+					$('#result').html(data);
+				});
+			});
+		});
+	</script>
+
 	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";

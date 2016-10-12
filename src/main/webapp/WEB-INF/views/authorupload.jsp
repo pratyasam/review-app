@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
-<title>User Profile Picture Upload</title>
+<title>Author Profile Picture Upload</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet"
@@ -19,15 +19,15 @@
 
 	<div class="container-fluid">
 		<div
-			class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-10 col-sm-offest-1" style="margin-top: 20px;">
+			class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-10 col-sm-offest-1">
 
 			<div class="panel panel-primary">
 				<div class="panel-heading text-center">
-					<h3>User Profile Picture Upload</h3>
+					<h3>Author Profile Picture Upload</h3>
 				</div>
 				<div class="panel-body">
 					
-					 <form action="/reviewBook/userupload" method="post" enctype="multipart/form-data">
+					 <form action="/reviewBook/authorupload" method="post" enctype="multipart/form-data">
 						<fieldset>
 							<div class="form-group">
 								<div class="col-lg-12">

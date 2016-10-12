@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 
 /**
@@ -111,5 +112,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	 * @return
 	 */
 	Book findOne(Long id);
+	
+	
+	List<Book> findTop10ByBookLikesGreaterThanOrderByBookLikesDesc(int likes);
 
 }

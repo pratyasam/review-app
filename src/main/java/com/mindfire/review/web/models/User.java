@@ -27,15 +27,23 @@ public class User implements Serializable {
 
     @Column(name = "user_name", unique = true, nullable = false, length = 255)
     private String userName;
+    
     @Column(name = "password", nullable = false, length = 64)
     private String userPassword;
+    
     @Column(name = "role", nullable = false, length = 45)
     private String role = "normal";
+    
     @Column(name = "gender", nullable = false, length = 45)
     private String userGender;
+    
+    @Column(name = "image", length = 4005)
+    private String userImage;
+    
     //bi-directional many-to-one association to ReviewAuthor
     @OneToMany(mappedBy = "user")
     private List<ReviewAuthor> reviewAuthors;
+    
     //bi-directional many-to-one association to ReviewBook
     @OneToMany(mappedBy = "user")
     private List<ReviewBook> reviewBooks;
@@ -131,7 +139,17 @@ public class User implements Serializable {
         this.reviewBooks = reviewBooks;
     }
 
-    public ReviewBook addReview(ReviewBook reviewBook) {
+    
+    
+    public String getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
+
+	public ReviewBook addReview(ReviewBook reviewBook) {
         getReviewBooks().add(reviewBook);
         reviewBook.setUser(this);
 

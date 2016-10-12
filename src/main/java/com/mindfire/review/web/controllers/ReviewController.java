@@ -92,10 +92,14 @@ public class ReviewController {
      * @return
      */
     @RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}", method = RequestMethod.DELETE)
-    public String removeAuthorReviewByUser(@PathVariable("authorId") Long authorId,@PathVariable("reviewAuthorId") Long reviewAuthorId,@ModelAttribute("delete") ChoiceDto choiceDto, HttpSession httpSession, Model model){
+    public String removeAuthorReviewByUser(HttpServletRequest httpServletRequest, @PathVariable("authorId") Long authorId,@PathVariable("reviewAuthorId") Long reviewAuthorId,@ModelAttribute("delete") ChoiceDto choiceDto, HttpSession httpSession, Model model){
         
     	
     	if(httpSession.getAttribute("userName") == null){
+    		String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
             return "redirect:/login";
         }
     	
@@ -114,8 +118,12 @@ public class ReviewController {
         return "redirect:/authors";
     }
     @RequestMapping(value="books/{bookId}/reviews/{reviewBookId}", method = RequestMethod.DELETE)
-    public String removeBookReviewByUser(@PathVariable("bookId") long bookId, @PathVariable("reviewBookId") Long reviewBookId, @ModelAttribute("delete")ChoiceDto choiceDto, HttpSession httpSession, Model model){
+    public String removeBookReviewByUser(HttpServletRequest httpServletRequest, @PathVariable("bookId") long bookId, @PathVariable("reviewBookId") Long reviewBookId, @ModelAttribute("delete")ChoiceDto choiceDto, HttpSession httpSession, Model model){
     	if(httpSession.getAttribute("userName") == null){
+    		String url = httpServletRequest.getRequestURI();
+    		System.out.println(url);
+    		if(url != null)
+    		httpSession.setAttribute("url", url);
             return "redirect:/login";
         }
     	
@@ -178,6 +186,7 @@ public class ReviewController {
             return "redirect:/authors/{authorId}/update";
         }
     }
+    
     @RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}/update", method = RequestMethod.GET)
     public Object updateBookReviewByUser(@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpSession httpSession){
         if(httpSession.getAttribute("userName") == null){
@@ -191,6 +200,7 @@ public class ReviewController {
         }
         return "redirect:/books/{bookId}";
     }
+    
     @RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}", method = RequestMethod.PUT)
     public String updateBookReviewByUserPost(@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, @Valid @ModelAttribute("bookprofile") ReviewBookDto reviewBookDto, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){

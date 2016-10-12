@@ -1,14 +1,14 @@
 package com.mindfire.review;
 
+import java.io.File;
+
 import javax.servlet.Filter;
-import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -72,7 +72,11 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(RESOURCES_HANDLER).addResourceLocations(RESOURCES_LOCATION);
+    	 String rootPath = System.getProperty("user.home");
+         String imagePath = "file:"+rootPath + File.separator + "tmpFiles/";
+         System.out.println(imagePath);
+         registry.addResourceHandler("/resources/**").addResourceLocations("resources/");
+         registry.addResourceHandler("/tmpFiles/**").addResourceLocations(imagePath);
     }
 
     @Override
