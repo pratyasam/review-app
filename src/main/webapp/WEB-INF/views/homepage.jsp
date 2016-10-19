@@ -163,8 +163,8 @@ a {
 			<div class="col-lg-6 col-lg-offset-3">
 
 				<input name="query" type="text" id="search"
-					onkeyup="searchfunc(this.value)"
-					placeholder="Search Authors or Books" /><br> <br>
+					placeholder="Search Authors or Books or Users" /><br> <br>
+					<button type="button" class="btn btn-primary" id="submit">Submit</button>
 
 
 			</div>
@@ -524,12 +524,15 @@ a {
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#search').keyup(function(event) {
-				var searchParam = $('#search').value();
+			$('#submit').click(function(event) {
+				var searchParam = $('#search').val();
+				var searchCategory = "BOOKS";
 				$.get('/reviewBook/search', {
-					searchParam : searchParam
+					searchParam : searchParam,
+					searchCategory:searchCategory
 				}, function(data) {
 					$('#result').html(data);
+					
 				});
 			});
 		});

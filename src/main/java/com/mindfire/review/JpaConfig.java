@@ -1,5 +1,6 @@
 package com.mindfire.review;
 
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,9 +73,9 @@ class JpaConfig {
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties jpaProperties = new Properties();
-        jpaProperties.put(org.hibernate.cfg.Environment.DIALECT, dialect);
-        jpaProperties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hbm2ddlAuto);
-        jpaProperties.put(org.hibernate.cfg.Environment.SHOW_SQL, true);
+        jpaProperties.put(AvailableSettings.DIALECT, dialect);
+        jpaProperties.put(AvailableSettings.HBM2DDL_AUTO, hbm2ddlAuto);
+        jpaProperties.put(AvailableSettings.SHOW_SQL, true);
         entityManagerFactoryBean.setJpaProperties(jpaProperties);
 
         return entityManagerFactoryBean;

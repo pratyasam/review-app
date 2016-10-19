@@ -1,7 +1,6 @@
 package com.mindfire.review.web.models;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 

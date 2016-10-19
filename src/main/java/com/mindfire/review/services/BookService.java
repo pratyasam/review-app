@@ -82,13 +82,13 @@ public interface BookService {
      * @param name
      * @return
      */
-    List<Book> getBookByNameLike(String name);
+    Page<Book> getBookByNameLikeAndIsbn(String name, String isbn, int page);
     /**
      * 
      * @param name
      * @return
      */
-    List<Book> getBookByNameLikeAdmin(String name);
+    Page<Book> getBookByNameLikeAdminAndIsbn(String name,String isbn, int page);
 
     /**
      * @param name
@@ -229,4 +229,14 @@ public interface BookService {
     
     int getTotalBookReviewByBook(String name);
 
+    /**
+     * 
+     * @param name
+     * @param genre
+     * @param isbn
+     * @param page
+     * @return
+     */
+    Page<Book> searchForBooks(String name, String genre, String isbn, int page);
+    
 }

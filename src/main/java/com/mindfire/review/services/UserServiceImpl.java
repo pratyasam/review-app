@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public User getUser(String userName) {
 		return userRepository.findByUserName(userName);
 	}
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public List<User> getUsers() {
 		return userRepository.findAll();
 	}
@@ -66,6 +68,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public Page<User> getUsers(int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
 		return userRepository.findAll(page);
@@ -78,12 +81,11 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
-	public List<User> getUserFirstName(String firstName) {
-		return userRepository.findByFirstNameIgnoreCase(firstName);
-	}
-	public Page<User> getUserFirstName(String firstName, int pageno, int size) {
-		Pageable page = Utility.buildPageRequest(size, pageno);
-		return userRepository.findByFirstNameIgnoreCase(firstName, page);
+	@Override
+	public Page<User> getUserFirstName(String firstName, int page) {
+		
+		Page<User> users = userRepository.findByFirstNameContaining(firstName, Utility.buildPageRequest(10, page));
+		return users;
 	}
 
 	/**
@@ -93,6 +95,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public List<User> getUserlastName(String lastName) {
 		return userRepository.findByLastNameIgnoreCase(lastName);
 	}
@@ -115,6 +118,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public List<User> getUserByType(String type) {
 		return userRepository.findByRoleIgnoreCase(type);
 	}
@@ -130,6 +134,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public List<ReviewAuthor> getAuthorReviewByUser(String user) {
 		User userName = getUser(user);
 		return reviewAuthorRepository.findByUser(userName);
@@ -140,6 +145,7 @@ public class UserServiceImpl implements UserService {
 	 * @param user
 	 * @return
 	 */
+	@Override
 	public List<Author> getAuthorReviewedByUser(String user) {
 		User userName = getUser(user);
 		List<ReviewAuthor> reviewAuthors = reviewAuthorRepository.findByUser(userName);
@@ -150,6 +156,7 @@ public class UserServiceImpl implements UserService {
 		return authors;
 
 	}
+	@Override
 	public Page<Author> getAuthorReviewedByUser(String user, int pageno, int size) {
 		User userName = getUser(user);
 		List<ReviewAuthor> reviewAuthors = reviewAuthorRepository.findByUser(userName);
@@ -170,6 +177,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public User getUserById(Long userId) {
 		return userRepository.findOne(userId);
 	}
@@ -181,6 +189,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public List<ReviewBook> getBookReviewByUser(String user) {
 		User userName = getUser(user);
 		return reviewBookRepository.findByUser(userName);
@@ -190,6 +199,7 @@ public class UserServiceImpl implements UserService {
 	 * @param user
 	 * @return
 	 */
+	@Override
 	public List<Book> getBookReviewedByUser(String user) {
 		User userName = getUser(user);
 		List<ReviewBook> reviewBooks = reviewBookRepository.findByUser(userName);
@@ -206,6 +216,7 @@ public class UserServiceImpl implements UserService {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public Page<Book> getBookReviewedByUser(String user, int pageno, int size) {
 		User userName = getUser(user);
 		List<ReviewBook> reviewBooks = reviewBookRepository.findByUser(userName);
@@ -225,6 +236,7 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 
+	@Override
 	public Boolean doesUserNameExist(String userName) {
 		if (getUser(userName) != null)
 			return true;
@@ -239,6 +251,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws UserExistException
 	 */
 
+	@Override
 	public void addUser(SignupDto signupDto) throws UserExistException {
 		if (signupDto == null)
 			throw new RuntimeException("");
@@ -265,6 +278,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws UserDoesNotExistException
 	 */
 
+	@Override
 	public void removeUser(Long userId) throws UserDoesNotExistException {
 		User user = userRepository.findOne(userId);
 		if (!doesUserNameExist(user.getUserName())) {
@@ -282,6 +296,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws UserDoesNotExistException
 	 */
 
+	@Override
 	public void updateUser(Long userId, SignupDto signupDto) throws UserDoesNotExistException {
 		User user = userRepository.findOne(userId);
 		if (!doesUserNameExist(user.getUserName())) {
@@ -302,6 +317,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws UserDoesNotExistException
 	 */
 
+	@Override
 	public void changeRoleToModerator(Long userId) throws UserDoesNotExistException {
 		User user = userRepository.findOne(userId);
 		user.setRole("moderator");
@@ -315,6 +331,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws UserDoesNotExistException
 	 */
 
+	@Override
 	public void changeRoleToAdmin(Long userId) throws UserDoesNotExistException {
 		User user = userRepository.findOne(userId);
 		user.setRole("admin");
@@ -330,6 +347,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws LoginFailException
 	 */
 
+	@Override
 	public User loginAuthenticate(String userName, String password) throws LoginFailException {
 		User user = userRepository.findByUserNameAndUserPassword(userName, DigestUtils.sha256Hex(password));
 		if (user != null)

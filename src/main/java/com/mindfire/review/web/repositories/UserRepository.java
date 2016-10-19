@@ -22,12 +22,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      *
      */
-    @Query(name = "User.findAll")
+    @Override
+	@Query(name = "User.findAll")
     List<User> findAll();
     /**
      * 
      */
-    @Query(name = "User.findAll")
+    @Override
+	@Query(name = "User.findAll")
     Page<User> findAll(Pageable page);
 
     /**
@@ -42,6 +44,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return
      */
     Page<User> findByFirstNameIgnoreCase(String firstName, Pageable page);
+    
+    /**
+     * 
+     * @param firstName
+     * @param page
+     * @return
+     */
+    
+    Page<User> findByFirstNameContaining(String firstName, Pageable page);
 
     /**
      * @param lastName
@@ -86,6 +97,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param id
      * @return
      */
-    User findOne(Long id);
+    @Override
+	User findOne(Long id);
 
 }

@@ -31,7 +31,8 @@ public interface ReviewAuthorRepository extends JpaRepository<ReviewAuthor, Long
      * @param id
      * @return
      */
-    ReviewAuthor findOne(Long id);
+    @Override
+	ReviewAuthor findOne(Long id);
 
     /**
      * @param user

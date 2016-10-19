@@ -11,7 +11,6 @@ import com.mindfire.review.web.dto.ReviewAuthorDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
-import com.mindfire.review.web.models.BookAuthor;
 import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.ReviewAuthorLike;
 import com.mindfire.review.web.models.ReviewBook;

@@ -3,9 +3,6 @@
  */
 package com.mindfire.review.web.dto;
 
-import com.mindfire.review.web.models.Author;
-import com.mindfire.review.web.models.Book;
-
 /**
  * @author pratyasa
  *

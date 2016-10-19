@@ -17,7 +17,6 @@ import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.BookDto;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
-import com.mindfire.review.web.models.AuthorLike;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.BookAuthor;
 import com.mindfire.review.web.models.BookLike;
@@ -55,6 +54,7 @@ public class BookServiceImpl implements BookService {
 	 * @param id
 	 * @return
 	 */
+	@Override
 	public Book getBookById(Long id) {
 		return bookRepository.findOne(id);
 	}
@@ -66,6 +66,7 @@ public class BookServiceImpl implements BookService {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public Page<Book> getBooks(int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
 		return bookRepository.findAll(page);
@@ -73,6 +74,7 @@ public class BookServiceImpl implements BookService {
 	/**
 	 * 
 	 */
+	@Override
 	public List<Book> getBooks() {
 		return bookRepository.findAll();
 	}
@@ -84,9 +86,10 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	@Override
 	public Page<Book> getBookByGenre(String genre, boolean choice,int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
-		return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, choice, page);
+		return bookRepository.findByBookGenreContainingAndBookVerified(genre, choice, page);
 	}
 	/**
 	 * 
@@ -96,17 +99,19 @@ public class BookServiceImpl implements BookService {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public Page<Book> getBookByGenreAdmin(String genre,int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
-		return bookRepository.findByBookGenreContainsIgnoreCase(genre, page);
+		return bookRepository.findByBookGenreContaining(genre, page);
 	}
 	/**
 	 * 
 	 * @param genre
 	 * @return
 	 */
+	@Override
 	public List<Book> getBookByGenre(String genre,boolean choice) {
-		return bookRepository.findByBookGenreContainsIgnoreCaseAndBookVerified(genre, choice);
+		return bookRepository.findByBookGenreContainingAndBookVerified(genre, choice);
 	}
 	/**
 	 * 
@@ -114,8 +119,9 @@ public class BookServiceImpl implements BookService {
 	 * @param choice
 	 * @return
 	 */
+	@Override
 	public List<Book> getBookByGenreAdmin(String genre) {
-		return bookRepository.findByBookGenreContainsIgnoreCase(genre);
+		return bookRepository.findByBookGenreContaining(genre);
 	}
 
 	/**
@@ -125,6 +131,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	@Override
 	public Page<Book> getBookByRating(float rating, int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
 		return bookRepository.findByBookRating(rating, page);
@@ -134,6 +141,7 @@ public class BookServiceImpl implements BookService {
 	 * @param rating
 	 * @return
 	 */
+	@Override
 	public List<Book> getBookByRating(float rating) {
 		return bookRepository.findByBookRating(rating);
 	}
@@ -144,6 +152,7 @@ public class BookServiceImpl implements BookService {
 	 * @param isbn
 	 * @return
 	 */
+	@Override
 	public Book getBookByIsbn(String isbn) {
 		return bookRepository.findByBookIsbn(isbn);
 	}
@@ -155,16 +164,18 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
-	public List<Book> getBookByNameLike(String name) {
-		return bookRepository.findByBookNameContainsIgnoreCaseAndBookVerified(name, true);
+	@Override
+	public Page<Book> getBookByNameLikeAndIsbn(String name, String isbn, int page) {
+		return bookRepository.findByBookNameContainingAndBookVerifiedOrBookIsbnContaining(name, true, isbn, Utility.buildPageRequest(10, page));
 	}
 	/**
 	 * 
 	 * @param name
 	 * @return
 	 */
-	public List<Book> getBookByNameLikeAdmin(String name) {
-		return bookRepository.findByBookNameContainsIgnoreCase(name);
+	@Override
+	public Page<Book> getBookByNameLikeAdminAndIsbn(String name,String isbn, int page) {
+		return bookRepository.findByBookNameContainingOrBookIsbnContaining(name, isbn, Utility.buildPageRequest(10, page));
 	}
 
 	/**
@@ -174,6 +185,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	@Override
 	public List<Author> getAuthorByBook(String name) {
 		Book book = getBookByName(name);
 		List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
@@ -190,6 +202,7 @@ public class BookServiceImpl implements BookService {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public Page<Author> getAuthorByBook(String name, int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
 		Book book = getBookByName(name);
@@ -207,6 +220,7 @@ public class BookServiceImpl implements BookService {
 	 * @param name
 	 * @return
 	 */
+	@Override
 	public Book getBookByName(String name) {
 		return bookRepository.findByBookName(name);
 	}
@@ -218,6 +232,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	@Override
 	public List<ReviewBook> getBookReviewByBook(String name) {
 		return reviewBookRepository.findByBook(getBookByName(name));
 	}
@@ -228,6 +243,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 	
+	@Override
 	public int getTotalBookReviewByBook(String name) {
 		return reviewBookRepository.findByBook(getBookByName(name)).size();
 	}
@@ -238,6 +254,7 @@ public class BookServiceImpl implements BookService {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public Page<ReviewBook> getBookReviewByBook(String name, int pageno, int size) {
 		Pageable page =Utility.buildPageRequest(size, pageno);
 		List<ReviewBook> list = reviewBookRepository.findByBook(getBookByName(name));
@@ -251,6 +268,7 @@ public class BookServiceImpl implements BookService {
 	 * @param name
 	 * @return
 	 */
+	@Override
 	public List<ReviewAuthor> getAuthorReviewByBook(String name) {
 		List<Author> authorList = getAuthorByBook(name);
 		List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
@@ -268,6 +286,7 @@ public class BookServiceImpl implements BookService {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public Page<ReviewAuthor> getAuthorReviewByBook(String name, int pageno, int size) {
 		List<Author> authorList = getAuthorByBook(name);
 		List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
@@ -287,6 +306,7 @@ public class BookServiceImpl implements BookService {
 	 * @param verified
 	 * @return
 	 */
+	@Override
 	public Page<Book> getVerifiedBook(boolean verified, int pageno, int size) {
 		Pageable page = Utility.buildPageRequest(size, pageno);
 		return bookRepository.findByBookVerified(verified, page);
@@ -297,6 +317,7 @@ public class BookServiceImpl implements BookService {
 	 * @param verified
 	 * @return
 	 */
+	@Override
 	public List<Book> getVerifiedBook(boolean verified) {
 		return bookRepository.findByBookVerified(verified);
 	}
@@ -308,6 +329,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	@Override
 	public List<User> getUserByBookReview(String name) {
 		List<User> users = new ArrayList<>();
 		List<ReviewBook> reviewBooks = getBookReviewByBook(name);
@@ -316,6 +338,7 @@ public class BookServiceImpl implements BookService {
 		}
 		return users;
 	}
+	@Override
 	public Page<User> getUserByBookReview(String name, int pageno, int size) {
 		List<User> users = new ArrayList<>();
 		List<ReviewBook> reviewBooks = getBookReviewByBook(name);
@@ -334,6 +357,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 
+	@Override
 	public boolean doesBookExist(String isbn) {
 		Book book = getBookByIsbn(isbn);
 		if (book != null)
@@ -349,6 +373,7 @@ public class BookServiceImpl implements BookService {
 	 * @throws BookExistException
 	 */
 
+	@Override
 	public void addBook(BookDto bookDto) throws BookExistException {
 		if (bookDto == null)
 			throw new RuntimeException("");
@@ -379,6 +404,7 @@ public class BookServiceImpl implements BookService {
 	 * @throws BookDoesNotExistException
 	 */
 
+	@Override
 	public void removeBook(Long id) throws BookDoesNotExistException {
 		Book book = getBookById(id);
 		if (book == null) {
@@ -400,6 +426,7 @@ public class BookServiceImpl implements BookService {
 	 * @throws BookDoesNotExistException
 	 */
 
+	@Override
 	public void updateBook(Long bookId, BookDto bookDto) throws BookDoesNotExistException {
 		Book bk = getBookById(bookId);
 		if (bookDto == null) {
@@ -423,19 +450,16 @@ public class BookServiceImpl implements BookService {
 	 * 
 	 * @param id
 	 */
+	@Override
 	public void verifyBook(Long id, ChoiceDto choiceDto) {
 		Book book = getBookById(id);
 		System.out.println(book.getBookName());
 		System.out.println(book.getBookVerified());
-		if (choiceDto.getChoice().equalsIgnoreCase("y")) {
 			book.setBookVerified(true);
 			System.out.println("\n Service executed");
 			bookRepository.save(book);
 			System.out.println(book.getBookVerified());
-		}
-
-		else
-			book.setBookVerified(false);
+		
 	}
 	
 	/**
@@ -445,6 +469,7 @@ public class BookServiceImpl implements BookService {
 	 * @throws AlreadyReviewedException
 	 */
 	
+	@Override
 	public void addBookLikeByUser(String userName, Long bookId)throws AlreadyReviewedException{
 		User user = userService.getUser(userName);
 		Book book = getBookById(bookId);
@@ -474,6 +499,7 @@ public class BookServiceImpl implements BookService {
 	 * @throws ReviewDoesnotExistException
 	 */
 	
+	@Override
 	public void removeBookLikeByUser(String userName, Long bookId) throws ReviewDoesnotExistException{
 		
 		User user = userService.getUser(userName);
@@ -493,6 +519,7 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 	
+	@Override
 	public int getNumberOfBookLikesByUsers(Long bookId){
 		Book book = getBookById(bookId);
 		int likes = bookLikeRepository.findByBook(book).size();
@@ -503,4 +530,11 @@ public class BookServiceImpl implements BookService {
 		return likes;
 	}
 
+		
+	@Override
+	public Page<Book> searchForBooks(String name, String genre, String isbn, int page) {
+		Page<Book> books = bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContaining(name, genre, isbn, Utility.buildPageRequest(10, page));
+		System.out.println(books.getSize());
+		return books; 
+	}
 }

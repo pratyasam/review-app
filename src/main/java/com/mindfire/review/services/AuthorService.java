@@ -3,13 +3,10 @@ package com.mindfire.review.services;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.AuthorExistenceException;
 import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.web.dto.AuthorDto;
-import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewAuthor;
@@ -35,7 +32,7 @@ public interface AuthorService {
      * @return
      */
 
-    List<Author> getAuthorByNameLike(String name);
+    Page<Author> getAuthorByNameLike(String name,int page);
 
     /**
      * @param name

@@ -4,7 +4,6 @@
 package com.mindfire.review.web.dto;
 
 import com.mindfire.review.web.models.ReviewBook;
-import com.mindfire.review.web.models.User;
 
 /**
  * @author pratyasa

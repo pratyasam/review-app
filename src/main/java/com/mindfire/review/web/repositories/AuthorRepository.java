@@ -21,12 +21,14 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     /**
      *
      */
-    @Query(name = "Author.findAll")
+    @Override
+	@Query(name = "Author.findAll")
     Page<Author> findAll(Pageable page);
     /**
      * 
      */
-    List<Author> findAll();
+    @Override
+	List<Author> findAll();
 
     /**
      * @param name
@@ -58,17 +60,13 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      */
    List<Author> findByAuthorRating(float rating);
 
+   
     /**
      * @param name
+     * @param pageable
      * @return
      */
-    List<Author> findByAuthorNameContainsIgnoreCase(String name);
-
-    /**
-     * @param id
-     * @return
-     */
-    Author findOne(Long id);
+    Page<Author> findByAuthorNameContainsIgnoreCase(String name, Pageable pageable);	
     
     /**
      * 
@@ -76,9 +74,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      */
     
     List<Author> findTop10ByAuthorLikesGreaterThanOrderByAuthorLikesDesc(int likes);
-    
-//    @Query("SELECT  a FROM Author a WHERE a.likes > '0' ORDER BY a.likes DESC LIMIT 10")
-//    List<Author> findByTop();
+
 }
 
 

@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ import com.mindfire.review.exceptions.AuthorExistenceException;
 import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.util.Utility;
 import com.mindfire.review.web.dto.AuthorDto;
-import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.AuthorLike;
 import com.mindfire.review.web.models.Book;
@@ -26,11 +24,8 @@ import com.mindfire.review.web.models.User;
 import com.mindfire.review.web.repositories.AuthorLikeRepository;
 import com.mindfire.review.web.repositories.AuthorRepository;
 import com.mindfire.review.web.repositories.BookAuthorRepository;
-import com.mindfire.review.web.repositories.BookLikeRepository;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
-
-import ch.qos.logback.classic.pattern.Util;
 
 /**
  * @author pratyasa
@@ -84,7 +79,7 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    public List<Author> getAuthorByNameLike(String name) {return authorRepository.findByAuthorNameContainsIgnoreCase(name);}
+    public Page<Author> getAuthorByNameLike(String name,int page) {return authorRepository.findByAuthorNameContainsIgnoreCase(name, Utility.buildPageRequest(10, page));}
 
     /**
      * get the author by name
@@ -283,7 +278,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws AuthorExistenceException
      */
 
-    public void addAuthor(AuthorDto authorDto) throws AuthorExistenceException{
+    @Override
+	public void addAuthor(AuthorDto authorDto) throws AuthorExistenceException{
         if(authorDto == null){
             throw new RuntimeException("");
         }
@@ -305,7 +301,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException{
+    @Override
+	public void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException{
         Author author = authorRepository.findOne(authorId);
         if(authorDto == null){
             throw new RuntimeException("");
@@ -326,7 +323,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void removeAuthor(Long authorId) throws AuthorExistenceException{
+    @Override
+	public void removeAuthor(Long authorId) throws AuthorExistenceException{
         Author author = authorRepository.findOne(authorId);
         if(author == null){
             throw new AuthorExistenceException("Author does not exist");
@@ -343,7 +341,8 @@ public class AuthorServiceImpl implements AuthorService {
       * @throws AlreadyReviewedException
       */
     
-    public void addAuthorLikeByUser(String userName, Long authorId) throws AlreadyReviewedException{
+    @Override
+	public void addAuthorLikeByUser(String userName, Long authorId) throws AlreadyReviewedException{
     	User user = userService.getUser(userName);
     	Author author = getAuthorById(authorId);
     	 if(authorLikeRepository.findByAuthorAndUser(author, user) != null){
@@ -370,7 +369,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @throws ReviewDoesnotExistException
      */
     
-    public void removeAuthorLikeByUser(String userName, Long authorId) throws ReviewDoesnotExistException{
+    @Override
+	public void removeAuthorLikeByUser(String userName, Long authorId) throws ReviewDoesnotExistException{
     	
     	User user = userService.getUser(userName);
     	Author author = getAuthorById(authorId);
@@ -389,7 +389,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @return
      */
     
-    public int getNumberOfLikesByUser(Long authorId){
+    @Override
+	public int getNumberOfLikesByUser(Long authorId){
     	Author author = getAuthorById(authorId);
     	int likes = authorLikeRepository.findByAuthor(author).size();
     	author.setAuthorLikes(likes);

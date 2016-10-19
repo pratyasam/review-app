@@ -1,3 +1,6 @@
+<%@page import="org.springframework.data.domain.Page"%>
+<%@page import="com.mindfire.review.enums.SearchType"%>
+<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="com.mindfire.review.web.models.*"%>
@@ -124,6 +127,7 @@
 	<%
 		}
 	%>
+
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
 			<ul class="nav nav-tabs">
@@ -134,137 +138,14 @@
 			<div class="tab-content">
 				<div id="Books" class="tab-pane fade in active">
 					<h3>Books</h3>
-					<%
-						for (BookAuthorListDto ba : (List<BookAuthorListDto>) request.getAttribute("books")) {
-							Book book = ba.getBook();
-							List<Author> authors = ba.getAuthorList();
-					%>
-					<div class="col-lg-6">
-						<div class="row">
-							<div class="col-lg-4" style="padding: 2px;">
-								<img src="assets/img/book1.jpg" alt="book1" style="width: 100%" />
-							</div>
-							<div class="col-lg-8">
-								<div class="panel panel-default">
-									<div class="panel-body">
-										<a href="/reviewBook/books/<%=book.getBookId()%>">
-											<div
-												style="font-size: 120%; border-bottom: 2px #CCC solid; overflow: hidden; text-overflow: ellipsis;"><%=book.getBookName()%></div>
-										</a>
-										<%
-											for (Author a : authors) {
-										%>
-										<h6><%=a.getAuthorName()%></h6>
-										<%
-											}
-										%>
-										<span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span> <br>
-										<div class="sidebar-box">
-											<p class="read-more"></p>
-											<p><%=book.getBookDescription()%></p>
-
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<%
-						}
-					%>
-					<br> <br>
-					<div
-						class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center"">
-						<%
-							if (((List<BookAuthorListDto>) request.getAttribute("bookauthorlist")).size() != 0) {
-						%>
-						<ul class="pagination">
-							<%
-								for (int i = 1; i <= (int) request.getAttribute("totalpagesb"); i++) {
-							%>
-							<li><a
-								href="/reviewBook/books?pagenob=<%=i%>&pagenoa=1&pagenou=1&searchCategory=Books"><%=i%></a></li>
-							<%
-								}
-							%>
-						</ul>
-						<%
-							}
-						%>
-						<%
-							if (((List<BookAuthorListDto>) request.getAttribute("bookauthorlist")).size() == 0) {
-						%>
-						<h3>No Books !</h3>
-						<%
-							}
-						%>
+					<jsp:include page="bookpartial.jsp"/>
 					</div>
 				</div>
 				<div id="Authors" class="tab-pane fade">
 					<h3>Authors</h3>
 					<div class="row col-lg-8 col-lg-offset-2">
 						<div class="col-xs-12">
-							<%
-								for (Author a : (List<Author>) request.getAttribute("authors")) {
-							%>
-							<div class="col-lg-6">
-								<div class="row">
-									<div class="col-lg-4" style="padding: 2px;">
-										<img src="assets/img/book1.jpg" alt="book1"
-											style="width: 100%" />
-									</div>
-
-									<div class="col-lg-8">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
-													<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
-												</a> <span class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span> <br>
-												<div class="sidebar-box">
-													<p><%=a.getAuthorDescription()%></p>
-													<p class="read-more"></p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<%
-								}
-							%>
-							<br> <br>
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-								<%
-									if (((List<Author>) request.getAttribute("authors")).size() != 0) {
-								%>
-								<ul class="pagination">
-									<%
-										for (int i = 1; i <= (int) request.getAttribute("totalpagesa"); i++) {
-									%>
-									<li><a
-										href="/reviewBook/search?pagenoa=<%=i%>&pagenob=1&pagenou=1&searchCategory=Authors"><%=i%></a></li>
-									<%
-										}
-									%>
-								</ul>
-								<%
-									}
-								%>
-								<%
-									if (((List<Author>) request.getAttribute("authors")).size() == 0) {
-								%>
-								<h3>No Authors !</h3>
-								<%
-									}
-								%>
+							<jsp:include page="authorpartial.jsp"/>
 							</div>
 						</div>
 					</div>
@@ -273,64 +154,7 @@
 					<h3>Users</h3>
 					<div class="row col-lg-8 col-lg-offset-2">
 						<div class="col-xs-12">
-							<%
-								for (User u : (List<User>) request.getAttribute("users")) {
-							%>
-							<div class="col-lg-6 col-md-6 col-sm-6">
-								<div class="col-lg-4" style="padding: 2px;">
-									<img src="assets/img/book1.jpg" alt="book1"
-										style="width: 100%; height: 200px;" />
-								</div>
-
-								<div class="col-lg-8">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<a href="/reviewBook/users/<%=u.getUserId()%>">
-												<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=u.getUserName()%></p>
-											</a> <br>
-											<p>
-												Name:
-												<%=u.getFirstName()%>
-												<%=u.getLastName()%></p>
-											<p>
-												Gender:
-												<%=u.getUserGender()%>
-											</p>
-											<p>
-												Role:
-												<%=u.getRole()%></p>
-										</div>
-									</div>
-								</div>
-							</div>
-							<%
-								}
-							%>
-							<br> <br>
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-								<%
-									if (((List<User>) request.getAttribute("users")).size() != 0) {
-								%>
-								<ul class="pagination">
-									<%
-										for (int i = 1; i <= (int) request.getAttribute("totalpagesu"); i++) {
-									%>
-									<li><a
-										href="/reviewBook/search?pagenou=<%=i%>&pagenob=1&pagenoa=1&searchCategory=Users"><%=i%></a></li>
-									<%
-										}
-									%>
-								</ul>
-								<%
-									}
-								%>
-								<%
-									if (((List<Author>) request.getAttribute("authors")).size() == 0) {
-								%>
-								<h3>No Authors !</h3>
-								<%
-									}
-								%>
+							<jsp:include page="userpartial.jsp"/>
 							</div>
 						</div>
 					</div>
@@ -341,27 +165,56 @@
 
 		</div>
 	</div>
+	<%
+		String searchParam = (String) request.getAttribute("searchparam");
+	%>
 
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		
+
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		
+
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
-	
-		<script type="text/javascript">
+
+	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#Books').click(function(event) {
-				var searchCategory = "Books";
 				$.get('/reviewBook/search', {
-					searchParam : searchParam
+					searchParam : searchParam,
+					searchCategory : 'BOOKS'
 				}, function(data) {
 					$('#result').html(data);
 				});
 			});
 		});
 	</script>
-	
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#Authors').click(function(event) {
+				$.get('/reviewBook/search', {
+					searchParam : searchParam,
+					searchCategory : 'AUTHORS'
+				}, function(data) {
+					$('#result').html(data);
+				});
+			});
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#Users').click(function(event) {
+				$.get('/reviewBook/search', {
+					searchParam : searchParam,
+					searchCategory : 'USERS'
+				}, function(data) {
+					$('#result').html(data);
+				});
+			});
+		});
+	</script>
+
 </body>
 </html>

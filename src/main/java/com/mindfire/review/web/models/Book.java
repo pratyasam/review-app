@@ -54,7 +54,7 @@ public class Book implements Serializable {
 
     //bi-directional many-to-one association to BookAuthor
     @OneToMany(mappedBy = "book")
-    private List<BookAuthor> bookAuthors;
+    private List<BookAuthor> bookAuthors;	
 
 //	//bi-directional many-to-one association to BookReview
 //	@OneToMany(mappedBy="book")

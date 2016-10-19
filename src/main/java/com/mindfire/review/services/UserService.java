@@ -32,11 +32,14 @@ public interface UserService {
     List<User> getUsers();
     Page<User> getUsers(int pageno, int size);
 
-    /**
+     /**
+     * 
      * @param firstName
+     * @param page
      * @return
      */
-    List<User> getUserFirstName(String firstName);
+    
+    Page<User> getUserFirstName(String firstName, int page);
 
     /**
      * @param lastName
