@@ -171,11 +171,11 @@ ul {
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
 			<div class="form">
-				<form action="search" method="get">
+				<form action="/reviewBook/search" method="get">
 					<fieldset>
 						<div class="col-lg-6 col-lg-offset-3">
 							<div class="form-group">
-								<input name="query" type="text" class="form-control" id="search" placeholder="Search Authors or Books" />
+								<input name="searchParam" type="text" class="form-control" id="search" placeholder="Search Authors or Books" />
 								<input name="page" value="1" type="hidden" />
 								<br> <br>
 								<div class="col-lg-10 col-lg-offset-2">

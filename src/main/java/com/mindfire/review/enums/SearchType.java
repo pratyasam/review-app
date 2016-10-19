@@ -8,10 +8,8 @@ package com.mindfire.review.enums;
  */
 public enum SearchType {
 	
-	ALL("ALL"),
 	BOOKS("BOOKS"),
 	AUTHORS("AUTHORS"),
-	GENRES("GENRES"),
 	USERS("USERS");
 	
 	private String code;

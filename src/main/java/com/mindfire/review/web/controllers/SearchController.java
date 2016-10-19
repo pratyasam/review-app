@@ -55,9 +55,16 @@ public class SearchController {
 			role = (String) httpSession.getAttribute("role");
 		}
 		
-		//converts the string category to enum
-		SearchType searchCategory = SearchType.valueOf(category);
+		category = category.toUpperCase();
+		System.out.println(category);
+		SearchType searchCategory = SearchType.BOOKS;
 		
+		for(SearchType s : SearchType.values()){
+			if(s.name().equals(category)){
+				//converts the string category to enum
+				searchCategory = SearchType.valueOf(category);
+			}
+		}
 		
 		// Service call to fetch the results 
 		Map<SearchType, Page> searchResult = searchService.search(query, role, searchCategory, page);
@@ -70,23 +77,45 @@ public class SearchController {
 		// Check to see if its a XHR
 		if(httpServletRequest.getHeader("X-Requested-With") == null){
 			model.setViewName("searchresult");
+			model.addObject("SEARCH_TYPE", searchCategory);
+			switch(searchCategory){
+				case BOOKS:
+					model.addObject("books",searchResult.get(SearchType.BOOKS));
+					break;
+					
+				case AUTHORS:
+					model.addObject("authors",searchResult.get(SearchType.AUTHORS));
+					break;
+					
+				case USERS:
+					model.addObject("users",searchResult.get(SearchType.USERS));
+					break;
+					
+				default:
+					model.addObject("books",searchResult.get(SearchType.BOOKS));
+					break;
+			}
+			model.addObject("searchParam", query);
+			return model;
 		}
 		
 		switch(searchCategory){
 			case BOOKS:
 				model.setViewName("bookpartial");
 				model.addObject("books",searchResult.get(SearchType.BOOKS));
-				
+				model.addObject("searchParam", query);
 				break;
 				
 			case AUTHORS:
 				model.setViewName("authorpartial");
 				model.addObject("authors",searchResult.get(SearchType.AUTHORS));
+				model.addObject("searchParam", query);
 				break;
 				
 			case USERS:
 				model.setViewName("userpartial");
 				model.addObject("users",searchResult.get(SearchType.USERS));
+				model.addObject("searchParam", query);
 				break;
 		}
 		

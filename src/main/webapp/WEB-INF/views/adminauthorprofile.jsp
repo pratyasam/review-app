@@ -49,6 +49,50 @@
 	/* "transparent" only works here because == rgba(0,0,0,0) */
 	background-image: linear-gradient(to bottom, transparent, grey);
 }
+.overlay2 a {
+	color: white;
+}
+
+.overlay2 {
+	height: 0%;
+	width: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.9);
+	overflow-y: hidden;
+	transition: 0.5s;
+}
+
+.overlay2-content {
+	position: relative;
+	top: 25%;
+	width: 100%;
+	text-align: center;
+	margin-top: 30px;
+}
+
+.overlay2 .closebtn {
+	position: absolute;
+	top: 20px;
+	right: 45px;
+	font-size: 60px;
+}
+@media screen and (max-height: 450px) {
+	.overlay2 {
+		overflow-y: auto;
+	}
+	.overlay2 a {
+		font-size: 20px;
+		color: white;
+	}
+	.overlay2 .closebtn {
+		font-size: 40px;
+		top: 15px;
+		right: 35px;
+	}
+}
 </style>
 
 <body>
@@ -65,6 +109,8 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
+			<li><a href="#"><i class="fa fa-search fa-2x"
+						onclick="openNav()"></i> </a></li>
 				<li><a href="/reviewBook/home">Home</a></li>
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" href="#">Add <span class="caret"></span></a>
@@ -79,8 +125,26 @@
 						class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 			</ul>
 		</div>
-
 	</nav>
+	<div id="myNav" class="overlay2">
+				<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+				<div class="overlay2-content">
+					<form action="/reviewBook/search" method="get">
+						<fieldset>
+							<div class="col-lg-6 col-lg-offset-3">
+								<div class="form-group">
+									<input name="searchParam" type="text" class="form-control"
+										id="search" placeholder="Search Authors or Books" /> <input
+										name="page" value="1" type="hidden" /> <br> <br>
+									<div class="col-lg-10 col-lg-offset-2">
+										<button type="submit" class="btn btn-primary">Submit</button>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
 			<div class="col-lg-3">
@@ -682,6 +746,15 @@
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+		<script>
+		function openNav() {
+			document.getElementById("myNav").style.height = "100%";
+		}
+
+		function closeNav() {
+			document.getElementById("myNav").style.height = "0%";
+		}
+	</script>
 </body>
 
 </html>

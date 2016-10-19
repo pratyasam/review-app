@@ -9,6 +9,7 @@
 <%@page import="com.mindfire.review.web.models.Book"%>
 <%@page import="java.util.List"%>
 <%@page import="com.mindfire.review.web.models.ReviewAuthor"%>
+<%@page import="com.mindfire.review.enums.SearchType"%>
 <html>
 <head>
 <title>${searchparam}</title>
@@ -23,7 +24,26 @@
 </head>
 <body>
 	<%
-		if (session.getAttribute("userName") != null) {
+		SearchType searchCategory = (SearchType) request.getAttribute("SEARCH_TYPE");
+		String activePaneId = "Books";
+		if (searchCategory != null) {
+			// Set the tab active
+			switch (searchCategory) {
+				case AUTHORS :
+					activePaneId = "Authors";
+					break;
+
+				case USERS :
+					activePaneId = "Users";
+					break;
+			}
+		} else {
+			response.sendRedirect("/reviewBook/");
+		}
+	%>
+
+	<%
+		if (session.getAttribute("userName") != null && (session.getAttribute("role").equals("normal"))) {
 	%>
 	<nav class="navbar navbar-default navbackground main">
 		<div class="container-fluid">
@@ -127,94 +147,110 @@
 	<%
 		}
 	%>
-
 	<div class="container-fluid">
-		<div class="col-lg-6 col-lg-offset-3">
+		<div class="col-lg-10 col-lg-offset-1">
 			<ul class="nav nav-tabs">
-				<li class="active"><a data-toggle="tab" href="#Books">Books</a></li>
-				<li><a data-toggle="tab" href="#Authors">Authors</a></li>
-				<li><a data-toggle="tab" href="#Users">Users</a></li>
+				<li class="<%= ((searchCategory == SearchType.BOOKS) ? "active" : "inactive" )%>" id="BooksTab"><a data-toggle="tab" href="#Books">Books</a></li>
+				<li class="<%= ((searchCategory == SearchType.AUTHORS) ? "active" : "inactive" )%>" id="AuthorsTab"><a data-toggle="tab" href="#Authors">Authors</a></li>
+				<li class="<%= ((searchCategory == SearchType.USERS) ? "active" : "inactive" )%>" id="UsersTab"><a data-toggle="tab" href="#Users">Users</a></li>
 			</ul>
 			<div class="tab-content">
-				<div id="Books" class="tab-pane fade in active">
+				<div id="Books" class="tab-pane fade in">
 					<h3>Books</h3>
-					<jsp:include page="bookpartial.jsp"/>
+					<div class="row">
+						<div class="col-xs-12" id="Books_result">
+							<% if(searchCategory == SearchType.BOOKS) {%>
+								<jsp:include page="bookpartial.jsp" />
+							<% } %>
+						</div>
 					</div>
 				</div>
-				<div id="Authors" class="tab-pane fade">
+				<div id="Authors" class="tab-pane fade in">
 					<h3>Authors</h3>
-					<div class="row col-lg-8 col-lg-offset-2">
-						<div class="col-xs-12">
-							<jsp:include page="authorpartial.jsp"/>
-							</div>
+					<div class="row">
+						<div class="col-xs-12" id="Authors_result">
+						<% if(searchCategory == SearchType.AUTHORS) {%>
+							<jsp:include page="authorpartial.jsp" />
+						<% } %>
 						</div>
 					</div>
 				</div>
-				<div id="Users" class="tab-pane fade">
+				<div id="Users" class="tab-pane fade in">
 					<h3>Users</h3>
-					<div class="row col-lg-8 col-lg-offset-2">
-						<div class="col-xs-12">
-							<jsp:include page="userpartial.jsp"/>
-							</div>
+					<div class="row">
+						<div class="col-xs-12" id="Users_result">
+						
+							<% if(searchCategory == SearchType.USERS) {%>
+								<jsp:include page="userpartial.jsp" />
+							<% } %>
 						</div>
 					</div>
-
 				</div>
-
 			</div>
-
 		</div>
+
+
 	</div>
-	<%
-		String searchParam = (String) request.getAttribute("searchparam");
-	%>
 
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
-	<script
-		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
 
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#Books').click(function(event) {
-				$.get('/reviewBook/search', {
-					searchParam : searchParam,
-					searchCategory : 'BOOKS'
-				}, function(data) {
-					$('#result').html(data);
-				});
-			});
+		$(function(){
+			var activePaneId = '<%=activePaneId%>';
+			if (activePaneId) {
+				$('#' + activePaneId).addClass('active');
+			}
 		});
 	</script>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#Authors').click(function(event) {
-				$.get('/reviewBook/search', {
-					searchParam : searchParam,
-					searchCategory : 'AUTHORS'
-				}, function(data) {
-					$('#result').html(data);
-				});
+  
+	<script>
+	
+		$('#AuthorsTab').click(function(event) {
+			var searchCategory = 'AUTHORS';
+			var searchParam = '<%= (String) request.getAttribute("searchParam")%>';
+			$.get('/reviewBook/search', {
+				searchParam :searchParam,
+				category:searchCategory
+			}, function(data) {
+				$('#Authors_result').html(data);
+				
 			});
 		});
+	
 	</script>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#Users').click(function(event) {
-				$.get('/reviewBook/search', {
-					searchParam : searchParam,
-					searchCategory : 'USERS'
-				}, function(data) {
-					$('#result').html(data);
-				});
+	<script>
+	
+		$('#BooksTab').click(function(event) {
+			var searchCategory = 'BOOKS';
+			var searchParam = '<%= (String) request.getAttribute("searchParam")%>';
+			$.get('/reviewBook/search', {
+				searchParam : searchParam,
+				category:searchCategory
+			}, function(data) {
+				$('#Books_result').html(data);
+				
 			});
 		});
+	
 	</script>
-
+	
+		<script>
+	
+		$('#UsersTab').click(function(event) {
+			var searchCategory = 'USERS';
+			var searchParam = '<%= (String) request.getAttribute("searchParam")%>';
+			$.get('/reviewBook/search', {
+				searchParam : searchParam,
+				category:searchCategory
+			}, function(data) {
+				$('#Users_result').html(data);
+				
+			});
+		});
+	
+	</script>
+	
 </body>
 </html>

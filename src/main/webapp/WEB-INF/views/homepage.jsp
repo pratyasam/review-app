@@ -159,20 +159,22 @@ a {
 	<div id="myNav" class="overlay2">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<div class="overlay2-content">
-
-			<div class="col-lg-6 col-lg-offset-3">
-
-				<input name="query" type="text" id="search"
-					placeholder="Search Authors or Books or Users" /><br> <br>
-					<button type="button" class="btn btn-primary" id="submit">Submit</button>
-
-
+			<div class="form">
+				<form action="/reviewBook/search" method="get">
+					<fieldset>
+						<div class="col-lg-6 col-lg-offset-3">
+							<div class="form-group">
+								<input name="searchParam" type="text" class="form-control" id="search" placeholder="Search Authors or Books" />
+								<input name="page" value="1" type="hidden" />
+								<br> <br>
+								<div class="col-lg-10 col-lg-offset-2">
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					</form>
 			</div>
-			<br>
-			<br>
-
-
-			<div class="col-lg-6 col-lg-offset-3" id="result"></div>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -522,21 +524,21 @@ a {
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#submit').click(function(event) {
-				var searchParam = $('#search').val();
-				var searchCategory = "BOOKS";
-				$.get('/reviewBook/search', {
-					searchParam : searchParam,
-					searchCategory:searchCategory
-				}, function(data) {
-					$('#result').html(data);
+<!-- 	<script type="text/javascript"> 
+ 		$(document).ready(function() {
+ 			$('#submit').click(function(event) {
+ 				var searchParam = $('#search').val();
+ 				var searchCategory = "BOOKS";
+ 				$.get('/reviewBook/search', {
+ 					searchParam : searchParam,
+ 					searchCategory:searchCategory
+ 				}, function(data) {
+ 					$('#result').html(data);
 					
-				});
-			});
+ 				});
+ 			});
 		});
-	</script>
+	</script> -->
 
 	<script>
 		function openNav() {

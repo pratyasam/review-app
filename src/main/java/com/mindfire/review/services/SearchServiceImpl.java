@@ -51,8 +51,6 @@ public class SearchServiceImpl implements SearchService {
 				case USERS:
 					searchResults.put(SearchType.USERS, userService.getUserFirstName(query, page));
 					break;
-				case GENRES:
-					break;
 				default:
 					searchResults.put(SearchType.BOOKS, bookService.searchForBooks(query, query, query, page));
 					break;
