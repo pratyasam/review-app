@@ -4,6 +4,10 @@
 package com.mindfire.review.web.controllers;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -20,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.review.services.AuthorService;
@@ -92,9 +97,14 @@ public class UploadController {
 			if (items.size() == 1) {
 				FileItem file = items.get(0);
 
-				String imageName = uploadService.simpleUpload(file, httpSession, true);
-				uploadService.uploadUserImage(user, imageName);
-				model.addAttribute("photo", imageName);
+				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
+				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+
+				uploadService.uploadUserImage(user, imageUrl);
+				model.addAttribute("imageurl", imageUrl);
+				model.addAttribute("imagename",imageName);
+				httpSession.setAttribute("image", imageUrl);
+				
 				return "uploadsuccess";
 
 			}
@@ -105,6 +115,23 @@ public class UploadController {
 
 		return ":redirect/userupload";
 	}
+	
+//	@RequestMapping(value = "/getImage/{imageId}")
+//	@ResponseBody
+//	public byte[] getImage(@PathVariable long imageId, HttpServletRequest request, HttpSession httpSession)  {
+//		
+//	String rpath = (String) httpSession.getAttribute("image");
+////	 rpath=rpath+"/"+imageId; 
+//	Path path = Paths.get(rpath);
+//	byte[] data = null;
+//	try {
+//		data = Files.readAllBytes(path);
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	} 
+//	return data;
+//	}
 	
 	@RequestMapping(value = "/{authorId}/authorupload", method = RequestMethod.GET)
 	public Object authorUploadPage(@PathVariable("authorId") int authorId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {

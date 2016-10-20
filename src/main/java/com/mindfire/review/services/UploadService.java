@@ -32,9 +32,9 @@ import com.mindfire.review.web.repositories.UserRepository;
 @Service
 public class UploadService {
 
-	private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/Wotkspace/git/review-app/src/main/webapp/assets/uploads";
+	private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/Wotkspace/git/uploads";
 
-	// private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/uploads";
+	//private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/uploads";
 
 	@Autowired
 	private UserRepository userRepository;
@@ -89,8 +89,10 @@ public class UploadService {
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(serverFile));
 				bufferedOutputStream.write(bytes);
 				bufferedOutputStream.close();
-				System.out.println(serverFile.getAbsolutePath());
-				return fileName;
+				System.out.println("\n file path = "+serverFile.getAbsolutePath());
+				System.out.println("\n file name =" + fileName);
+				//return fileName;  
+				return serverFile.getAbsolutePath();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

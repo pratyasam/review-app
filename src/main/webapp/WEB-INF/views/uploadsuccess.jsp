@@ -11,7 +11,7 @@
 <div class = "container-fluid">
 <div class="col-lg-6 col-lg-offset-3">
 <div class="row">
-<img src="/reviewBook/assets/uploads/${photo}" alt="sorry" height="300" width="300">
+<img src="${imageurl} " alt="sorry" height="300" width="300">
 </div>
 </div>
 </div>

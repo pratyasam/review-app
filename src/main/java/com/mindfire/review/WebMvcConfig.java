@@ -73,10 +73,12 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	 String rootPath = System.getProperty("user.home");
-         String imagePath = "file:"+rootPath + File.separator + "tmpFiles/";
+//         String imagePath = "file:"+rootPath + File.separator + "tmpFiles/";
+    	 String imagePath = "file:"+rootPath + File.separator + "Wotkspace/git/uploads/";
          System.out.println(imagePath);
          registry.addResourceHandler("/resources/**").addResourceLocations("resources/");
-         registry.addResourceHandler("/tmpFiles/**").addResourceLocations(imagePath);
+         registry.addResourceHandler("/Wotkspace/git/uploads/**").addResourceLocations(imagePath);
+         
     }
 
     @Override
