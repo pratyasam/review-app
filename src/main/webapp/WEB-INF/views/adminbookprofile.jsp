@@ -153,19 +153,24 @@
 			<div class="col-lg-3">
 				<div class="row">
 					<div class="col-lg-12" style="height: 20%">
-						<img src="/reviewBook/assets/img/book.jpg"
+						<img src="/reviewBook/uploads/${book.bookImage}"
 							style="height: 100%; width: 100%;">
 					</div>
 					<div class="nav">
 						<div class="col-lg-12 col-md-12 col-xs-12">
-							<div class="col-lg-6 col-md-6 col-xs-6 well">
+							<div class="col-lg-4 col-md-4 col-xs-4 well">
 								<a href="/reviewBook/books/${book.bookId}/addlike "> <i
 									class="fa fa-thumbs-o-up fa-lg"></i>
 								</a>
 							</div>
-							<div class="col-lg-6 col-md-6 col-xs-6 well">
+							<div class="col-lg-4 col-md-4 col-xs-12 well">
 								<a href="/reviewBook/books/${book.bookId}/deletelike "> <i
 									class="fa fa-thumbs-o-down fa-lg"></i>
+								</a>
+							</div>
+								<div class="col-lg-4 col-md-4 col-xs-12 well">
+								<a href="/reviewBook/books/${book.bookId}/bookupload "> <i
+									class="fa fa-pencil fa-lg"></i>
 								</a>
 							</div>
 						</div>

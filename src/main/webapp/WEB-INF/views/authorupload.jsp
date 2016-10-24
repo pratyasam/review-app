@@ -27,7 +27,7 @@
 				</div>
 				<div class="panel-body">
 					
-					 <form action="/reviewBook/authorupload" method="post" enctype="multipart/form-data">
+					 <form action="/reviewBook/authors/${authorId}/authorupload" method="post" enctype="multipart/form-data">
 						<fieldset>
 							<div class="form-group">
 								<div class="col-lg-12">

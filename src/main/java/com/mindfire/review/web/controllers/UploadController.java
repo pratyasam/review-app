@@ -4,10 +4,6 @@
 package com.mindfire.review.web.controllers;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -24,13 +20,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.UploadService;
 import com.mindfire.review.services.UserService;
+import com.mindfire.review.web.models.Author;
+import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.User;
 
 /**
@@ -100,7 +97,7 @@ public class UploadController {
 				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
 				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
 
-				uploadService.uploadUserImage(user, imageUrl);
+				uploadService.uploadUserImage(user, imageName);
 				model.addAttribute("imageurl", imageUrl);
 				model.addAttribute("imagename",imageName);
 				httpSession.setAttribute("image", imageUrl);
@@ -113,31 +110,17 @@ public class UploadController {
 			return e.getMessage();
 		}
 
-		return ":redirect/userupload";
+		return "redirect:/userupload";
 	}
 	
-//	@RequestMapping(value = "/getImage/{imageId}")
-//	@ResponseBody
-//	public byte[] getImage(@PathVariable long imageId, HttpServletRequest request, HttpSession httpSession)  {
-//		
-//	String rpath = (String) httpSession.getAttribute("image");
-////	 rpath=rpath+"/"+imageId; 
-//	Path path = Paths.get(rpath);
-//	byte[] data = null;
-//	try {
-//		data = Files.readAllBytes(path);
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} 
-//	return data;
-//	}
+
 	
-	@RequestMapping(value = "/{authorId}/authorupload", method = RequestMethod.GET)
+	@RequestMapping(value = "/authors/{authorId}/authorupload", method = RequestMethod.GET)
 	public Object authorUploadPage(@PathVariable("authorId") int authorId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
 
 		if (httpSession.getAttribute("userName") != null) {
 			ModelAndView modelAndView = new ModelAndView("authorupload");
+			modelAndView.addObject("authorId",authorId);
 			return modelAndView;
 		} else {
 			String url = httpServletRequest.getRequestURI();
@@ -149,8 +132,11 @@ public class UploadController {
 
 	}
 	
-	@RequestMapping(value = "/{authorId}/authorupload", method = RequestMethod.POST)
-	public String saveAuthorFile(HttpServletRequest request, HttpSession httpSession, Model model) {
+	@RequestMapping(value = "/authors/{authorId}/authorupload", method = RequestMethod.POST)
+	public String saveAuthorFile(@PathVariable("authorId") Long authorId, HttpServletRequest request, HttpSession httpSession, Model model) {
+		
+		Author author = authorService.getAuthorById(authorId);
+		
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			return "redirect:/authorupload";
 		}
@@ -170,9 +156,12 @@ public class UploadController {
 			if (items.size() == 1) {
 				FileItem file = items.get(0);
 
-				String imageName = uploadService.simpleUpload(file, httpSession, true);
-				
-				model.addAttribute("photo", imageName);
+				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
+				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+				uploadService.uploadAuthorImage(author, imageName);
+				model.addAttribute("imageurl", imageUrl);
+				model.addAttribute("imagename",imageName);
+				httpSession.setAttribute("image", imageUrl);
 				return "redirect:/authors/{authorId}";
 
 			}
@@ -181,7 +170,65 @@ public class UploadController {
 			return e.getMessage();
 		}
 
-		return ":redirect/authorupload";
+		return "redirect:/authors/{authorId}/authorupload";
+	}
+	
+	@RequestMapping(value = "/books/{bookId}/bookupload", method = RequestMethod.GET)
+	public Object bookUploadPage(@PathVariable("bookId") int bookId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
+
+		if (httpSession.getAttribute("userName") != null) {
+			ModelAndView modelAndView = new ModelAndView("bookupload");
+			modelAndView.addObject("bookId",bookId);
+			return modelAndView;
+		} else {
+			String url = httpServletRequest.getRequestURI();
+			System.out.println(url);
+			if (url != null)
+				httpSession.setAttribute("url", url);
+			return "redirect:/login";
+		}
+
+	}
+	
+	@RequestMapping(value = "/books/{bookId}/bookupload", method = RequestMethod.POST)
+	public String saveBookFile(@PathVariable("bookId") Long bookId, HttpServletRequest request, HttpSession httpSession, Model model) {
+		
+		Book book = bookService.getBookById(bookId);
+		
+		if (!ServletFileUpload.isMultipartContent(request)) {
+			return "redirect:/books/{bookId}/bookupload";
+		}
+
+		// Create a factory for disk-based file items
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+
+		/// Configure a repository (to ensure a secure temp location is used)
+		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+		factory.setRepository(repository);
+
+		// Create a new file upload handler
+		ServletFileUpload upload = new ServletFileUpload(factory);
+
+		try {
+			List<FileItem> items = upload.parseRequest(request);
+			if (items.size() == 1) {
+				FileItem file = items.get(0);
+
+				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
+				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+				uploadService.uploadBookImage(book, imageName);
+				model.addAttribute("imageurl", imageUrl);
+				model.addAttribute("imagename",imageName);
+				httpSession.setAttribute("image", imageUrl);
+				return "redirect:/books/{bookId}";
+
+			}
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+
+		return "redirect:/books/{bookId}/bookupload";
 	}
 	
 }

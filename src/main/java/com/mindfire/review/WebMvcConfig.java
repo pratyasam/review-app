@@ -63,7 +63,7 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     }
 
    
-    @Bean
+    @Bean(name="multipartResolver")
     public CommonsMultipartResolver multipartResolver(){
     	CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
     	multipartResolver.setMaxUploadSize(26214400L);
@@ -72,13 +72,10 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	 String rootPath = System.getProperty("user.home");
-//         String imagePath = "file:"+rootPath + File.separator + "tmpFiles/";
-    	 String imagePath = "file:"+rootPath + File.separator + "Wotkspace/git/uploads/";
+    	 String rootPath =  System.getProperty("user.home") + "/Desktop/Wotkspace/git";
+    	 String imagePath = "file:"+rootPath + File.separator + "uploads/";
          System.out.println(imagePath);
-         registry.addResourceHandler("/resources/**").addResourceLocations("resources/");
-         registry.addResourceHandler("/Wotkspace/git/uploads/**").addResourceLocations(imagePath);
-         
+         registry.addResourceHandler("/uploads/**").addResourceLocations(imagePath);   
     }
 
     @Override

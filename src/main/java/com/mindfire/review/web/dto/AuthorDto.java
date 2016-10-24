@@ -4,6 +4,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * Created by pratyasa on 10/8/16.
  */
@@ -17,9 +19,12 @@ public class AuthorDto {
 
     @NotNull(message = "Author Name cannot be null")
     private String authorName;
+    
     @Min(value = 1, message = "Rating should be atleast 1")
     @Max(value = 5, message = "Rating should be less than equal to 5")
     private float authorRating;
+  
+//	private MultipartFile fileupload;
 
     public String getAuthorDescription() {
         return authorDescription;
@@ -52,4 +57,14 @@ public class AuthorDto {
     public void setAuthorRating(float authorRating) {
         this.authorRating = authorRating;
     }
+
+//	public MultipartFile getFileupload() {
+//		return fileupload;
+//	}
+//
+//	public void setFileupload(MultipartFile fileupload) {
+//		this.fileupload = fileupload;
+//	}
+    
+    
 }

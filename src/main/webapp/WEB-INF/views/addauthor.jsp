@@ -95,6 +95,7 @@
                                     </div>
                                 </div>
                                 <br>
+                            
                                 <div class="form-group">
                                     <div class="col-lg-10 col-lg-offset-2">
                                         <input type="reset" class="btn btn-default" value="cancel" />
@@ -103,16 +104,20 @@
                                 </div>
                                 <br>
                                 <div class="footer text-center "> <small>Copyright &copy; Pratyasha</small> </div>
+                                <br>
                             </fieldset>
                         </form:form>
+                      
                     </div>
                 </div>
+			
             </div>
         </div>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

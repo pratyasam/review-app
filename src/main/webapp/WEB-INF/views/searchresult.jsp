@@ -214,13 +214,10 @@
 				searchParam :searchParam,
 				category:searchCategory
 			}, function(data) {
-				$('#Authors_result').html(data);
-				
+				$('#Authors_result').html(data);	
 			});
 		});
-	
-	</script>
-	<script>
+
 	
 		$('#BooksTab').click(function(event) {
 			var searchCategory = 'BOOKS';
