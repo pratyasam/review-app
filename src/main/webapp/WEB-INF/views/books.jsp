@@ -4,23 +4,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
 <head>
 <title>All books</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/animation.css">
-<link rel="stylesheet" type="text/css"
-	href="assets/css/home-pagestyle.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
-	
-<link href="assets/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="assets/css/home-pagestyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
 <style>
 .sidebar-box {
@@ -276,7 +270,7 @@ ul {
 					%>
 					<div class="col-lg-6">
 						<div class="row">
-							<div class="col-lg-4" style="padding: 2px;">
+							<div class="col-lg-4" style="padding: 2px; max-height:50%;">
 								<img src="assets/img/book1.jpg" alt="book1" style="width: 100%" />
 							</div>
 
@@ -293,11 +287,10 @@ ul {
 										<%
 											}
 										%>
-										<span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span> <br>
+										<% if(authors.size() == 0){ %>
+										<br>
+										<%} %>
+										<div data-rateyo="rateYo" class="text-center" data-rating="<%= book.getBookRating() %>" style="margin-left: 55px;"></div> <br>
 										<div class="sidebar-box">
 										<p class="read-more"></p>
 											<p><%=book.getBookDescription()%></p>
@@ -633,12 +626,10 @@ ul {
 	</g> </svg>
 
 
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="/reviewBook/assets/js/star-rating.js" type="text/javascript"></script>
-	<script
-		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
@@ -647,6 +638,22 @@ ul {
 		function closeNav() {
 			document.getElementById("myNav").style.height = "0%";
 		}
+	</script>
+		<script type="text/javascript">
+
+		$(function(){
+			var ratedEntities = $('div[data-rateyo]');
+			
+			for(var i=0;i<ratedEntities.length;i++){
+				$(ratedEntities[i]).rateYo({
+		        	rating: $(ratedEntities[i]).attr('data-rating'),
+		        	readOnly: true,
+		        	 starWidth: "20px"
+		 		 });
+			}
+			
+		});
+		
 	</script>
 </body>
 

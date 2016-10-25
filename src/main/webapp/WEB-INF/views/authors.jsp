@@ -10,15 +10,12 @@
 <head>
 <title>All Authors</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/animation.css">
-<link rel="stylesheet" type="text/css"
-	href="assets/css/home-pagestyle.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="assets/css/home-pagestyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
 <style>
 .sidebar-box {
@@ -324,11 +321,8 @@ ul {
 									<div class="panel-body">
 										<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
 											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
-										</a> <span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span> <br>
+										</a>
+										 <div data-rateyo="rateYo" class="text-center" data-rating="<%= a.getAuthorRating() %>"></div> <br>
 										<div class="sidebar-box">
 											<p><%=a.getAuthorDescription()%></p>
 											<p class="read-more"></p>
@@ -665,6 +659,7 @@ ul {
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
@@ -673,6 +668,22 @@ ul {
 		function closeNav() {
 			document.getElementById("myNav").style.height = "0%";
 		}
+	</script>
+	<script type="text/javascript">
+
+		$(function(){
+			var ratedEntities = $('div[data-rateyo]');
+			
+			for(var i=0;i<ratedEntities.length;i++){
+				$(ratedEntities[i]).rateYo({
+		        	rating: $(ratedEntities[i]).attr('data-rating'),
+		        	readOnly: true,
+		        	 starWidth: "15px"
+		 		 });
+			}
+			
+		});
+		
 	</script>
 </body>
 

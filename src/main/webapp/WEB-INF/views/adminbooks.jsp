@@ -10,16 +10,12 @@
 <head>
 <title>All books</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/animation.css">
-<link rel="stylesheet" type="text/css"
-	href="assets/css/home-pagestyle.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
-</head>
+<link rel="stylesheet" type="text/css" href="assets/css/home-pagestyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 <style>
 .sidebar-box {
 	max-height: 120px;
@@ -261,11 +257,10 @@ ul {
 										<%
 											}
 										%>
-										<span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span> <br>
+										<% if(authors.size() == 0){ %>
+										<br>
+										<%} %>
+										<div data-rateyo="rateYo" class="text-center" data-rating="<%= book.getBookRating() %>" style="margin-left: 55px;"></div> <br>
 										<div class="sidebar-box">
 											<p><%=book.getBookDescription()%></p>
 											<p class="read-more"></p>
@@ -598,10 +593,10 @@ ul {
 	</div>
 
 
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script
-		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
@@ -610,6 +605,22 @@ ul {
 		function closeNav() {
 			document.getElementById("myNav").style.height = "0%";
 		}
+	</script>
+			<script type="text/javascript">
+
+		$(function(){
+			var ratedEntities = $('div[data-rateyo]');
+			
+			for(var i=0;i<ratedEntities.length;i++){
+				$(ratedEntities[i]).rateYo({
+		        	rating: $(ratedEntities[i]).attr('data-rating'),
+		        	readOnly: true,
+		        	 starWidth: "20px"
+		 		 });
+			}
+			
+		});
+		
 	</script>
 </body>
 

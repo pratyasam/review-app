@@ -20,6 +20,8 @@ import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.ReviewBook;
 import com.mindfire.review.web.models.User;
+import com.mindfire.review.web.repositories.AuthorLikeRepository;
+import com.mindfire.review.web.repositories.BookLikeRepository;
 import com.mindfire.review.web.repositories.ReviewAuthorRepository;
 import com.mindfire.review.web.repositories.ReviewBookRepository;
 import com.mindfire.review.web.repositories.UserRepository;
@@ -38,6 +40,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ReviewBookRepository reviewBookRepository;
+	
+	@Autowired
+	private BookLikeRepository bookLikeRepository;
+	
+	@Autowired
+	private AuthorLikeRepository authorLikeRepository;
 
 	/**
 	 * get user by user name
@@ -84,8 +92,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Page<User> getUserFirstName(String firstName, int page) {
 		
-		Page<User> users = userRepository.findByFirstNameContaining(firstName, Utility.buildPageRequest(10, page));
-		return users;
+		return userRepository.findByFirstNameContaining(firstName, Utility.buildPageRequest(10, page));
 	}
 
 	/**
@@ -165,15 +172,14 @@ public class UserServiceImpl implements UserService {
 			authors.add(ra.getAuthor());
 		}
 		Pageable page = Utility.buildPageRequest(size, pageno);
-		PageImpl<Author> pageImpl = new PageImpl<>(authors,page, size);
-		return pageImpl;
+		return new PageImpl<>(authors,page, size);
 
 	}
 
 	/**
 	 * get a user by user Id
 	 *
-	 * @param userId
+	 * @param userIdget
 	 * @return
 	 */
 
@@ -349,10 +355,30 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User loginAuthenticate(String userName, String password) throws LoginFailException {
+		
 		User user = userRepository.findByUserNameAndUserPassword(userName, DigestUtils.sha256Hex(password));
 		if (user != null)
 			return user;
 		else
 			throw new LoginFailException("Invalid User Name or Password");
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int totalLikesByUser(User user) { 
+		
+		int bookLikes = bookLikeRepository.findByUser(user).size();
+		int authorLike = authorLikeRepository.findByUser(user).size();
+		return bookLikes + authorLike;
+	}
+	
+	@Override
+	public int totalReviewsMadeByTheUser(User user){
+		
+		int bookReviews = getBookReviewByUser(user.getUserName()).size();
+		int authorReviews = getAuthorReviewedByUser(user.getUserName()).size();
+		 return authorReviews + bookReviews;
 	}
 }

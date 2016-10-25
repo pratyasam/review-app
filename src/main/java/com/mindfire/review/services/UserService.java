@@ -150,6 +150,20 @@ public interface UserService {
      * @return
      */
     public User getUserById(Long userId);
+    
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    int totalLikesByUser(User user);
+    
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    int totalReviewsMadeByTheUser(User user);
 
 
 }

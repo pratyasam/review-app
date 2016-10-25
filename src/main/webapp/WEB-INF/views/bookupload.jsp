@@ -21,7 +21,7 @@
 		<div
 			class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-10 col-sm-offest-1">
 
-			<div class="panel panel-primary">
+			<div class="panel panel-primary" style="margin-top:100px;">
 				<div class="panel-heading text-center">
 					<h3>Book Profile Picture Upload</h3>
 				</div>

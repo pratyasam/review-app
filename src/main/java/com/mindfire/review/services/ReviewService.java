@@ -160,4 +160,11 @@ public interface ReviewService {
       */
      
      int getNumberOfReviewDislikesByAuthor(ReviewAuthor reviewAuthor);
+     
+     /**
+      * 
+      * @param user
+      * @return
+      */
+     int getNumberOfReviewLikesByUser(User user);
 }

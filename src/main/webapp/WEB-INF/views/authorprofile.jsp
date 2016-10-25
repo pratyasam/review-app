@@ -1,3 +1,5 @@
+<%@page import="org.springframework.web.servlet.ModelAndView"%>
+<%@page import="org.springframework.ui.Model"%>
 <%@page import="com.mindfire.review.web.dto.ReviewAuthorLikesDto"%>
 <%@page import="com.mindfire.review.web.models.Author"%>
 <%@page import="com.mindfire.review.web.dto.BookAuthorListDto"%>
@@ -23,16 +25,12 @@
 <head>
 <title>${author.authorName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="/reviewBook/assets/css/font-awesome.min.css">
+<link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
 <link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	href="/reviewBook/assets/css/animation.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
 <style>
 .sidebar-box {
@@ -98,6 +96,9 @@
 }
 </style>
 <body>
+    <%
+    Book book = null;
+    %>
 	<%
 		if (session.getAttribute("userName") != null) {
 	%>
@@ -215,7 +216,7 @@
 					</div>
 					<div class="panel-body">
 						<h4>Author Genre: ${author.authorGenre}</h4>
-						<h4>Author Rating:${author.authorRating}</h4>
+						<div id="rateYo" onchange="star1()"></div>
 					</div>
 					<div class="panel-footer">
 						<div class="row nav">
@@ -244,7 +245,8 @@
 						<%
 							for (BookAuthorListDto b : (List<BookAuthorListDto>) request.getAttribute("books")) {
 								List<Author> authorList = b.getAuthorList();
-								Book book = b.getBook();
+								book = b.getBook();
+								session.setAttribute("bookrating", book.getBookRating());
 						%>
 						<div class="col-lg-6">
 							<div class="row">
@@ -266,11 +268,7 @@
 											<%
 												}
 											%>
-											<span class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span> <br>
+										<div data-rateyo="rateYo" class="text-center" data-rating="<%= book.getBookRating() %>" style="margin-left: 55px;"></div><br>
 											<div class="sidebar-box">
 												<p><%=book.getBookDescription()%></p>
 												<p class="read-more"></p>
@@ -353,11 +351,6 @@
 										</form:form>
 									</span>
 											</h4>
-										<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span>
 											<br>
 											<p><%=ra.getReviewAuthorText()%></p>
 						</div>
@@ -742,7 +735,8 @@
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
-		<script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
 		}
@@ -750,6 +744,34 @@
 		function closeNav() {
 			document.getElementById("myNav").style.height = "0%";
 		}
+	</script>
+	<script type="text/javascript">
+
+		$(function(){
+			var ratedEntities = $('div[data-rateyo]');
+			
+			for(var i=0;i<ratedEntities.length;i++){
+				$(ratedEntities[i]).rateYo({
+		        	rating: $(ratedEntities[i]).attr('data-rating'),
+		        	readOnly: true,
+		        	 starWidth: "20px"
+		 		 });
+			}
+			
+		});
+		
+	</script>
+	<script type="text/javascript">
+
+	    $(function star1() {
+	 
+	        $("#rateYo").rateYo({
+	        	rating: ${author.authorRating}, 
+	        	readOnly: true,
+	        	 multiColor: true
+	  });
+	 
+	    });
 	</script>
 </body>
 

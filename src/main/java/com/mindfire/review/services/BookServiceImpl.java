@@ -514,7 +514,7 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	/**
-	 * 
+	 * Returns number of total likes by book id.
 	 * @param bookId
 	 * @return
 	 */
@@ -530,7 +530,9 @@ public class BookServiceImpl implements BookService {
 		return likes;
 	}
 
-		
+	/**
+	 * 	
+	 */
 	@Override
 	public Page<Book> searchForBooks(String name, String genre, String isbn, int page) {
 		Page<Book> books = bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContaining(name, genre, isbn, Utility.buildPageRequest(10, page));

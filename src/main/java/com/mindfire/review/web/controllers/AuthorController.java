@@ -156,7 +156,6 @@ public class AuthorController {
 		int totalpagesu = users.getTotalPages();
 		List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>();
 		ReviewAuthorDto reviewAuthorDto = new ReviewAuthorDto();
-		User user = userService.getUser((String) httpSession.getAttribute("userName"));
 		List<ReviewAuthorLikesDto> reviewAuthorLikesDtos = new ArrayList<>();
 
 		for (ReviewAuthor ra : reviewAuthors.getContent()) {
@@ -196,8 +195,6 @@ public class AuthorController {
 			modelAndView.addObject("totalpagesu", totalpagesu);
 			modelAndView.addObject("totalreviews", authorService.getTotalAuthorReviewByAuthorName(authorName));
 			modelAndView.addObject("totallikes", authorService.getNumberOfLikesByUser(authorId));
-
-			System.out.println("Admin");
 			return modelAndView;
 		}
 		if (httpSession.getAttribute("review") != null) {

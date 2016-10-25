@@ -15,7 +15,7 @@
 <html lang="en">
 
 <head>
-<title>User Profile Page</title>
+<title>${user.firstName} ${user.lastName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -103,15 +103,15 @@
 						</div>
 						<div class="panel-footer">
 							<div class="row nav">
-								<div class="col-md-8 col-xs-12">
+								<div class="col-md-12 col-xs-12">
 									<div class="col-md-4 col-xs-4 well">
-										<i class="fa fa-weixin fa-lg"></i> 16
+										<i class="fa fa-weixin fa-lg"></i> ${totalreviewsmade}
 									</div>
 									<div class="col-md-4 col-xs-4 well">
-										<i class="fa fa-heart-o fa-lg"></i> 14
+										<i class="fa fa-heart-o fa-lg"></i> ${totallikes}
 									</div>
 									<div class="col-md-4 col-xs-4 well">
-										<i class="fa fa-thumbs-o-up fa-lg"></i> 26
+										<i class="fa fa-thumbs-o-up fa-lg"></i> ${totalreviewlikes}
 									</div>
 								</div>
 							</div>

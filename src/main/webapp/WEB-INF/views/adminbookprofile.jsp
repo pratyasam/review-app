@@ -19,18 +19,13 @@
 <head>
 <title><b>${book.bookName}</b></title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="/reviewBook/assets/css/font-awesome.min.css">
+<link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
 <link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	href="/reviewBook/assets/css/animation.css">
-<link rel="stylesheet" type="text/css"
-	href="/reviewBook/assets/css/bookprofile-style.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/bookprofile-style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
 <style>
 .sidebar-box {
@@ -198,7 +193,7 @@
 					</div>
 					<div class="panel-body">
 						<h4>Book Genre: ${book.bookGenre}</h4>
-						<h4>Book Rating:${book.bookRating}</h4>
+						<div id="rateYo" onchange="star1()"></div>
 						<h4>Book Cost:${book.bookCost}</h4>
 						<h5>
 							Book Link: <a href=#> Download <span
@@ -278,11 +273,6 @@
 										<h6><%=rb.getUser().getFirstName()%>
 											reviewed :
 										</h6>
-										<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span>
 									</div>
 									<div class="edit col-lg-6 col-md-6 col-sm-6"
 										style="text-align: right; padding-right: 10px;">
@@ -771,6 +761,7 @@
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 		<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
@@ -779,6 +770,18 @@
 		function closeNav() {
 			document.getElementById("myNav").style.height = "0%";
 		}
+		</script>
+	<script type="text/javascript">
+
+	    $(function star1() {
+	 
+	        $("#rateYo").rateYo({
+	        	rating: ${book.bookRating}, 
+	        	readOnly: true,
+	        	 multiColor: true
+	  });
+	 
+	    });
 	</script>
 </body>
 

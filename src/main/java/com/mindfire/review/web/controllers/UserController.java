@@ -4,6 +4,8 @@
  */
 package com.mindfire.review.web.controllers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.services.BookService;
+import com.mindfire.review.services.ReviewService;
 import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.ChoiceDto;
@@ -42,6 +45,9 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private BookService bookService;
+	@Autowired
+	private ReviewService reviewService;
+	
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public Object getUsers(@RequestParam(value = "pageno", defaultValue="1") int pageno,HttpSession httpSession) {
@@ -77,8 +83,11 @@ public class UserController {
 			modelAndView.addObject("authors", authorList.getContent());
 		    modelAndView.addObject("totalpagesb", totalpagesb);
 		    modelAndView.addObject("totalpagesa", totalpagesa);
+		    modelAndView.addObject("totalreviewlikes",reviewService.getNumberOfReviewLikesByUser(userService.getUserById(userId)));
+            modelAndView.addObject("totallikes",userService.totalLikesByUser(userService.getUserById(userId)));
 			modelAndView.addObject("user", userService.getUserById(userId));
 			modelAndView.addObject("delete", new ChoiceDto());
+			modelAndView.addObject("totalreviewsmade", userService.totalReviewsMadeByTheUser(userService.getUserById(userId)));
 			return modelAndView;
 		}
 		return null;
@@ -164,6 +173,9 @@ public class UserController {
 			    User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
 	            ModelAndView modelAndView = new ModelAndView("admin");
 	            modelAndView.addObject("user",user);
+	            modelAndView.addObject("totalreviewlikes",reviewService.getNumberOfReviewLikesByUser(user));
+	            modelAndView.addObject("totallikes",userService.totalLikesByUser(user));
+	            modelAndView.addObject("totalreviewsmade", userService.totalReviewsMadeByTheUser(user));
 	            Long userId = (Long)httpSession.getAttribute("userId");
 				return "redirect:/users/" + userId;
 			}

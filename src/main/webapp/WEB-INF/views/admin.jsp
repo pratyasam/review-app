@@ -108,13 +108,13 @@
 							<div class="row nav">
 								<div class="col-lg-12 col-md-12 col-xs-12">
 									<div class="col-md-4 col-xs-4 well">
-										<i class="fa fa-weixin fa-lg"></i> 16
+										<i class="fa fa-weixin fa-lg"></i>${totalreviewsmade}
 									</div>
 									<div class="col-md-4 col-xs-4 well">
-										<i class="fa fa-heart-o fa-lg"></i> 14
+										<i class="fa fa-heart-o fa-lg"></i> ${totallikes}
 									</div>
 									<div class="col-md-4 col-xs-4 well">
-										<i class="fa fa-thumbs-o-up fa-lg"></i> 26
+										<i class="fa fa-thumbs-o-up fa-lg"></i> ${totalreviewlikes}
 									</div>
 								</div>
 							</div>

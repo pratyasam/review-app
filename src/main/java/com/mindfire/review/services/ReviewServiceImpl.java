@@ -147,9 +147,7 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public void removeAuthorReview(Long reviewAuthorId) throws ReviewDoesnotExistException {
-
-		System.out.println("Review - " + reviewAuthorId);
-
+		
 		// Fetch the author from the DB
 		ReviewAuthor reviewAuthor = reviewAuthorRepository.findOne(reviewAuthorId);
 
@@ -252,8 +250,6 @@ public class ReviewServiceImpl implements ReviewService {
 			reviewAuthorLike2.setReviewAuthorLikeFlag(1);
 			reviewAuthorLikeRepository.saveAndFlush(reviewAuthorLike2);
 		}
-		
-		System.out.println("Author review liked.");
 
 	}
 	
@@ -280,7 +276,7 @@ public class ReviewServiceImpl implements ReviewService {
 			reviewAuthorLike.setReviewAuthorLikeFlag(-1);
 			reviewAuthorLikeRepository.saveAndFlush(reviewAuthorLike);
 		}
-		System.out.println("author review disliked");
+		
 	}
 	
 	/**
@@ -288,7 +284,7 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public void addLikeForBookReview(String userName, Long reviewBookId) throws AlreadyReviewedException {
-		System.out.println("to do : like this review ");
+		
 		User user = userService.getUser(userName);
 		ReviewBook reviewBook = getReviewBookById(reviewBookId);
 		ReviewBookLike reviewBookLike = reviewBookLikeRepository.findByReviewBookAndUser(reviewBook, user);
@@ -303,7 +299,7 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewBookLike2.setUser(user);
 		reviewBookLike2.setReviewBookLikeFlag(1);
 		reviewBookLike2 = reviewBookLikeRepository.save(reviewBookLike2);
-		System.out.print("Book review liked.");
+		
 		if(reviewBookLike2 == null){
 			throw new RuntimeException("");
 		}
@@ -379,6 +375,9 @@ public class ReviewServiceImpl implements ReviewService {
 		return x;
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public int getNumberOfReviewDislikesByBook(ReviewBook reviewBook){
 		List<ReviewBookLike> reviewBookLikes = reviewBookLikeRepository.findByReviewBook(reviewBook);
@@ -390,7 +389,7 @@ public class ReviewServiceImpl implements ReviewService {
 			x = x+ y;
 		}
 		
-		return (-1 * x);
+		return -1 * x;
 		
 	}
 	
@@ -404,10 +403,17 @@ public class ReviewServiceImpl implements ReviewService {
 			if(y == -1)
 				x= x+y;
 		}
-		return (-1 * x);
+		return -1 * x;
 		
 	}
 	
+	@Override
+	public int getNumberOfReviewLikesByUser(User user){
+		 int authorReviewLike = reviewAuthorLikeRepository.findByUser(user).size();
+		 int bookReviewLike = reviewBookLikeRepository.findByUser(user).size();
+		 return authorReviewLike + bookReviewLike;
+		
+	}
 	
 
 }
