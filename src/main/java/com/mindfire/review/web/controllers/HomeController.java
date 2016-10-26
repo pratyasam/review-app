@@ -1,5 +1,7 @@
 package com.mindfire.review.web.controllers;
 
+import com.mindfire.review.services.AuthorService;
+import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,10 +16,16 @@ public class HomeController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private AuthorService authorService;
 
     @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
     public Object home(HttpSession httpSession) {
          ModelAndView modelAndView = new ModelAndView("homepage");
+         modelAndView.addObject("authorlist", authorService.getTop10Authors());
+         modelAndView.addObject("booklist", bookService.getTop10Books());
          return modelAndView;
     }
 

@@ -123,7 +123,7 @@ ul {
 
 <body>
 	<%
-		if (session.getAttribute("userName") != null) {
+		if (session.getAttribute("userName") != null && ("normal").equals(session.getAttribute("userName"))) {
 	%>
 	<nav class="navbar navbar-default">
 	<div class="container-fluid">
@@ -133,21 +133,21 @@ ul {
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">ReviewApp</a>
+			<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><i class="fa fa-search fa-2x"
 						onclick="openNav()"></i> </a></li>
-				<li><a href="#">Home</a></li>
+				<li><a href="/">Home</a></li>
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Update Info</a></li>
+						<li><a href="#/reviewBook/userupload">Update Info</a></li>
 						<li><a href="#">Delete Account</a></li>
 						<li><a href="/reviewBook/profile">Profile</a></li>
 					</ul></li>
-				<li><img src="/reviewBook/assets/img/book.jpg"
+				<li><img src="/reviewBook/uploads/${userImage}"
 					class="img-circle img-responsive" alt="book"
 					style="height: 60px; width: 60px;"></li>
 				<li><a href="/reviewBook/logout"><span
@@ -170,7 +170,7 @@ ul {
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">ReviewApp</a>
+			<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
@@ -271,7 +271,7 @@ ul {
 					<div class="col-lg-6">
 						<div class="row">
 							<div class="col-lg-4" style="padding: 2px; max-height:50%;">
-								<img src="assets/img/book1.jpg" alt="book1" style="width: 100%" />
+								<img src="/reviewBook/uploads/<%= book.getBookImage() %>" alt="book1" style="width: 100%" />
 							</div>
 
 							<div class="col-lg-8">

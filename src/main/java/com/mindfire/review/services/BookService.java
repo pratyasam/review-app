@@ -238,5 +238,10 @@ public interface BookService {
      * @return
      */
     Page<Book> searchForBooks(String name, String genre, String isbn, int page);
+    /**
+     * 
+     * @return
+     */
+    List<Book> getTop10Books();
     
 }

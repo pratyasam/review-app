@@ -49,6 +49,7 @@ public class User implements Serializable {
     private List<ReviewBook> reviewBooks;
 
     public User() {
+    	// empty
     }
 
     public String getFirstName() {

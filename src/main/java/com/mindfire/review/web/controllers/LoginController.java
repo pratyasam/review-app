@@ -42,8 +42,6 @@ public class LoginController {
         }
 
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getFieldErrors());
-            System.out.println("has errors");
             return "login";
         }
 
@@ -58,7 +56,7 @@ public class LoginController {
             httpSession.setAttribute("userLastName", user.getLastName());
             httpSession.setAttribute("role", user.getRole());
             httpSession.setAttribute("userId", user.getUserId());
-            
+            httpSession.setAttribute("userImage", user.getUserImage());
             if(httpSession.getAttribute("url") != null){
             	String url = (String)httpSession.getAttribute("url");
             	url = url.replaceFirst("/reviewBook", "");

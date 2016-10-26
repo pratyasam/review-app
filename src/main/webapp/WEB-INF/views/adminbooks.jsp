@@ -127,8 +127,7 @@ ul {
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
-				${userLastName}</a>
+			<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
@@ -150,6 +149,9 @@ ul {
 						<li><a href="/reviewBook/authors">All Authors</a></li>
 						<li><a href="/reviewBook/users">All Users</a></li>
 					</ul></li>
+					<li><img src="/reviewBook/uploads/${userImage}"
+						class="img-circle img-responsive" alt="user"
+						style="height: 60px; width: 60px;"></li>
 				<li><a href="/reviewBook/profile">Profile </a></li>
 				<li><a href="logout"><span
 						class="glyphicon glyphicon-log-in"></span> Logout</a></li>
@@ -240,7 +242,7 @@ ul {
 					<div class="col-lg-6">
 						<div class="row">
 							<div class="col-lg-4" style="padding: 2px;">
-								<img src="assets/img/book1.jpg" alt="book1" style="width: 100%" />
+								<img src="/reviewBook/uploads/<%= book.getBookImage() %>" alt="book1" style="width: 100%; height:30%;" />
 							</div>
 
 							<div class="col-lg-8">

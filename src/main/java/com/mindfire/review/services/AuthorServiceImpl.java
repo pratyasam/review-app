@@ -397,5 +397,14 @@ public class AuthorServiceImpl implements AuthorService {
     	authorRepository.save(author);
     	return likes;
     }
+    
+    /**
+     * 
+     */
+    @Override
+    public List<Author> getTop10Authors() {
+    	
+    	return authorRepository.findTop10ByAuthorLikesGreaterThanOrderByAuthorLikesDesc(0);
+    }
 
 }

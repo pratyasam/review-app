@@ -21,6 +21,8 @@
 	href="/reviewBook/assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css"
 	href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
 <body>
 	<%
@@ -53,7 +55,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">ReviewApp</a>
+				<a class="navbar-brand" href="/">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -61,11 +63,11 @@
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Update Info</a></li>
+							<li><a href="/reviewBook/userupload">Update Info</a></li>
 							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
-					<li><img src="/reviewBook/assets/img/book.jpg"
+					<li><img src="/reviewBook/uploads/${userImage}"
 						class="img-circle img-responsive" alt="book"
 						style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/logout"><span
@@ -89,8 +91,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
-					${userLastName}</a>
+				<a class="navbar-brand" href="/">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -110,6 +111,9 @@
 							<li><a href="/reviewBook/authors">All Authors</a></li>
 							<li><a href="/reviewBook/users">All Users</a></li>
 						</ul></li>
+					<li><img src="/reviewBook/uploads/${userImage}"
+						class="img-circle img-responsive" alt="book"
+						style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
 					<li><a href="logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
@@ -131,7 +135,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">ReviewApp</a>
+				<a class="navbar-brand" href="/">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -150,39 +154,54 @@
 	<div class="container-fluid">
 		<div class="col-lg-10 col-lg-offset-1">
 			<ul class="nav nav-tabs">
-				<li class="<%= ((searchCategory == SearchType.BOOKS) ? "active" : "inactive" )%>" id="BooksTab"><a data-toggle="tab" href="#Books">Books</a></li>
-				<li class="<%= ((searchCategory == SearchType.AUTHORS) ? "active" : "inactive" )%>" id="AuthorsTab"><a data-toggle="tab" href="#Authors">Authors</a></li>
-				<li class="<%= ((searchCategory == SearchType.USERS) ? "active" : "inactive" )%>" id="UsersTab"><a data-toggle="tab" href="#Users">Users</a></li>
+				<li
+					class="<%=((searchCategory == SearchType.BOOKS) ? "active" : "inactive")%>"
+					id="BooksTab"><a data-toggle="tab" href="#Books">Books</a></li>
+				<li
+					class="<%=((searchCategory == SearchType.AUTHORS) ? "active" : "inactive")%>"
+					id="AuthorsTab"><a data-toggle="tab" href="#Authors">Authors</a></li>
+				<li
+					class="<%=((searchCategory == SearchType.USERS) ? "active" : "inactive")%>"
+					id="UsersTab"><a data-toggle="tab" href="#Users">Users</a></li>
 			</ul>
 			<div class="tab-content">
 				<div id="Books" class="tab-pane fade in">
-					<h3>Books</h3>
 					<div class="row">
 						<div class="col-xs-12" id="Books_result">
-							<% if(searchCategory == SearchType.BOOKS) {%>
-								<jsp:include page="bookpartial.jsp" />
-							<% } %>
+							<%
+								if (searchCategory == SearchType.BOOKS) {
+							%>
+							<jsp:include page="bookpartial.jsp" />
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>
 				<div id="Authors" class="tab-pane fade in">
-					<h3>Authors</h3>
 					<div class="row">
 						<div class="col-xs-12" id="Authors_result">
-						<% if(searchCategory == SearchType.AUTHORS) {%>
+							<%
+								if (searchCategory == SearchType.AUTHORS) {
+							%>
 							<jsp:include page="authorpartial.jsp" />
-						<% } %>
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>
 				<div id="Users" class="tab-pane fade in">
-					<h3>Users</h3>
 					<div class="row">
 						<div class="col-xs-12" id="Users_result">
-						
-							<% if(searchCategory == SearchType.USERS) {%>
-								<jsp:include page="userpartial.jsp" />
-							<% } %>
+
+							<%
+								if (searchCategory == SearchType.USERS) {
+							%>
+							<jsp:include page="userpartial.jsp" />
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>
@@ -192,9 +211,12 @@
 
 	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	
 
 	<script type="text/javascript">
 		$(function(){
@@ -204,12 +226,12 @@
 			}
 		});
 	</script>
-  
+
 	<script>
 	
 		$('#AuthorsTab').click(function(event) {
 			var searchCategory = 'AUTHORS';
-			var searchParam = '<%= (String) request.getAttribute("searchParam")%>';
+			var searchParam = '<%=(String) request.getAttribute("searchParam")%>';
 			$.get('/reviewBook/search', {
 				searchParam :searchParam,
 				category:searchCategory
@@ -217,11 +239,10 @@
 				$('#Authors_result').html(data);	
 			});
 		});
-
-	
+    
 		$('#BooksTab').click(function(event) {
 			var searchCategory = 'BOOKS';
-			var searchParam = '<%= (String) request.getAttribute("searchParam")%>';
+			var searchParam = '<%=(String) request.getAttribute("searchParam")%>';
 			$.get('/reviewBook/search', {
 				searchParam : searchParam,
 				category:searchCategory
@@ -232,22 +253,38 @@
 		});
 	
 	</script>
-	
-		<script>
+
+	<script>
 	
 		$('#UsersTab').click(function(event) {
 			var searchCategory = 'USERS';
-			var searchParam = '<%= (String) request.getAttribute("searchParam")%>';
-			$.get('/reviewBook/search', {
-				searchParam : searchParam,
-				category:searchCategory
-			}, function(data) {
-				$('#Users_result').html(data);
-				
-			});
-		});
-	
+			var searchParam = '<%=(String) request.getAttribute("searchParam")%>';
+							$.get('/reviewBook/search', {
+								searchParam : searchParam,
+								category : searchCategory
+							}, function(data) {
+								$('#Users_result').html(data);
+
+							});
+						});
 	</script>
 	
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	var ratedEntities = $('div[data-rateyo1]');
+
+	for (var i = 0; i < ratedEntities.length; i++) {
+		$(ratedEntities[i]).rateYo({
+			rating : $(ratedEntities[i]).attr('data-rating'),
+			readOnly : true,
+			starWidth : "20px"
+		});
+	}
+
+});
+</script>
+
 </body>
 </html>

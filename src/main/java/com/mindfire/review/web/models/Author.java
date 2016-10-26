@@ -42,6 +42,7 @@ public class Author{
     private List<BookAuthor> bookAuthors;
 
     public Author() {
+    	// empty constructor.
     }
 
     public Long getAuthorId() {

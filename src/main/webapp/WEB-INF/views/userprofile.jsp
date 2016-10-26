@@ -15,7 +15,7 @@
 <html lang="en">
 
 <head>
-<title>${user.firstName} ${user.lastName}</title>
+<title>${user.firstName}${user.lastName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -25,8 +25,8 @@
 
 <link rel="stylesheet" type="text/css"
 	href="/reviewBook/assets/css/animation.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
 <style>
 .sidebar-box {
@@ -46,7 +46,6 @@
 	/* "transparent" only works here because == rgba(0,0,0,0) */
 	background-image: linear-gradient(to bottom, transparent, grey);
 }
-
 </style>
 
 <body>
@@ -58,8 +57,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">${user.firstName}
-					${user.lastName}</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -67,8 +65,7 @@
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="/reviewBook/users/${user.userId}">Update
-									Info</a></li>
+							<li><a href="/reviewBook/userupload">Update Info</a></li>
 							<form:form action="${user.userId}" method="delete"
 								modelAttribute="delete">
 								<fieldset>
@@ -94,7 +91,7 @@
 				<div class="col-sm-8 col-lg-8 pad">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3>${user.firstName} ${user.lastName}</h3>
+							<h3>${user.firstName}${user.lastName}</h3>
 						</div>
 						<div class="panel-body">
 							<p>User Name: ${user.userName}</p>
@@ -132,8 +129,8 @@
 						<div class="col-lg-6">
 							<div class="row">
 								<div class="col-lg-4" style="padding: 2px;">
-									<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
-										style="width: 100%; height: 200px;" />
+									<img src="/reviewBook/uploads/<%=book.getBookImage()%>"
+										alt="book1" style="width: 100%; height: 200px;" />
 								</div>
 
 								<div class="col-lg-8">
@@ -145,15 +142,32 @@
 											<%
 												for (Author a : authorList) {
 											%>
+											<%
+												if (a.getAuthorName() != null) {
+											%>
+
 											<h6><%=a.getAuthorName()%></h6>
+
 											<%
 												}
 											%>
-											<span class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span> <br>
+											<%
+												}
+											%>
+
+
+											<%
+												if (authorList.size() == 0) {
+											%>
+											<h6>Unknown</h6>
+											<%
+												}
+											%>
+
+											<div data-rateyo="rateYo" class="text-center"
+												data-rating="<%=book.getBookRating()%>"
+												style="margin-left: 55px;"></div>
+											<br>
 											<div class="sidebar-box">
 												<p><%=book.getBookDescription()%></p>
 												<p class="read-more"></p>
@@ -169,8 +183,10 @@
 						<br> <br>
 						<div
 							class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center">
-							<%if(((List<BookAuthorListDto>)request.getAttribute("books")).size() !=0){ %>
-							
+							<%
+								if (((List<BookAuthorListDto>) request.getAttribute("books")).size() != 0) {
+							%>
+
 							<ul class="pagination">
 								<%
 									for (int i = 1; i <= (int) request.getAttribute("totalpagesb"); i++) {
@@ -181,71 +197,87 @@
 									}
 								%>
 							</ul>
-							<%} %>
-							<%if(((List<BookAuthorListDto>)request.getAttribute("books")).size() ==0){ %>
-							<h3> No Books Reviewed Yet !</h3>
-							<%} %>
+							<%
+								}
+							%>
+							<%
+								if (((List<BookAuthorListDto>) request.getAttribute("books")).size() == 0) {
+							%>
+							<h3>No Books Reviewed Yet !</h3>
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-12 text-center">
-							<h4 style="border-bottom: 2px #CCC solid;">Authors Reviewed by
+				<h4 style="border-bottom: 2px #CCC solid;">Authors Reviewed by
 					${user.firstName} ${user.lastName} :</h4>
+				<div class="row">
+					<%
+						for (Author a : (List<Author>) request.getAttribute("authors")) {
+					%>
+					<div class="col-lg-6">
 						<div class="row">
-							<%
-								for (Author a : (List<Author>) request.getAttribute("authors")) {
-							%>
-							<div class="col-lg-6">
-								<div class="row">
-									<div class="col-lg-4" style="padding: 2px;">
-										<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
-											style="width: 100%" />
-									</div>
+							<div class="col-lg-4" style="padding: 2px;">
+								<img src="/reviewBook/uploads/<%=a.getAuthorImage()%>"
+									alt="author" style="width: 100%" />
+							</div>
 
-									<div class="col-lg-8">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
-													<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
-												</a> <span class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span><span
-													class="glyphicon glyphicon-star"></span> <br>
-												<div class="sidebar-box">
-													<p><%=a.getAuthorDescription()%></p>
-													<p class="read-more"></p>
-												</div>
-											</div>
+							<div class="col-lg-8">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
+											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
+										</a>
+
+										<div data-rateyo1="rateYo" class="text-center"
+											data-rating="<%=a.getAuthorRating()%>"
+											style="margin-left: 55px;"></div>
+										<br>
+										<div class="sidebar-box">
+											<p><%=a.getAuthorDescription()%></p>
+											<p class="read-more"></p>
 										</div>
 									</div>
 								</div>
 							</div>
-							<%
-								}
-							%>
-
-
-						</div>
-						<div class="col-lg-12 text-center">
-						<% if(((List<Author>)request.getAttribute("authors")).size() != 0){
-							System.out.println("author list not empty");%>
-							<ul class="pagination">
-								<%
-									for (int j = 1; j <= (int) request.getAttribute("totalpagesa"); j++) {
-								%>
-								<li><a href="/reviewBook/users/${user.userId}?pagenob=1&pagenoa<%=j%>"><%=j%></a></li>
-								<%
-									}
-								%>
-							</ul>
-							<%} %>
-							<% if(((List<Author>)request.getAttribute("authors")).size() == 0){ %>
-							<h3> No Authors Reviewed Yet.</h3>
-							<%} %>
 						</div>
 					</div>
+					<%
+						}
+					%>
+
+
+				</div>
+				<div class="col-lg-12 text-center">
+					<%
+						if (((List<Author>) request.getAttribute("authors")).size() != 0) {
+							System.out.println("author list not empty");
+					%>
+					<ul class="pagination">
+						<%
+							for (int j = 1; j <= (int) request.getAttribute("totalpagesa"); j++) {
+						%>
+						<li><a
+							href="/reviewBook/users/${user.userId}?pagenob=1&pagenoa<%=j%>"><%=j%></a></li>
+						<%
+							}
+						%>
+					</ul>
+					<%
+						}
+					%>
+					<%
+						if (((List<Author>) request.getAttribute("authors")).size() == 0) {
+					%>
+					<h3>No Authors Reviewed Yet.</h3>
+					<%
+						}
+					%>
+				</div>
+			</div>
 			<jsp:include page='contact.jsp' />
 			<div class="col-lg-12">
 				<div class="footer text-center">
@@ -553,6 +585,38 @@
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+		
+		<script type="text/javascript">
+		$(function() {
+			var ratedEntities = $('div[data-rateyo]');
+
+			for (var i = 0; i < ratedEntities.length; i++) {
+				$(ratedEntities[i]).rateYo({
+					rating : $(ratedEntities[i]).attr('data-rating'),
+					readOnly : true,
+					starWidth : "20px"
+				});
+			}
+
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(function() {
+			var ratedEntities = $('div[data-rateyo1]');
+
+			for (var i = 0; i < ratedEntities.length; i++) {
+				$(ratedEntities[i]).rateYo({
+					rating : $(ratedEntities[i]).attr('data-rating'),
+					readOnly : true,
+					starWidth : "20px"
+				});
+			}
+
+		});
+	</script>
 </body>
 
 </html>

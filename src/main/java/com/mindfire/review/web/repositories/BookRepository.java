@@ -121,12 +121,23 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	 * @param id
 	 * @return
 	 */
-	@Override
 	Book findOne(Long id);
 	
-	
+	/**
+	 * 
+	 * @param likes
+	 * @return
+	 */
 	List<Book> findTop10ByBookLikesGreaterThanOrderByBookLikesDesc(int likes);
-
+    
+	/**
+	 * 
+	 * @param name
+	 * @param genre
+	 * @param isbn
+	 * @param page
+	 * @return
+	 */
 	Page<Book> findByBookNameContainingOrBookGenreContainingOrBookIsbnContaining(String name, String genre, String isbn, Pageable page);
 	
 }

@@ -251,7 +251,6 @@ public class BookController {
 		String userName = (String) httpSession.getAttribute("userName");
 		if(userName==null){
 			String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
     		 return "redirect:/login";
@@ -280,7 +279,6 @@ public class BookController {
 		String userName = (String) httpSession.getAttribute("userName");
 		if(userName == (null)){
 			String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
     		 return "redirect:/login";

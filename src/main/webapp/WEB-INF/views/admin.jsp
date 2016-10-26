@@ -23,11 +23,11 @@
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="/reviewBook/assets/css/font-awesome.min.css">
-
 <link rel="stylesheet" type="text/css"
 	href="/reviewBook/assets/css/animation.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
+	<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
+
 </head>
 <style>
 .sidebar-box {
@@ -59,8 +59,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
-					${userLastName}</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -80,6 +79,9 @@
 							<li><a href="/reviewBook/authors">All Authors</a></li>
 							<li><a href="/reviewBook/users">All Users</a></li>
 						</ul></li>
+						<li><img src="/reviewBook/uploads/${userImage}"
+						class="img-circle img-responsive" alt="user"
+						style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
 					<li><a href="logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
@@ -91,7 +93,7 @@
 		<div class="col-lg-6 col-lg-offset-3col-md-6 col-md-offset-3">
 			<div class="row">
 				<div class="col-sm-4 col-lg-4 col-md-4 pad">
-					<img src="/reviewBook/assets/img/download.jpg" alt="image"
+					<img src="/reviewBook/uploads/${user.userImage}" alt="image"
 						style="width: 100%;">
 				</div>
 				<div class="col-sm-8 col-lg-8 col-md-8 pad">
@@ -135,16 +137,16 @@
 						<div class="col-lg-6">
 							<div class="row">
 								<div class="col-lg-4" style="padding: 2px;">
-									<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
+									<img src="/reviewBook/uploads/<%= book.getBookImage() %>" alt="book1"
 										style="width: 100%; height: 200px;" />
 								</div>
 
 								<div class="col-lg-8">
 									<div class="panel panel-default">
 										<div class="panel-body">
-											<a href="/reviewBook/books/<%=book.getBookId()%>">
-												<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=book.getBookName()%></p>
-											</a>
+											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><a href="/reviewBook/books/<%= book.getBookId()%>">
+												<%=book.getBookName()%>
+											</a></p>
 											<%
 												for (Author a : authorList) {
 											%>
@@ -152,11 +154,9 @@
 											<%
 												}
 											%>
-											<span class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span><span
-												class="glyphicon glyphicon-star"></span> <br>
+										<div data-rateyo="rateYo" class="text-center"
+										data-rating="<%=book.getBookRating()%>"
+										style="margin-left: 55px;"></div> <br>
 											<div class="sidebar-box">
 												<p><%=book.getBookDescription()%></p>
 												<p class="read-more"></p>
@@ -219,11 +219,10 @@
 									<div class="panel-body">
 										<a href="/reviewBook/authors/<%=a.getAuthorId()%>">
 											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><%=a.getAuthorName()%></p>
-										</a> <span class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span><span
-											class="glyphicon glyphicon-star"></span> <br>
+										</a> 
+										<div data-rateyo1="rateYo" class="text-center"
+												data-rating="<%=a.getAuthorRating()%>"
+												style="margin-left: 55px;"></div> <br>
 										<div class="sidebar-box">
 											<p><%=a.getAuthorDescription()%></p>
 											<p class="read-more"></p>
@@ -572,7 +571,38 @@
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="assets/js/animation.js"></script>
+	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			var ratedEntities = $('div[data-rateyo]');
+
+			for (var i = 0; i < ratedEntities.length; i++) {
+				$(ratedEntities[i]).rateYo({
+					rating : $(ratedEntities[i]).attr('data-rating'),
+					readOnly : true,
+					starWidth : "20px"
+				});
+			}
+
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(function() {
+			var ratedEntities = $('div[data-rateyo1]');
+
+			for (var i = 0; i < ratedEntities.length; i++) {
+				$(ratedEntities[i]).rateYo({
+					rating : $(ratedEntities[i]).attr('data-rating'),
+					readOnly : true,
+					starWidth : "20px"
+				});
+			}
+
+		});
+	</script>
 </body>
 
 </html>

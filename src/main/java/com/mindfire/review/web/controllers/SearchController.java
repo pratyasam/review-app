@@ -56,7 +56,6 @@ public class SearchController {
 		}
 		
 		category = category.toUpperCase();
-		System.out.println(category);
 		SearchType searchCategory = SearchType.BOOKS;
 		
 		for(SearchType s : SearchType.values()){
@@ -117,104 +116,16 @@ public class SearchController {
 				model.addObject("users",searchResult.get(SearchType.USERS));
 				model.addObject("searchParam", query);
 				break;
+				
+			default:
+				model.setViewName("bookpartial");
+				model.addObject("books",searchResult.get(SearchType.BOOKS));
+				model.addObject("searchParam", query);
+				break;
 		}
 		
 	
 		return model;
 	}
-	
-	/**
-	 * 
-	 * 
-	 * @param httpSession
-	 * @param searchParam
-	 * @param category
-	 * @param page
-	 * @return
-	 */
-//	@RequestMapping(value = "/search", method = RequestMethod.GET)
-//	public Object searchPost(HttpSession httpSession, @RequestParam("searchParam") String searchParam,
-//			@RequestParam(value = "searchCategory", defaultValue = "BOOKS") String category,
-//			@RequestParam(value = "page", defaultValue = "1") int page) {
-//		
-//		Map<SearchType, Page> map = new HashMap<>(); // it will store the searchResult
-//		String role = "normal";
-//        
-//		// the role is required to access the verified or non verified set of books
-//		if (httpSession.getAttribute("role") != null) {
-//			role = (String) httpSession.getAttribute("role");
-//		}
-//		
-//		
-//		//it accepts the search type , which is books by default
-//		SearchType searchCategory = SearchType.valueOf(category);
-//		
-//		map = searchService.search(searchParam, role,searchCategory, page); // it accepts the search result set
-//		
-//
-//		ModelAndView modelAndView = new ModelAndView("searchresult"); // creates view 
-//		
-//		
-//        // if the search type is of books, it will attach the result set for books only
-//		if (SearchType.BOOKS == searchCategory) {
-//			
-//			Page bookList = map.get(SearchType.BOOKS); // this will contains the book result
-//			int totalPagesB = bookList.getTotalPages(); // required for pagination
-//			List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>(); //  required to store the author for each book. assuming thr may be more than one author for a book.
-//			 
-//			// to handle the null pointer exception
-//			if(bookList != null){
-//				
-//				if(bookList.getContent().size() > 0){
-//					for(Book b : bookList.getContent()){
-//						bookAuthorListDto book
-//					}
-//					
-//					// ok.allow me to chnge
-////					for (Book b : bookList.getContent()) {
-////						System.out.println(b.getBookName()); 
-////	
-////						BookAuthorListDto bookAuthorListDto2 = new BookAuthorListDto();
-////						
-////						List<Author> authors = new ArrayList<>();
-////						authors = bookService.getAuthorByBook(b.getBookName());
-////						
-////						if(authors.size() != 0)
-////						bookAuthorListDto2.setAuthorList(authors);
-////						
-////						bookAuthorListDto2.setBook(b);
-////						bookAuthorListDto.add(bookAuthorListDto2);
-////					}
-//				}
-//			}
-//
-//		
-//			modelAndView.addObject("books", bookAuthorListDto); // it contains the book and its author list
-//			modelAndView.addObject("totalpagesb", totalPagesB); // req for pagination
-//			modelAndView.addObject("searchparam", searchParam); // the search query is required in the view to display along side the result
-//		} 
-//        
-//		//if the search type is author
-//		else if (SearchType.AUTHORS == searchCategory) {
-//			
-//			Page<Author> authorList = (Page<Author>) map.get(searchCategory.AUTHORS); // accepts the result set for authors
-//			int totalPagesA = authorList.getTotalPages(); // required for pagination
-//			modelAndView.addObject("authors", authorList.getContent());
-//			modelAndView.addObject("totalpagesa", totalPagesA);
-//
-//		}
-//        
-//		// if the search type is user
-//		else if (SearchType.USERS == searchCategory) {
-//			
-//			Page<User> userList = (Page<User>) map.get(searchCategory.USERS); // accepts the result set for users
-//			int totalPagesU = userList.getTotalPages(); // required for pagination
-//			modelAndView.addObject("users", userList.getContent());
-//			modelAndView.addObject("totalpagesu", totalPagesU);
-//		}
-//
-//		return modelAndView; // done!
-//
-//	}
 
 }

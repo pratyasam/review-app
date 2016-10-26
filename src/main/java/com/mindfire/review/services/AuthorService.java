@@ -189,5 +189,11 @@ public interface AuthorService {
      */
     
     int getTotalAuthorReviewByAuthorName(String name);
+    
+    /**
+     * 
+     * @return
+     */
+    List<Author> getTop10Authors();
 
 }

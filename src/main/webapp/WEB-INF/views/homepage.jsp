@@ -5,6 +5,9 @@
   Time: 3:38 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@page import="com.mindfire.review.web.models.Author"%>
+<%@page import="java.util.List"%>
+<%@page import="com.mindfire.review.web.models.Book"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
@@ -181,7 +184,7 @@ a {
 		<div class="hero row">
 			<div class="container">
 				<%
-					if (session.getAttribute("userName") == null) {
+					if (session.getAttribute("userName") == null ) {
 				%>
 				<nav class="navbar navbar-default"
 					style="z-index: 100; margin-top: 40px;">
@@ -212,7 +215,7 @@ a {
 					}
 				%>
 				<%
-					if (session.getAttribute("userName") != null) {
+					if (session.getAttribute("userName") != null ) {
 				%>
 				<nav class="navbar navbar-default"
 					style="z-index: 100; margin-top: 40px;">
@@ -223,7 +226,7 @@ a {
 								<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 									class="icon-bar"></span>
 							</button>
-							<a class="navbar-brand" href="#">ReviewApp</a>
+							<a class="navbar-brand" href="/">ReviewApp</a>
 						</div>
 						<div class="collapse navbar-collapse" id="myNavbar">
 							<ul class="nav navbar-nav navbar-right">
@@ -231,10 +234,10 @@ a {
 										onclick="openNav()"></i> </a></li>
 								<li><a href="home">Home</a></li>
 								<li><a href="/reviewBook/profile">Profile</a></li>
-								<li><a href="/reviewBook/profile">Hello User</a></li>
+								<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
 								<li>
 									<div class="user">
-										<a><img src="/reviewBook/assets/img/user.png"
+										<a><img src="/reviewBook/uploads/${userImage}"
 											class="img-circle" alt="user" /></a>
 									</div>
 								</li>
@@ -273,42 +276,16 @@ a {
 					</h3>
 				</div>
 				<div class="book-background" style="padding: 50px;">
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12"">
-						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 220px;">
-						</div>
-					</div>
+				
+				<%for (Book b : (List<Book>) request.getAttribute("booklist")){ %>
 					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
 						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/assets/img/book.jpg" alt="book"
+							<img src="/reviewBook/uploads/<%= b.getBookImage() %>" alt="book"
 								style="width: 100%; height: 220px;">
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 220px;">
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 220px;">
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 220px;">
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/assets/img/book.jpg" alt="book"
-								style="width: 100%; height: 220px;">
-						</div>
-					</div>
+				<%} %>
+					
 				</div>
 			</div>
 			<br> <br> <br>
@@ -325,72 +302,19 @@ a {
 					</h3>
 				</div>
 				<div class="content" style="padding: 50px;">
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc; background-color: white;">
-							<div style="padding: 10px;">
-								<div>
-									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%; height: 200px;">
+				    <% for(Author a : (List<Author>) request.getAttribute("authorlist")) { %>
+						<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+							<div style="border: 1px solid #ccc; background-color: white;">
+								<div style="padding: 10px;">
+									<div>
+										<img src="/reviewBook/uploads/<%= a.getAuthorImage() %>" class="img-circle"
+											alt="author" style="width: 100%; height: 200px;">
+									</div>
+									<div class="text-center">Author Name</div>
 								</div>
-								<div class="text-center">Author Name</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc; background-color: white;">
-							<div style="padding: 10px;">
-								<div>
-									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%; height: 200px;">
-								</div>
-								<div class="text-center">Author Name</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc; background-color: white;">
-							<div style="padding: 10px;">
-								<div>
-									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%; height: 200px;">
-								</div>
-								<div class="text-center">Author Name</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc; background-color: white;">
-							<div style="padding: 10px;">
-								<div>
-									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%; height: 200px;">
-								</div>
-								<div class="text-center">Author Name</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc; background-color: white;">
-							<div style="padding: 10px;">
-								<div>
-									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%; height: 200px;">
-								</div>
-								<div class="text-center">Author Name</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
-						<div style="border: 1px solid #ccc; background-color: white;">
-							<div style="padding: 10px;">
-								<div>
-									<img src="/reviewBook/assets/img/book.jpg" class="img-circle"
-										alt="book" style="width: 100%; height: 200px;">
-								</div>
-								<div class="text-center">Author Name</div>
-							</div>
-						</div>
-					</div>
+					<%} %>
 				</div>
 			</div>
 			<br> <br>
@@ -524,21 +448,6 @@ a {
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<!-- 	<script type="text/javascript"> 
- 		$(document).ready(function() {
- 			$('#submit').click(function(event) {
- 				var searchParam = $('#search').val();
- 				var searchCategory = "BOOKS";
- 				$.get('/reviewBook/search', {
- 					searchParam : searchParam,
- 					searchCategory:searchCategory
- 				}, function(data) {
- 					$('#result').html(data);
-					
- 				});
- 			});
-		});
-	</script> -->
 
 	<script>
 		function openNav() {

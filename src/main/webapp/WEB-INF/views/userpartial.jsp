@@ -39,13 +39,12 @@
 
 								if (users.size() != 0) {
 							%>
-<%=users.size()%>
 <%
 								for (User u : users) {
 							%>
 <div class="col-lg-6 col-md-6 col-sm-6">
 	<div class="col-lg-4" style="padding: 2px;">
-		<img src="assets/img/book1.jpg" alt="book1"
+		<img src="/reviewBook/uploads/<%=u.getUserImage() %>" alt="user"
 			style="width: 100%; height: 200px;" />
 	</div>
 

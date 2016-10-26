@@ -10,34 +10,16 @@
 <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 </head>
 <style>
-.image-class{
-background-image: url(/reviewBook/assets/img/inspired404.jpg);
-    background-size: cover;
-    height:100%;
-    
-}
-panel-body{
-background-color: grey;
+img{
+margin-left:250px;
+height:100%;
 }
 </style>
 <body>
 <div class="container-fluid">
-	<div class="col-lg-8 col-lg-offset-2" style="margin-top:20px;">
-						<div class="row">
-							<div class="col-lg-6 image-class" style="padding: 2px;">
-								
-							</div>
-
-							<div class="col-lg-6">
-								<div class="panel panel-default">
-									<div class="panel-body" style="margin-top:100px;">
-									<h4>404</h4>
-									<h2>Looks like the page you are looking for is missing. Don't worry, our best man is on the case.</h2>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+<img alt="sorry 500 error" src="/reviewBook/assets/img/inspired500.png">
+</div>
 </div>
 </body>
 </html>

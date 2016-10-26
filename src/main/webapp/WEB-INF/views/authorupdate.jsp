@@ -38,8 +38,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
-					${userLastName}</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -50,6 +49,9 @@
 							<li><a href="/reviewBook/addbook">Add Book</a></li>
 							<li><a href="/reviewBook/addauthor">Add Author</a></li>
 						</ul></li>
+						<li><img src="/reviewBook/uploads/${userImage}"
+					class="img-circle img-responsive" alt="user"
+					style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
 					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>

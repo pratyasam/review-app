@@ -29,6 +29,8 @@
 	/* "transparent" only works here because == rgba(0,0,0,0) */
 	background-image: linear-gradient(to bottom, transparent, grey);
 }
+
+.jq-ry-container{position:relative;padding:0 5px;line-height:0;display:block;cursor:pointer;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}.jq-ry-container[readonly=readonly]{cursor:default}.jq-ry-container>.jq-ry-group-wrapper{position:relative;width:100%}.jq-ry-container>.jq-ry-group-wrapper>.jq-ry-group{position:relative;line-height:0;z-index:10;white-space:nowrap}.jq-ry-container>.jq-ry-group-wrapper>.jq-ry-group>svg{display:inline-block}.jq-ry-container>.jq-ry-group-wrapper>.jq-ry-group.jq-ry-normal-group{width:100%}.jq-ry-container>.jq-ry-group-wrapper>.jq-ry-group.jq-ry-rated-group{width:0;z-index:11;position:absolute;top:0;left:0;overflow:hidden}
 </style>
 
 <!-- Books -->
@@ -45,7 +47,7 @@
 <div class="col-lg-6">
 	<div class="row">
 		<div class="col-lg-4" style="padding: 2px;">
-			<img src="assets/img/book1.jpg" alt="book1" style="width: 100%" />
+			<img src="/reviewBook/uploads/<%= book.getBookImage() %>" alt="book1" style="width: 100%" />
 		</div>
 		<div class="col-lg-8">
 			<div class="panel panel-default">
@@ -53,11 +55,12 @@
 					<a href="/reviewBook/books/<%=book.getBookId()%>">
 						<div
 							style="font-size: 120%; border-bottom: 2px #CCC solid; overflow: hidden; text-overflow: ellipsis;"><%=book.getBookName()%></div>
-					</a> <span class="glyphicon glyphicon-star"></span><span
-						class="glyphicon glyphicon-star"></span><span
-						class="glyphicon glyphicon-star"></span><span
-						class="glyphicon glyphicon-star"></span><span
-						class="glyphicon glyphicon-star"></span> <br>
+					</a>
+					<br>
+					<div data-rateyo="rateYo" class="text-center"
+										data-rating="<%=book.getBookRating()%>"
+										style="margin-left: 55px;"></div>
+										<br>
 					<div class="sidebar-box">
 						<p class="read-more"></p>
 						<p><%=book.getBookDescription()%></p>
@@ -101,6 +104,24 @@
 	%>
 </div>
 
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	var ratedEntities = $('div[data-rateyo]');
+
+	for (var i = 0; i < ratedEntities.length; i++) {
+		$(ratedEntities[i]).rateYo({
+			rating : $(ratedEntities[i]).attr('data-rating'),
+			readOnly : true,
+			starWidth : "20px"
+		});
+	}
+
+});
+</script>
 
 
 

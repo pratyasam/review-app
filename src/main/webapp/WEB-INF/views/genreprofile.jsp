@@ -139,7 +139,7 @@ ul {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">ReviewApp</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -153,8 +153,8 @@ ul {
 							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
-					<li><img src="/reviewBook/assets/img/book.jpg"
-						class="img-circle img-responsive" alt="book"
+					<li><img src="/reviewBook/uploads/${userImage}"
+						class="img-circle img-responsive" alt="user"
 						style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> LogOut</a></li>
@@ -177,8 +177,7 @@ ul {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/reviewBook/profile">${userFirstName}
-					${userLastName}</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -200,6 +199,9 @@ ul {
 							<li><a href="/reviewBook/authors">All Authors</a></li>
 							<li><a href="/reviewBook/users">All Users</a></li>
 						</ul></li>
+						<li><img src="/reviewBook/uploads/${userImage}"
+					class="img-circle img-responsive" alt="user"
+					style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
 					<li><a href="logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
@@ -221,7 +223,7 @@ ul {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">ReviewApp</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
@@ -328,7 +330,7 @@ ul {
 					<div class="col-lg-6">
 
 						<div class="col-lg-4" style="padding: 2px;">
-							<img src="/reviewBook/assets/img/book2.jpg" alt="book1"
+							<img src="/reviewBook/uploads/<%= book.getBookImage() %>" alt="book1"
 								style="width: 100%; height: 30%;" />
 						</div>
 						<div class="col-lg-8">
@@ -427,7 +429,7 @@ ul {
 						<div class="col-lg-6">
 							<div class="row">
 								<div class="col-lg-4" style="padding: 2px;">
-									<img src="/reviewBook/assets/img/book1.jpg" alt="book1"
+									<img src="/reviewBook/uploads/<%= a.getAuthorImage() %>" alt="book1"
 										style="width: 100%; height: 30%;" />
 								</div>
 
@@ -794,8 +796,7 @@ ul {
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
@@ -804,7 +805,6 @@ ul {
 		function closeNav() {
 			document.getElementById("myNav").style.height = "0%";
 		}
-	</script>
 	</script>
 	<script type="text/javascript">
 		$(function() {
@@ -820,7 +820,7 @@ ul {
 
 		});
 	</script>
-	</script>
+
 	<script type="text/javascript">
 		$(function() {
 			var ratedEntities = $('div[data-rateyo1]');

@@ -57,48 +57,6 @@ public class SearchServiceImpl implements SearchService {
 			}
 		}
 		
-//		/*
-//		 * Book Search
-//		 */
-//		
-//		// ISBN search
-//		String isbn = query;
-//		
-//		// search for books by name by considering the role.
-//		if (role.equalsIgnoreCase("admin") || role.equalsIgnoreCase("moderator")) {
-//			// Fetch all the verified as well as unverified books
-//			Page<Book> allBooks = bookService.getBookByNameLikeAdminAndIsbn(query, isbn, page);
-//			
-//			// Results for book search
-//			searchResults.put(SearchType.BOOKS, allBooks);
-//		} else {
-//			// Fetch only verified books
-//			Page<Book> verifiedBooks = bookService.getBookByNameLikeAndIsbn(query, isbn, page);
-//			
-//			// Results for book search
-//			searchResults.put(SearchType.BOOKS, verifiedBooks);
-//		}
-//		
-//		/*
-//		 * Author Search by author name
-//		 */
-//		
-//		 // fetch author result set
-//		Page<Author> allAuthors = authorService.getAuthorByNameLike(query, page);
-//		
-//		// store result for author search
-//		searchResults.put(SearchType.AUTHORS, allAuthors);
-//		
-//		/**
-//		 * User search by user first name
-//		 */
-//		
-//		// Fetch user results 
-//		Page<User> allUsers = userService.getUserFirstName(query, page);
-//		
-//		// Store result for user search
-//		searchResults.put(SearchType.USERS, allUsers);
-		
 		return searchResults;
 	}
 

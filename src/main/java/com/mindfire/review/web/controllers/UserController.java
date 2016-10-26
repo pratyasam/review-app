@@ -4,8 +4,6 @@
  */
 package com.mindfire.review.web.controllers;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +63,7 @@ public class UserController {
 
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
 	public Object getUser(@RequestParam(value = "pagenob", defaultValue="1") int pagenob, @RequestParam(value = "pagenoa", defaultValue="1") int pagenoa, @PathVariable("userId") Long userId, HttpSession httpSession) {
+		ModelAndView modelAndView;
 		if ((httpSession.getAttribute("userName") != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute("userName") != null && httpSession.getAttribute("userId").equals(userId))) {
 			Page<Book> bookList = userService.getBookReviewedByUser(userService.getUserById(userId).getUserName(), pagenob, 4);
 			Page<Author> authorList = userService.getAuthorReviewedByUser(userService.getUserById(userId).getUserName(), pagenoa, 4);
@@ -78,7 +77,10 @@ public class UserController {
 				bookAuthorListDto.setBook(b);
 				ba.add(bookAuthorListDto);
 			}
-			ModelAndView modelAndView = new ModelAndView("userprofile");
+			if((httpSession.getAttribute("userName") != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute("userName") != null && httpSession.getAttribute("role").equals("moderator")))
+			    modelAndView = new ModelAndView("admin");
+			else
+				modelAndView = new ModelAndView("userprofile");
 			modelAndView.addObject("books", ba);
 			modelAndView.addObject("authors", authorList.getContent());
 		    modelAndView.addObject("totalpagesb", totalpagesb);
@@ -151,9 +153,7 @@ public class UserController {
 	public Object getProfile(HttpSession httpSession) {
 		if(httpSession.getAttribute("userName") != null){
 		if (httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator")) {
-		    User user = userService.getUserById((Long)httpSession.getAttribute("userId"));
-            ModelAndView modelAndView = new ModelAndView("admin");
-            modelAndView.addObject("user",user);
+			
             Long userId = (Long)httpSession.getAttribute("userId");
 			return "redirect:/users/" + userId;
 		}

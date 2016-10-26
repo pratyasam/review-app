@@ -90,7 +90,7 @@
 
 <body>
 	<%
-		if (session.getAttribute("userName") != null) {
+		if (session.getAttribute("userName") != null && ("normal").equals(session.getAttribute("role"))) {
 	%>
 	<nav class="navbar navbar-default navbackground">
 		<div class="container-fluid">
@@ -100,21 +100,21 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">ReviewApp</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><i class="fa fa-search fa-2x"
 						onclick="openNav()"></i> </a></li>
-					<li><a href="#">Home</a></li>
+					<li><a href="/">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Update Info</a></li>
+							<li><a href="/reviewBook/userupload">Update Info</a></li>
 							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
-					<li><img src="/reviewBook/assets/img/book.jpg"
+					<li><img src="/reviewBook/uploads/${userImage}"
 						class="img-circle img-responsive" alt="book" width="100"
 						height="100"></li>
 					<li><a href="/reviewBook/logout"><span
@@ -141,7 +141,7 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><i class="fa fa-search fa-2x"
+				<li><a href="/reviewBook/home"><i class="fa fa-search fa-2x"
 						onclick="openNav()"></i> </a></li>
 					<li><a href="/reviewBook/home">Home</a></li>
 					<li><a href="/reviewBook/login"><span
@@ -179,7 +179,7 @@
 			<div class="col-lg-3">
 				<div class="row">
 					<div class="col-lg-12" style="height: 20%">
-						<img src="/reviewBook/assets/img/book.jpg"
+						<img src="/reviewBook/uploads/${book.bookImage}>"
 							style="height: 100%; width: 100%;">
 					</div>
 					<div class="nav">
@@ -262,7 +262,7 @@
 						%>
 						<div class="media">
 							<div class="media-left">
-								<img src="/reviewBook/assets/img/avatar.jpg" alt="avatar"
+								<img src="/reviewBook/uploads/${userImage}" alt="avatar"
 									class="media-object" style="width: 60px">
 							</div>
 							<div class="media-body">
@@ -276,11 +276,7 @@
 										</form:form>
 									</span>
 								</h4>
-								<span>rated it:</span> <span class="glyphicon glyphicon-star"></span><span
-									class="glyphicon glyphicon-star"></span><span
-									class="glyphicon glyphicon-star"></span><span
-									class="glyphicon glyphicon-star"></span><span
-									class="glyphicon glyphicon-star"></span> <br>
+								 <br>
 								<p><%=rb.getReviewText()%></p>
 							</div>
 						</div>
