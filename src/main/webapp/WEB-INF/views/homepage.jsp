@@ -310,7 +310,7 @@ a {
 										<img src="/reviewBook/uploads/<%= a.getAuthorImage() %>" class="img-circle"
 											alt="author" style="width: 100%; height: 200px;">
 									</div>
-									<div class="text-center">Author Name</div>
+									<div class="text-center"><%= a.getAuthorName() %></div>
 								</div>
 							</div>
 						</div>
@@ -327,7 +327,7 @@ a {
 
 		<div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0px;">
 			<br> <br> <br>
-			<div class="col-lg-6 ">
+			<div class="col-lg-12 ">
 				<iframe width="100%" height="415"
 					src="https://www.youtube.com/embed/OVMsoDBO1jA?list=PLnkWWmhVvhc00tAQ4J7a1dpPlwI78JJxq"
 					frameborder="0" allowfullscreen></iframe>

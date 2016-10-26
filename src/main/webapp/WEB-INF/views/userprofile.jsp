@@ -75,7 +75,7 @@
 								</fieldset>
 							</form:form>
 						</ul></li>
-					<li><a href="/reviewBook/logout"><span
+					<li><a href="logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 				</ul>
 			</div>
@@ -85,7 +85,7 @@
 		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-6">
 			<div class="row">
 				<div class="col-sm-4 col-lg-4 pad">
-					<img src="/reviewBook/assets/img/download.jpg" alt="image"
+					<img src="/reviewBook/uploads/${user.userImage}" alt="image"
 						style="width: 100%;">
 				</div>
 				<div class="col-sm-8 col-lg-8 pad">

@@ -83,7 +83,7 @@
 						class="img-circle img-responsive" alt="user"
 						style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
-					<li><a href="logout"><span
+					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 				</ul>
 			</div>

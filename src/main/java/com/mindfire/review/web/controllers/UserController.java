@@ -81,7 +81,7 @@ public class UserController {
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
 	public Object getUser(@RequestParam(value = "pagenob", defaultValue="1") int pagenob, @RequestParam(value = "pagenoa", defaultValue="1") int pagenoa, @PathVariable("userId") Long userId, HttpSession httpSession) throws UserDoesNotExistException{
 		
-		ModelAndView modelAndView;
+		ModelAndView modelAndView =null;
 		if ((httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("userId").equals(userId))) {
 			Page<Book> bookList = userService.getBookReviewedByUser(userService.getUserById(userId).getUserName(), pagenob, 4);
 			Page<Author> authorList = userService.getAuthorReviewedByUser(userService.getUserById(userId).getUserName(), pagenoa, 4);
@@ -96,16 +96,21 @@ public class UserController {
 				ba.add(bookAuthorListDto);
 			}
 			if((httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("moderator")))
-			    modelAndView = new ModelAndView("admin");
-			else
+			{ 
+				modelAndView = new ModelAndView("admin");
+				modelAndView.addObject("user", userService.getUser((String) httpSession.getAttribute(USERNAME)));
+			}
+			if(httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("normal")){
 				modelAndView = new ModelAndView("userprofile");
+				modelAndView.addObject("user", userService.getUserById(userId));
+			}
+			
 			modelAndView.addObject("books", ba);
 			modelAndView.addObject("authors", authorList.getContent());
 		    modelAndView.addObject("totalpagesb", totalpagesb);
 		    modelAndView.addObject("totalpagesa", totalpagesa);
 		    modelAndView.addObject("totalreviewlikes",reviewService.getNumberOfReviewLikesByUser(userService.getUserById(userId)));
             modelAndView.addObject("totallikes",userService.totalLikesByUser(userService.getUserById(userId)));
-			modelAndView.addObject("user", userService.getUserById(userId));
 			modelAndView.addObject("delete", new ChoiceDto());
 			modelAndView.addObject("totalreviewsmade", userService.totalReviewsMadeByTheUser(userService.getUserById(userId)));
 			return modelAndView;
