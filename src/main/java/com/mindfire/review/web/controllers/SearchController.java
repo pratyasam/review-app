@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.mindfire.review.enums.SearchType;
-import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.SearchService;
 
 /**
@@ -25,16 +22,18 @@ import com.mindfire.review.services.SearchService;
 @Controller
 public class SearchController {
 
-	@Autowired
-	private BookService bookService;
 
 	@Autowired
 	private SearchService searchService;
 	
-	
-	
 	/**
-	 * 
+	 * to return the search result according to the search category of book or author or user
+	 * @param httpSession
+	 * @param httpServletRequest
+	 * @param query
+	 * @param category
+	 * @param page
+	 * @return
 	 */
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public Object search(HttpSession httpSession, HttpServletRequest httpServletRequest,

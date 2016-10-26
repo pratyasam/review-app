@@ -11,6 +11,12 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class LogoutController {
+	
+	/**
+	 * to logout and end the session
+	 * @param httpSession
+	 * @return
+	 */
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpSession httpSession) {
         httpSession.invalidate();

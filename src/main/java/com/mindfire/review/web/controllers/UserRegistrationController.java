@@ -26,6 +26,11 @@ public class UserRegistrationController {
     @Autowired
     private UserService userService;
 
+    /**
+     * to get the signup form
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public Object signup(HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null) {
@@ -35,6 +40,14 @@ public class UserRegistrationController {
         return new ModelAndView("signup", "signUp", new SignupDto());
     }
 
+    /**
+     * to persist the user in the database
+     * @param signupDto
+     * @param bindingResult
+     * @param model
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String addUser(@Valid @ModelAttribute("signUp") SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null) {
@@ -44,8 +57,6 @@ public class UserRegistrationController {
         if (bindingResult.hasErrors()) {
             return "signup";
         }
-
-        System.out.println(signupDto);
 
         try {
             userService.addUser(signupDto);

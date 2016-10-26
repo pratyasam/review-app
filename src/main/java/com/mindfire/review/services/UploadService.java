@@ -34,8 +34,6 @@ public class UploadService {
 
 	private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/Wotkspace/git/uploads";
 
-	//private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/uploads";
-
 	@Autowired
 	private UserRepository userRepository;
 
@@ -46,7 +44,7 @@ public class UploadService {
 	private AuthorRepository authorRepository;
 
 	/**
-	 * 
+	 * method to upload user image
 	 * @param file1
 	 * @param httpSession
 	 * @param encryption
@@ -60,10 +58,7 @@ public class UploadService {
 
 		try {
 			if (!(file).isEmpty()) {
-				// ServletContext context = httpSession.getServletContext();
-				// String path = context.getRealPath(UPLOAD_DIRECTORY);
-
-				System.out.println(file.getSize());
+				
 
 				if (encryption) {
 					String currentFileName = file.getOriginalFilename();
@@ -89,9 +84,7 @@ public class UploadService {
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(serverFile));
 				bufferedOutputStream.write(bytes);
 				bufferedOutputStream.close();
-				System.out.println("\n file path = "+serverFile.getAbsolutePath());
-				System.out.println("\n file name =" + fileName);
-				//return fileName;  
+				 
 				return serverFile.getAbsolutePath();
 			}
 		} catch (Exception e) {
@@ -101,41 +94,36 @@ public class UploadService {
 	}
 
 	/**
-	 * 
+	 * persist user image in database
 	 * @param user
 	 * @param fileName
 	 */
 
 	public void uploadUserImage(User user, String fileName) {
-		System.out.println(fileName + "  " + user.getFirstName());
 		user.setUserImage(fileName);
 		userRepository.save(user);
 
 	}
 
 	/**
-	 * 
+	 * method to upload author image
 	 * @param file1
 	 * @param httpSession
 	 * @param encryption
 	 * @return
 	 */
 
-	public String simpleUploadAuthor(FileItem file1, HttpSession httpSession, boolean encryption) {
+	public String simpleUploadAuthor(FileItem file1, boolean encryption) {
 
 		String fileName = null;
 		MultipartFile file = new CommonsMultipartFile(file1);
 
 		try {
 			if (!(file).isEmpty()) {
-				// ServletContext context = httpSession.getServletContext();
-				// String path = context.getRealPath(UPLOAD_DIRECTORY);
-
-				System.out.println(file.getSize());
 
 				if (encryption) {
 					String currentFileName = file.getOriginalFilename();
-					String extension = currentFileName.substring(currentFileName.lastIndexOf("."),
+					String extension = currentFileName.substring(currentFileName.lastIndexOf('.'),
 							currentFileName.length());
 					Long nameRandom = Calendar.getInstance().getTimeInMillis();
 					String newFileName = nameRandom + extension;
@@ -157,7 +145,6 @@ public class UploadService {
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(serverFile));
 				bufferedOutputStream.write(bytes);
 				bufferedOutputStream.close();
-				System.out.println(serverFile.getAbsolutePath());
 				return fileName;
 			}
 		} catch (Exception e) {
@@ -167,7 +154,7 @@ public class UploadService {
 	}
 
 	/**
-	 * 
+	 * persist author image in database
 	 * @param author
 	 * @param fileName
 	 */
@@ -178,22 +165,25 @@ public class UploadService {
 		authorRepository.save(author);
 
 	}
+	/**
+	 * method to upload book image
+	 * @param file1
+	 * @param httpSession
+	 * @param encryption
+	 * @return
+	 */
 	
-	public String simpleUploadBook(FileItem file1, HttpSession httpSession, boolean encryption) {
+	public String simpleUploadBook(FileItem file1, boolean encryption) {
 
 		String fileName = null;
 		MultipartFile file = new CommonsMultipartFile(file1);
 
 		try {
 			if (!(file).isEmpty()) {
-				// ServletContext context = httpSession.getServletContext();
-				// String path = context.getRealPath(UPLOAD_DIRECTORY);
-
-				System.out.println(file.getSize());
 
 				if (encryption) {
 					String currentFileName = file.getOriginalFilename();
-					String extension = currentFileName.substring(currentFileName.lastIndexOf("."),
+					String extension = currentFileName.substring(currentFileName.lastIndexOf('.'),
 							currentFileName.length());
 					Long nameRandom = Calendar.getInstance().getTimeInMillis();
 					String newFileName = nameRandom + extension;
@@ -215,7 +205,6 @@ public class UploadService {
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(serverFile));
 				bufferedOutputStream.write(bytes);
 				bufferedOutputStream.close();
-				System.out.println(serverFile.getAbsolutePath());
 				return fileName;
 			}
 		} catch (Exception e) {
@@ -224,6 +213,11 @@ public class UploadService {
 		return fileName;
 	}
 	
+	/**
+	 * persist the image name in database
+	 * @param book
+	 * @param fileName
+	 */
 	public void uploadBookImage(Book book, String fileName) {
 
 		book.setBookImage(fileName);

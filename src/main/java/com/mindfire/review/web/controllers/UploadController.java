@@ -52,17 +52,21 @@ public class UploadController {
 	@Autowired
 	private BookService bookService;
 
-	private final String UPLOAD_DIRECTORY = "/images";
-
+	/**
+	 * to get the page for user picture upload
+	 * @param httpSession
+	 * @param httpServletRequest
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/userupload", method = RequestMethod.GET)
-	public Object uploadPage(HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
+	public Object uploadPage(HttpSession httpSession, HttpServletRequest httpServletRequest)  {
 
 		if (httpSession.getAttribute("userName") != null) {
 			ModelAndView modelAndView = new ModelAndView("userfileupload");
 			return modelAndView;
 		} else {
 			String url = httpServletRequest.getRequestURI();
-			System.out.println(url);
 			if (url != null)
 				httpSession.setAttribute("url", url);
 			return "redirect:/login";
@@ -70,8 +74,16 @@ public class UploadController {
 
 	}
 
+	/**
+	 * to save the picture uploaded by user
+	 * @param request
+	 * @param httpSession
+	 * @param model
+	 * @return
+	 * @throws FileUploadException
+	 */
 	@RequestMapping(value = "/userupload", method = RequestMethod.POST)
-	public String saveFile(HttpServletRequest request, HttpSession httpSession, Model model) {
+	public String saveFile(HttpServletRequest request, HttpSession httpSession, Model model) throws FileUploadException {
 
 		User user = userService.getUser((String) httpSession.getAttribute("userName"));
 
@@ -106,8 +118,7 @@ public class UploadController {
 
 			}
 		} catch (FileUploadException e) {
-			e.printStackTrace();
-			return e.getMessage();
+			throw e;
 		}
 
 		return "redirect:/userupload";
@@ -115,6 +126,14 @@ public class UploadController {
 	
 
 	
+	/**
+	 * to get the page to upload the author picture
+	 * @param authorId
+	 * @param httpSession
+	 * @param httpServletRequest
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/authors/{authorId}/authorupload", method = RequestMethod.GET)
 	public Object authorUploadPage(@PathVariable("authorId") int authorId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
 
@@ -124,7 +143,6 @@ public class UploadController {
 			return modelAndView;
 		} else {
 			String url = httpServletRequest.getRequestURI();
-			System.out.println(url);
 			if (url != null)
 				httpSession.setAttribute("url", url);
 			return "redirect:/login";
@@ -132,8 +150,16 @@ public class UploadController {
 
 	}
 	
+	/**
+	 * to save the author image
+	 * @param authorId
+	 * @param request
+	 * @param httpSession
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/authors/{authorId}/authorupload", method = RequestMethod.POST)
-	public String saveAuthorFile(@PathVariable("authorId") Long authorId, HttpServletRequest request, HttpSession httpSession, Model model) {
+	public String saveAuthorFile(@PathVariable("authorId") Long authorId, HttpServletRequest request, HttpSession httpSession, Model model) throws FileUploadException {
 		
 		Author author = authorService.getAuthorById(authorId);
 		
@@ -166,13 +192,20 @@ public class UploadController {
 
 			}
 		} catch (FileUploadException e) {
-			e.printStackTrace();
-			return e.getMessage();
+			 throw e;
 		}
 
 		return "redirect:/authors/{authorId}/authorupload";
 	}
 	
+	/**
+	 * to get the page to upload book image
+	 * @param bookId
+	 * @param httpSession
+	 * @param httpServletRequest
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/books/{bookId}/bookupload", method = RequestMethod.GET)
 	public Object bookUploadPage(@PathVariable("bookId") int bookId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
 
@@ -182,7 +215,6 @@ public class UploadController {
 			return modelAndView;
 		} else {
 			String url = httpServletRequest.getRequestURI();
-			System.out.println(url);
 			if (url != null)
 				httpSession.setAttribute("url", url);
 			return "redirect:/login";
@@ -190,8 +222,16 @@ public class UploadController {
 
 	}
 	
+	/**
+	 * to save the book image uploaded
+	 * @param bookId
+	 * @param request
+	 * @param httpSession
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/books/{bookId}/bookupload", method = RequestMethod.POST)
-	public String saveBookFile(@PathVariable("bookId") Long bookId, HttpServletRequest request, HttpSession httpSession, Model model) {
+	public String saveBookFile(@PathVariable("bookId") Long bookId, HttpServletRequest request, HttpSession httpSession, Model model) throws FileUploadException{
 		
 		Book book = bookService.getBookById(bookId);
 		
@@ -224,8 +264,7 @@ public class UploadController {
 
 			}
 		} catch (FileUploadException e) {
-			e.printStackTrace();
-			return e.getMessage();
+			throw e;
 		}
 
 		return "redirect:/books/{bookId}/bookupload";

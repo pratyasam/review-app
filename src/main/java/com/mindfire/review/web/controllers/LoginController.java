@@ -21,28 +21,44 @@ import javax.validation.Valid;
  */
 @Controller
 public class LoginController {
+	
+	public static final String LOGIN = "login";
+	
     @Autowired
     private UserService userService;
 
+    /**
+     * to get the login page
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public Object login(HttpSession httpSession) {
+    public Object loginGet(HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null) {
             return "redirect:/profile";
         }
 
-        ModelAndView modelAndView = new ModelAndView("login");
-        modelAndView.addObject("login", new LoginDto());
+        ModelAndView modelAndView = new ModelAndView(LOGIN);
+        modelAndView.addObject(LOGIN, new LoginDto());
         return modelAndView;
     }
 
+    /**
+     * to login
+     * @param LoginDto
+     * @param bindingResult
+     * @param model
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String authenticateUser(@Valid @ModelAttribute("login") LoginDto LoginDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+    public String authenticateUser(@Valid @ModelAttribute(LOGIN) LoginDto LoginDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
         if (httpSession.getAttribute("userName") != null) {
             return null;
         }
 
         if (bindingResult.hasErrors()) {
-            return "login";
+            return LOGIN;
         }
 
 
@@ -65,10 +81,8 @@ public class LoginController {
             return "redirect:/";
 
         } catch (LoginFailException lex) {
-
-
             model.addAttribute("exception", lex);
-            return "login";
+            return LOGIN;
 
 
         }

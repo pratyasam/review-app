@@ -61,7 +61,7 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	/**
-	 * 
+	 * search by genre
 	 */
 	@Override
 	public Map<String, Object> searchByGenre(SearchDto searchDto) {
@@ -74,6 +74,9 @@ public class SearchServiceImpl implements SearchService {
 		return map;
 	}
 
+	/**
+	 * search by rating
+	 */
 	@Override
 	public Map<String, Object> searchByRating(float rating) {
 		List<Author> authors = authorService.getAuthorByRating(rating);

@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 	/**
-	 * 
+	 * get users in page form
 	 * @param pageno
 	 * @param size
 	 * @return
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByLastNameIgnoreCase(lastName);
 	}
 	/**
-	 * 
+	 * get users by last name in page form
 	 * @param lastName
 	 * @param pageno
 	 * @param size
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
 
 	}
 	/**
-	 * 
+	 * get the author reviews made by the user
 	 * @param user
 	 * @return
 	 */
@@ -163,6 +163,13 @@ public class UserServiceImpl implements UserService {
 		return authors;
 
 	}
+	
+	/**
+	 * get authors reviewed by the user in page form
+	 * @param user
+	 * @param user
+	 * @param user
+	 */
 	@Override
 	public Page<Author> getAuthorReviewedByUser(String user, int pageno, int size) {
 		User userName = getUser(user);
@@ -201,7 +208,7 @@ public class UserServiceImpl implements UserService {
 		return reviewBookRepository.findByUser(userName);
 	}
 	/**
-	 * 
+	 * get books reviewed by the user
 	 * @param user
 	 * @return
 	 */
@@ -216,7 +223,7 @@ public class UserServiceImpl implements UserService {
 		return books;
 	}
 	/**
-	 * 
+	 * get books reviewed by the user in page form
 	 * @param user
 	 * @param pageno
 	 * @param size
@@ -313,7 +320,7 @@ public class UserServiceImpl implements UserService {
 		user.setUserName(signupDto.getUserName());
 		user.setUserGender(signupDto.getGender());
 		user.setUserPassword(DigestUtils.sha256Hex(signupDto.getPassword()));
-		user = userRepository.save(user);
+		userRepository.save(user);
 	}
 
 	/**
@@ -364,7 +371,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/**
-	 * 
+	 * get total books and author likes made by the user
+	 * @param user
 	 */
 	@Override
 	public int totalLikesByUser(User user) { 
@@ -374,6 +382,10 @@ public class UserServiceImpl implements UserService {
 		return bookLikes + authorLike;
 	}
 	
+	/**
+	 * get the total reviews made by the user
+	 * @param user
+	 */
 	@Override
 	public int totalReviewsMadeByTheUser(User user){
 		

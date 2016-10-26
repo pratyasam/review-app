@@ -56,10 +56,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Page<Author> getAllAuthor(int pageno, int size) {
     	Pageable page = Utility.buildPageRequest(size, pageno);
-    	
-    	
-       // System.out.println(authorRepository.findTop10ByAuthorLikesGreaterThanOrderByAuthorLikesDesc(0).size());
-    	
         return authorRepository.findAll(page);
     }
     /**
@@ -167,8 +163,8 @@ public class AuthorServiceImpl implements AuthorService {
     public Page<ReviewAuthor> getAuthorReviewByAuthorName(String name, int pageno, int size) {
     	Pageable page = Utility.buildPageRequest(size, pageno);
     	List<ReviewAuthor> reviewAuthors = reviewAuthorRepository.findByAuthor(getAuthorByName(name));
-    	PageImpl< ReviewAuthor> pageImpl = new PageImpl<>(reviewAuthors,page, size);
-    	return pageImpl;
+     
+    	return new PageImpl<>(reviewAuthors,page, size);
     	}
 
     /**
@@ -206,8 +202,7 @@ public class AuthorServiceImpl implements AuthorService {
             reviewBookList.addAll(reviewBookList1);
         }
         Pageable page = Utility.buildPageRequest(size, pageno);
-        PageImpl<ReviewBook> pageImpl = new PageImpl<>(reviewBookList,page, size);
-        return pageImpl;
+        return new PageImpl<>(reviewBookList,page, size);
     }
 
     /**
@@ -236,8 +231,7 @@ public class AuthorServiceImpl implements AuthorService {
         	book.add(ba.getBook());
         }
         Pageable page = Utility.buildPageRequest(size, pageno);
-        PageImpl< Book> pageImpl = new PageImpl<>(book,page,size);
-        return pageImpl;
+        return new PageImpl<>(book,page,size);
     }
 
 
@@ -268,8 +262,7 @@ public class AuthorServiceImpl implements AuthorService {
             users.addAll(bookService.getUserByBookReview(b.getBookName()));
         }
         Pageable page = Utility.buildPageRequest(size, pageno);
-        PageImpl<User> pageImpl = new PageImpl<>(users,page,size);
-        return pageImpl;
+        return new PageImpl<>(users,page,size);
     }
 
     /**
@@ -292,7 +285,6 @@ public class AuthorServiceImpl implements AuthorService {
         author.setAuthorName(authorDto.getAuthorName());
         author.setAuthorRating(authorDto.getAuthorRating());
         authorRepository.save(author);
-        System.out.println("author added");
     }
 
     /**
@@ -315,7 +307,6 @@ public class AuthorServiceImpl implements AuthorService {
         author.setAuthorGenre(authorDto.getAuthorGenre());
         author.setAuthorDescription(authorDto.getAuthorDescription());
         authorRepository.save(author);
-        System.out.println("author updated");
     }
 
     /**
@@ -331,11 +322,10 @@ public class AuthorServiceImpl implements AuthorService {
         }
         
             authorRepository.delete(author);
-            System.out.println("Author deleted");
        
     }
      /**
-      * 
+      * method to add likes for author
       * @param userName
       * @param authorId
       * @throws AlreadyReviewedException
@@ -356,7 +346,6 @@ public class AuthorServiceImpl implements AuthorService {
     	 
     	 author.setAuthorLikes(getNumberOfLikesByUser(authorId));
     	 authorRepository.save(author);
-    	 System.out.println("author liked");
     	 
     	 if(authorLike == null){
     		 throw new RuntimeException("");
@@ -364,7 +353,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
     
     /**
-     * 
+     *  method to dislike author
      * @param authorLikeId
      * @throws ReviewDoesnotExistException
      */
@@ -384,7 +373,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
     
     /**
-     * 
+     * returns the total likes
      * @param authorId
      * @return
      */
@@ -399,7 +388,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
     
     /**
-     * 
+     * returns the top 10 authors
      */
     @Override
     public List<Author> getTop10Authors() {

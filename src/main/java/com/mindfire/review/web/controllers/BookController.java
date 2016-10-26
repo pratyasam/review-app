@@ -44,6 +44,11 @@ import com.mindfire.review.web.models.User;
  */
 @Controller
 public class BookController {
+	
+	public static final String USERNAME = "userName";
+	public static final String MODERATOR = "moderator";
+	public static final String ADMIN = "admin";
+	
 	@Autowired
 	private BookService bookService;
 	@Autowired
@@ -62,8 +67,8 @@ public class BookController {
 
 	@RequestMapping(value = "/addbook", method = RequestMethod.GET)
 	public Object bookController(HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (((ADMIN).equals(httpSession.getAttribute("role")) && httpSession.getAttribute(USERNAME) != null )
+				|| (MODERATOR).equals(httpSession.getAttribute("role"))) {
 
 			return new ModelAndView("addbook", "book", new BookDto());
 		} else {
@@ -100,7 +105,7 @@ public class BookController {
 	}
 	
 	/**
-	 *
+	 *to mark the book verified by the admin
 	 * @param bookId
 	 * @param choiceDto
 	 * @param bindingResult
@@ -113,10 +118,9 @@ public class BookController {
 	public String verifyBookPost(@PathVariable("bookId") Long bookId,
 			@Valid @ModelAttribute("verify") ChoiceDto choiceDto, BindingResult bindingResult, Model model,
 			HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && ((httpSession.getAttribute("role").equals("admin"))
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && ((httpSession.getAttribute("role").equals(ADMIN))
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			bookService.verifyBook(bookId, choiceDto);
-			System.out.println("controller executed");
 			return "redirect:/books/{bookId}";
 		}
 
@@ -142,9 +146,8 @@ public class BookController {
 			bookAuthorListDto2.setBook(b);
 			bookAuthorListDto.add(bookAuthorListDto2);
 		}
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
-			System.out.println("entered admin page");
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			List<Book> bookList = bookService.getBooks(pageno,6).getContent(); 
 															
 			List<BookAuthorListDto> bookAuthorListDto3 = new ArrayList<>();
@@ -176,7 +179,10 @@ public class BookController {
 	 * @returny
 	 */
 	@RequestMapping(value = "/books/{bookId}", method = RequestMethod.GET)
-	public Object getBook(@RequestParam(value="pagenou", defaultValue="1") int pagenou,@RequestParam(value="pagenor", defaultValue="1") int pagenor,@PathVariable("bookId") Long bookId, HttpSession httpSession) {
+	public Object getBook(@RequestParam(value="pagenou", defaultValue="1") int pagenou,@RequestParam(value="pagenor", defaultValue="1") int pagenor,@PathVariable("bookId") Long bookId, HttpSession httpSession) throws BookDoesNotExistException{
+		
+		if(bookService.getBookById(bookId) == null)
+			throw new BookDoesNotExistException("book doesnt exist");
 		String name = bookService.getBookById(bookId).getBookName();
 		List<Author> author = bookService.getAuthorByBook(name);
 		Page<ReviewBook> reviewBooks = bookService.getBookReviewByBook(name,pagenor,6);
@@ -195,8 +201,8 @@ public class BookController {
 			 reviewBookLikesDtos.add(reviewBookLikesDto2);
 		}
 		
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			if(httpSession.getAttribute("review") != null){
 				reviewBookDto = (ReviewBookDto) httpSession.getAttribute("review");
 			}
@@ -237,7 +243,7 @@ public class BookController {
 	}
 	
 	/**
-	 * 
+	 * to like a book by the user who is logged in
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
@@ -248,7 +254,7 @@ public class BookController {
 	@RequestMapping(value = "/books/{bookId}/addlike", method = RequestMethod.GET)
 	public Object addLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, HttpServletRequest httpServletRequest, Model model){
 		
-		String userName = (String) httpSession.getAttribute("userName");
+		String userName = (String) httpSession.getAttribute(USERNAME);
 		if(userName==null){
 			String url = httpServletRequest.getRequestURI();
     		if(url != null)
@@ -266,7 +272,7 @@ public class BookController {
 	}
 	
 	/**
-	 * 
+	 * to dislike
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
@@ -276,7 +282,7 @@ public class BookController {
 	
 	@RequestMapping(value = "/books/{bookId}/deletelike", method = RequestMethod.GET)
 	public Object deleteLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, HttpServletRequest httpServletRequest, Model model){
-		String userName = (String) httpSession.getAttribute("userName");
+		String userName = (String) httpSession.getAttribute(USERNAME);
 		if(userName == (null)){
 			String url = httpServletRequest.getRequestURI();
     		if(url != null)
@@ -303,8 +309,8 @@ public class BookController {
 	 */
 	@RequestMapping(value = "/books/{bookId}/update", method = RequestMethod.GET)
 	public Object updateBookGetView(@PathVariable("bookId") Long bookId, HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			ModelAndView modelAndView = new ModelAndView("bookupdate");
 			Book book = bookService.getBookById(bookId);
 			modelAndView.addObject("book", book);
@@ -362,24 +368,28 @@ public class BookController {
 	 */
 	@RequestMapping(value = "/books/{bookId}", method = RequestMethod.DELETE)
 	public Object removeBook(@PathVariable("bookId") Long bookId, @ModelAttribute("delete") ChoiceDto choiceDto,
-			HttpSession httpSession, Model model) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin"))) {
+			HttpSession httpSession, Model model) throws BookDoesNotExistException{
+		if (httpSession.getAttribute(USERNAME) != null && ADMIN.equals(httpSession.getAttribute("role"))) {
 			try {
 				bookService.removeBook(bookId);
 				return "redirect:/books";
 			} catch (BookDoesNotExistException b) {
-				model.addAttribute("BookDoesNotExist", b);
-				return "redirect:/books/{bookId}";
+				throw b;
 			}
 		}
 		return "null";
 
 	}
-
+	
+    /**
+     * to get the view to set authors for the book 
+     * @param httpSession
+     * @return
+     */
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.GET)
 	public Object getBookAuthorLinkPage(HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			ModelAndView modelAndView = new ModelAndView("bookauthorlink", "bookauthorlink", new BookAuthorLinkDto());
 			List<Book> books = bookService.getBooks();
 			List<Author> authors = authorService.getAllAuthor();
@@ -397,7 +407,12 @@ public class BookController {
 		}
 		return "redirect:/profile";
 	}
-
+    
+	/**
+	 * to set authors for the book 
+	 * @param bookAuthorLinkDto
+	 * @return
+	 */
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.POST)
 	public String postBookAuthorLinkPage(@ModelAttribute("bookauthorlink") BookAuthorLinkDto bookAuthorLinkDto) {
 		try{
@@ -405,7 +420,7 @@ public class BookController {
 		return "redirect:/linkBookAndAuthor";
 		}
 		finally{
-			System.out.println("caught duplicate enteries");
+			
 			return "redirect:/linkBookAndAuthor";
 		}
 	}

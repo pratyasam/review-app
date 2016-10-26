@@ -27,8 +27,10 @@ public class BookAuthorServiceImpl implements BookAuthorService {
 	@Autowired
 	private AuthorRepository authorRepository;
 	
-	/* (non-Javadoc)
-	 * @see com.mindfire.review.services.BookAuthorService#linkBookAndAuthor(com.mindfire.review.web.dto.BookAuthorLinkDto)
+	/**
+	 * method to link book and author
+	 * @param bookAuthorLinkDto
+	 * @exception SQLIntegrityConstraintViolationException
 	 */
 	@Override
 	public void linkBookAndAuthor(BookAuthorLinkDto bookAuthorLinkDto) throws SQLIntegrityConstraintViolationException{
@@ -38,7 +40,6 @@ public class BookAuthorServiceImpl implements BookAuthorService {
 		bookAuthor.setAuthor(author);
 		bookAuthor.setBook(book);
 		bookAuthorRepository.save(bookAuthor);
-		System.out.println("linked book and author.");
 	}
 
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,16 +24,27 @@ import javax.validation.Valid;
  */
 @Controller
 public class ReviewController {
+	
+	public static final String REDIRECTLOGIN = "redirect:/login";
     @Autowired
     private ReviewService reviewService;
 
 
+    /**
+     * to save the review for the book
+     * @param bookId
+     * @param reviewBookDto
+     * @param bindingResult
+     * @param model
+     * @param httpSession
+     * @param httpServletRequest
+     * @return
+     */
     @RequestMapping(value = "/books/{bookId}", method = RequestMethod.POST)
     public String addBookReviewByUser(@PathVariable("bookId") Long bookId, @Valid @ModelAttribute("bookProfile") ReviewBookDto reviewBookDto, BindingResult bindingResult, Model model, HttpSession httpSession, HttpServletRequest httpServletRequest) {
-       System.out.println("entered");
+      
     	if (httpSession.getAttribute("userName") == null) {
     		String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
     		if(httpSession.getAttribute("review") != null){
@@ -42,14 +52,13 @@ public class ReviewController {
     		}
     		if(reviewBookDto != null)
     			httpSession.setAttribute("review", reviewBookDto);
-            return "redirect:/login";
+            return REDIRECTLOGIN;
         }
         if (bindingResult.hasErrors()) {
             return "redirect:/books/{bookId}";
         }
         try {
             reviewService.addBookReview(reviewBookDto, (String) httpSession.getAttribute("userName"), bookId);
-            System.out.println("review saved.");
             return "redirect:/books/{bookId}";
         } catch (AlreadyReviewedException e) {
             model.addAttribute("alreadyReviewedException", e);
@@ -57,11 +66,20 @@ public class ReviewController {
         }
     }
 
+    /**
+     * to save the review for the author
+     * @param httpServletRequest
+     * @param authorId
+     * @param reviewAuthorDto
+     * @param bindingResult
+     * @param model
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/authors/{authorId}", method = RequestMethod.POST)
     public String addAuthorReviewByUser(HttpServletRequest httpServletRequest, @PathVariable("authorId") Long authorId, @Valid @ModelAttribute("authorprofile")ReviewAuthorDto reviewAuthorDto, BindingResult bindingResult, Model model, HttpSession httpSession){
         if(httpSession.getAttribute("userName") == null){
         	String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
     		if(httpSession.getAttribute("review") != null){
@@ -69,7 +87,7 @@ public class ReviewController {
     		}
     		if(reviewAuthorDto != null)
     			httpSession.setAttribute("review", reviewAuthorDto);
-            return "redirect:/login";
+            return REDIRECTLOGIN;
         }
         if(bindingResult.hasErrors()){
             return "redirect:/authors/{authorId}";
@@ -85,7 +103,7 @@ public class ReviewController {
     }
     
     /**
-     * 
+     * to delete the review for the author by admin or the user
      * @param reviewAuthorId
      * @param httpSession
      * @param model
@@ -97,10 +115,9 @@ public class ReviewController {
     	
     	if(httpSession.getAttribute("userName") == null){
     		String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
-            return "redirect:/login";
+            return REDIRECTLOGIN;
         }
     	
         if((httpSession.getAttribute("userName").toString().equals(reviewService.getReviewAuthorById(reviewAuthorId).getUser().getUserName())) || httpSession.getAttribute("role").equals("admin")) {
@@ -117,14 +134,24 @@ public class ReviewController {
         }
         return "redirect:/authors";
     }
+    
+    /**
+     * to delete the book review
+     * @param httpServletRequest
+     * @param bookId
+     * @param reviewBookId
+     * @param choiceDto
+     * @param httpSession
+     * @param model
+     * @return
+     */
     @RequestMapping(value="books/{bookId}/reviews/{reviewBookId}", method = RequestMethod.DELETE)
     public String removeBookReviewByUser(HttpServletRequest httpServletRequest, @PathVariable("bookId") long bookId, @PathVariable("reviewBookId") Long reviewBookId, @ModelAttribute("delete")ChoiceDto choiceDto, HttpSession httpSession, Model model){
     	if(httpSession.getAttribute("userName") == null){
     		String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
-            return "redirect:/login";
+            return REDIRECTLOGIN;
         }
     	
         if((httpSession.getAttribute("userName").toString().equals(reviewService.getReviewBookById(reviewBookId).getUser().getUserName())) || httpSession.getAttribute("role").equals("admin")) {
@@ -141,18 +168,9 @@ public class ReviewController {
         }
         return "redirect:/books";
     }
-    
+      
     /**
-     * 
-     * @param reviewBookId
-     * @param httpSession
-     * @param model
-     * @return
-     */
-   
-    
-    /**
-     * 
+     * to get the page to update the author review
      * @param authorId
      * @param reviewAuthorId
      * @param httpSession
@@ -161,7 +179,7 @@ public class ReviewController {
     @RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}/update", method = RequestMethod.GET)
     public Object updateAuthorReviewByUser(@PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpSession httpSession){
         if(httpSession.getAttribute("userName") == null){
-            return "redirect:/login";
+            return REDIRECTLOGIN;
         }
         if( httpSession.getAttribute("userName") == reviewService.getReviewAuthorById(reviewAuthorId).getUser().getUserName()){
             ModelAndView modelAndView = new ModelAndView("authorprofileupdate");
@@ -172,6 +190,16 @@ public class ReviewController {
         return "redirect:/authors/{authorId}";
 
     }
+    
+    /**
+     * to update the author review
+     * @param authorId
+     * @param reviewAuthorId
+     * @param reviewAuthorDto
+     * @param bindingResult
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}", method = RequestMethod.PUT)
     public String updateAuthorReviewPost(@PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId,@Valid @ModelAttribute("authorprofile") ReviewAuthorDto reviewAuthorDto, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
@@ -187,10 +215,17 @@ public class ReviewController {
         }
     }
     
+    /**
+     * to get the page to update the book review
+     * @param bookId
+     * @param reviewBookId
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}/update", method = RequestMethod.GET)
     public Object updateBookReviewByUser(@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpSession httpSession){
         if(httpSession.getAttribute("userName") == null){
-            return "redirect:/login";
+            return REDIRECTLOGIN;
         }
         if( httpSession.getAttribute("userName") == reviewService.getReviewBookById(reviewBookId).getUser().getUserName()){
             ModelAndView modelAndView = new ModelAndView("bookprofileupdate");
@@ -201,6 +236,15 @@ public class ReviewController {
         return "redirect:/books/{bookId}";
     }
     
+    /**
+     * to update the book review
+     * @param bookId
+     * @param reviewBookId
+     * @param reviewBookDto
+     * @param bindingResult
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}", method = RequestMethod.PUT)
     public String updateBookReviewByUserPost(@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, @Valid @ModelAttribute("bookprofile") ReviewBookDto reviewBookDto, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
@@ -216,15 +260,23 @@ public class ReviewController {
         }
     }
     
+    /**
+     * to like the book review
+     * @param httpSession
+     * @param bookId
+     * @param reviewBookId
+     * @param httpServletRequest
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}/addlike", method = RequestMethod.GET)
     public Object addLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpServletRequest httpServletRequest, Model model){
     	String userName = (String) httpSession.getAttribute("userName");
 		if(userName==null){
 			String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
-    		 return "redirect:/login";
+    		 return REDIRECTLOGIN;
 		}
 		
 		try{
@@ -237,19 +289,27 @@ public class ReviewController {
 			}
     }
     
+    /**
+     * to dislike a book review
+     * @param httpSession
+     * @param bookId
+     * @param reviewBookId
+     * @param httpServletRequest
+     * @param model
+     * @return
+     */
 	@RequestMapping(value = "/books/{bookId}/reviews/{reviewBookId}/deletelike", method = RequestMethod.GET)
 	public Object deleteLike(HttpSession httpSession,@PathVariable("bookId") Long bookId, @PathVariable("reviewBookId") Long reviewBookId, HttpServletRequest httpServletRequest, Model model){
 		String userName = (String) httpSession.getAttribute("userName");
 		if(userName == (null)){
 			String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
-    		 return "redirect:/login";
+    		 return REDIRECTLOGIN;
 		}
 		
 		try{
-			reviewService.removeLikeForBookReview(userName, reviewBookId);;
+			reviewService.removeLikeForBookReview(userName, reviewBookId);
 			return "redirect:/books/{bookId}";
 			}
 			catch (ReviewDoesnotExistException e) {
@@ -258,15 +318,23 @@ public class ReviewController {
 			}
 	}
 	
+	/**
+	 * to add author review like
+	 * @param httpSession
+	 * @param authorId
+	 * @param reviewAuthorId
+	 * @param httpServletRequest
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}/addlike", method = RequestMethod.GET)
     public Object addAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpServletRequest httpServletRequest, Model model){
     	String userName = (String) httpSession.getAttribute("userName");
 		if(userName == null){
 			String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
-    		 return "redirect:/login";
+    		 return REDIRECTLOGIN;
 		}
 		try{
 		reviewService.addLikeForAuthorReview(userName, reviewAuthorId);
@@ -278,15 +346,23 @@ public class ReviewController {
 		}
     }
 	
+	/**
+	 * to dislike author review
+	 * @param httpSession
+	 * @param authorId
+	 * @param reviewAuthorId
+	 * @param httpServletRequest
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/authors/{authorId}/reviews/{reviewAuthorId}/deletelike", method = RequestMethod.GET)
 	public Object deleteAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long authorId, @PathVariable("reviewAuthorId") Long reviewAuthorId, HttpServletRequest httpServletRequest, Model model){
 		String userName = (String) httpSession.getAttribute("userName");
 		if(userName==null){
 			String url = httpServletRequest.getRequestURI();
-    		System.out.println(url);
     		if(url != null)
     		httpSession.setAttribute("url", url);
-    		 return "redirect:/login";
+    		 return REDIRECTLOGIN;
 		}
 		
 		try{

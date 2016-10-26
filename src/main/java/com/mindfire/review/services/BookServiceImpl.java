@@ -72,7 +72,7 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findAll(page);
 	}
 	/**
-	 * 
+	 * returns the list of all books
 	 */
 	@Override
 	public List<Book> getBooks() {
@@ -92,7 +92,7 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findByBookGenreContainingAndBookVerified(genre, choice, page);
 	}
 	/**
-	 * 
+	 * returns book by genre for admin or moderator
 	 * @param genre
 	 * @param choice
 	 * @param pageno
@@ -105,8 +105,9 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findByBookGenreContaining(genre, page);
 	}
 	/**
-	 * 
+	 * get verified books by genre
 	 * @param genre
+	 * @param choice
 	 * @return
 	 */
 	@Override
@@ -114,7 +115,7 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findByBookGenreContainingAndBookVerified(genre, choice);
 	}
 	/**
-	 * 
+	 * find books by genre name similar
 	 * @param genre
 	 * @param choice
 	 * @return
@@ -169,7 +170,7 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findByBookNameContainingAndBookVerifiedOrBookIsbnContaining(name, true, isbn, Utility.buildPageRequest(10, page));
 	}
 	/**
-	 * 
+	 * search book by name or isbn
 	 * @param name
 	 * @return
 	 */
@@ -196,7 +197,7 @@ public class BookServiceImpl implements BookService {
 		return list;
 	}
 	/**
-	 * 
+	 * returns the authors for a book
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -211,12 +212,11 @@ public class BookServiceImpl implements BookService {
 		for (BookAuthor ba : list1) {
 			list.add(ba.getAuthor());
 		}
-		PageImpl<Author> authors = new PageImpl<>(list, page, size);
-		return authors;
+		return new PageImpl<>(list, page, size);
 	}
 
 	/**
-	 *
+	 * return a specific book
 	 * @param name
 	 * @return
 	 */
@@ -238,7 +238,7 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	/**
-	 * 
+	 * get total number of reviews for a book
 	 * @param name
 	 * @return
 	 */
@@ -248,7 +248,7 @@ public class BookServiceImpl implements BookService {
 		return reviewBookRepository.findByBook(getBookByName(name)).size();
 	}
 	/**
-	 * 
+	 * get reviews for the book
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -258,8 +258,7 @@ public class BookServiceImpl implements BookService {
 	public Page<ReviewBook> getBookReviewByBook(String name, int pageno, int size) {
 		Pageable page =Utility.buildPageRequest(size, pageno);
 		List<ReviewBook> list = reviewBookRepository.findByBook(getBookByName(name));
-		PageImpl<ReviewBook> bookReview = new PageImpl<>(list, page, size);
-		return bookReview;
+		return new PageImpl<>(list, page, size);
 	}
 
 	/**
@@ -280,7 +279,7 @@ public class BookServiceImpl implements BookService {
 		return reviewAuthorList;
 	}
 	/**
-	 * 
+	 * gets reviews for the author of a book
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -296,8 +295,7 @@ public class BookServiceImpl implements BookService {
 			reviewAuthorList.addAll(reviewAuthorList1);
 		}
 		Pageable page = Utility.buildPageRequest(size, pageno);
-		PageImpl<ReviewAuthor> authorReview = new PageImpl<>(reviewAuthorList, page, size);
-		return authorReview;
+		return new PageImpl<>(reviewAuthorList, page, size);
 	}
 
 	/**
@@ -313,7 +311,7 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	/**
-	 * 
+	 * get list of verified books
 	 * @param verified
 	 * @return
 	 */
@@ -338,6 +336,13 @@ public class BookServiceImpl implements BookService {
 		}
 		return users;
 	}
+	/**
+	 * returns the users who reviewed the book
+	 * @param name
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
 	@Override
 	public Page<User> getUserByBookReview(String name, int pageno, int size) {
 		List<User> users = new ArrayList<>();
@@ -346,8 +351,7 @@ public class BookServiceImpl implements BookService {
 			users.add(r.getUser());
 		}
 		Pageable page = Utility.buildPageRequest(size, pageno);
-		PageImpl<User> userPage = new PageImpl<>(users, page, size);
-		return userPage;
+		return new PageImpl<>(users, page, size);
 	}
 
 	/**
@@ -390,7 +394,6 @@ public class BookServiceImpl implements BookService {
 		book.setBookReview(bookDto.getBookReview());
 
 		book = bookRepository.save(book);
-		System.out.println("Book saved");
 		if (book == null) {
 			throw new RuntimeException("");
 		}
@@ -453,17 +456,13 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void verifyBook(Long id, ChoiceDto choiceDto) {
 		Book book = getBookById(id);
-		System.out.println(book.getBookName());
-		System.out.println(book.getBookVerified());
 			book.setBookVerified(true);
-			System.out.println("\n Service executed");
 			bookRepository.save(book);
-			System.out.println(book.getBookVerified());
 		
 	}
 	
 	/**
-	 * 
+	 * like the book
 	 * @param userName
 	 * @param bookId
 	 * @throws AlreadyReviewedException
@@ -485,7 +484,6 @@ public class BookServiceImpl implements BookService {
 		
 		book.setBookLikes(getNumberOfBookLikesByUsers(bookId));
 		bookRepository.save(book);
-	    System.out.println("book liked.");
 	    
 	    if(bookLike == null){
 	    	throw new RuntimeException("");
@@ -494,7 +492,7 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	/**
-	 * 
+	 * dislike the book
 	 * @param bookLikeId
 	 * @throws ReviewDoesnotExistException
 	 */
@@ -531,13 +529,20 @@ public class BookServiceImpl implements BookService {
 	}
 
 	/**
-	 * 	
+	 * search books by name or isbn or genre
+	 * @param name
+	 * @param genre
+	 * @param isbn
+	 * @param page
 	 */
 	@Override
 	public Page<Book> searchForBooks(String name, String genre, String isbn, int page) {
 
 		return bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContaining(name, genre, isbn, Utility.buildPageRequest(10, page)); 
 	}
+	/**
+	 * returns top 10 books
+	 */
 	
 	@Override
 	public List<Book> getTop10Books(){

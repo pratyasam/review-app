@@ -1,18 +1,11 @@
 package com.mindfire.review.web.controllers;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -31,8 +24,6 @@ import com.mindfire.review.exceptions.ReviewDoesnotExistException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.ReviewService;
-import com.mindfire.review.services.UploadService;
-import com.mindfire.review.services.UserService;
 import com.mindfire.review.web.dto.AuthorDto;
 import com.mindfire.review.web.dto.BookAuthorListDto;
 import com.mindfire.review.web.dto.ChoiceDto;
@@ -45,24 +36,25 @@ import com.mindfire.review.web.models.ReviewAuthor;
 import com.mindfire.review.web.models.User;
 
 /**
+ * @author 
  * Created by pratyasa on 10/8/16.
  */
 @Controller
 public class AuthorController {
+	
+	public static final String REDIRECT = "redirect:/login";
+	public static final String USERNAME = "userName";
+	public static final String ADMIN = "admin";
+	public static final String MODERATOR = "moderator";
+	public static final String ADDAUTHOR = "addauthor";
+	
 	@Autowired
 	private ReviewService reviewService;
-
 	@Autowired
 	private AuthorService authorService;
 	@Autowired
 	private BookService bookService;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private ServletContext servletContext;
-
-	@Autowired
-	private UploadService uploadService;
+	
 
 	/**
 	 * to get the add author page by the admin or moderator
@@ -72,13 +64,13 @@ public class AuthorController {
 	 */
 	@RequestMapping(value = "/addauthor", method = RequestMethod.GET)
 	public Object addAuthorGet(HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
-			ModelAndView modelAndView = new ModelAndView("addauthor");
-			modelAndView.addObject("addauthor", new AuthorDto());
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
+			ModelAndView modelAndView = new ModelAndView(ADDAUTHOR);
+			modelAndView.addObject(ADDAUTHOR, new AuthorDto());
 			return modelAndView;
 		}
-		return "redirect:/login";
+		return REDIRECT;
 
 	}
 
@@ -93,13 +85,13 @@ public class AuthorController {
 	 */
 
 	@RequestMapping(value = "/addauthor", method = RequestMethod.POST)
-	public String addAuthorPost(@Valid @ModelAttribute("addauthor") AuthorDto authorDto, BindingResult bindingResult,
+	public String addAuthorPost(@Valid @ModelAttribute(ADDAUTHOR) AuthorDto authorDto, BindingResult bindingResult,
 			Model model, HttpSession httpSession, HttpServletRequest request) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			if (bindingResult.hasErrors()){
-				model.addAttribute("addauthor", new AuthorDto());
-				return "addauthor";
+				model.addAttribute(ADDAUTHOR, new AuthorDto());
+				return ADDAUTHOR;
 			}
 			
 
@@ -107,13 +99,13 @@ public class AuthorController {
 					authorService.addAuthor(authorDto);
 				} catch (AuthorExistenceException e) {
 					model.addAttribute("authorexists", e);
-					return "addauthor";
+					return ADDAUTHOR;
 				}
 				httpSession.setAttribute("authorName", authorDto.getAuthorName());
 				return "authoradded";
 			
 		}
-		return "redirect:/login";
+		return REDIRECT;
 	}
 
 	/**
@@ -146,8 +138,11 @@ public class AuthorController {
 	public Object getSingleAuthor(@RequestParam(value = "pagenob", defaultValue = "1") int pagenob,
 			@RequestParam(value = "pagenou", defaultValue = "1") int pagenou,
 			@RequestParam(value = "pagenor", defaultValue = "1") int pagenor, @PathVariable("authorId") Long authorId,
-			HttpSession httpSession) {
+			HttpSession httpSession) throws AuthorExistenceException {
+		
 		String authorName = authorService.getAuthorById(authorId).getAuthorName();
+		if(authorName == null)
+			throw new AuthorExistenceException("author doesnt exist");
 		Page<Book> book = authorService.getBookByAuthor(authorName, pagenob, 6);
 		Page<ReviewAuthor> reviewAuthors = authorService.getAuthorReviewByAuthorName(authorName, pagenob, 6);
 		Page<User> users = authorService.getUserByAuthor(authorName, pagenob, 6);
@@ -175,15 +170,14 @@ public class AuthorController {
 			bookAuthorListDto.add(bookAuthorListDto2);
 		}
 
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			if (httpSession.getAttribute("review") != null) {
 				reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute("review");
 			}
 			ModelAndView modelAndView = new ModelAndView("adminauthorprofile");
 			modelAndView.addObject("author", authorService.getAuthorById(authorId));
 			modelAndView.addObject("delete", new ChoiceDto());
-			;
 			modelAndView.addObject("authorprofile", reviewAuthorDto);
 			modelAndView.addObject("reviews", reviewAuthorLikesDtos);
 			modelAndView.addObject("books", bookAuthorListDto);
@@ -212,8 +206,6 @@ public class AuthorController {
 		modelAndView.addObject("delete", new ChoiceDto());
 		modelAndView.addObject("totalreviews", authorService.getTotalAuthorReviewByAuthorName(authorName));
 		modelAndView.addObject("totallikes", authorService.getNumberOfLikesByUser(authorId));
-
-		System.out.println("User");
 		return modelAndView;
 	}
 
@@ -227,8 +219,8 @@ public class AuthorController {
 
 	@RequestMapping(value = "/authors/{authorId}/update", method = RequestMethod.GET)
 	public Object updateAuthorGet(@PathVariable("authorId") Long authorId, HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin")
-				|| httpSession.getAttribute("role").equals("moderator"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
+				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			ModelAndView modelAndView = new ModelAndView("authorupdate");
 			modelAndView.addObject("author", authorService.getAuthorById(authorId));
 			Author author = authorService.getAuthorById(authorId);
@@ -244,7 +236,7 @@ public class AuthorController {
 	}
 
 	/**
-	 * 
+	 * to like the author
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
@@ -255,13 +247,12 @@ public class AuthorController {
 	@RequestMapping(value = "/authors/{authorId}/addlike", method = RequestMethod.GET)
 	public Object addAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long bookId,
 			HttpServletRequest httpServletRequest, Model model) {
-		String userName = (String) httpSession.getAttribute("userName");
+		String userName = (String) httpSession.getAttribute(USERNAME);
 		if (userName == null) {
 			String url = httpServletRequest.getRequestURI();
-			System.out.println(url);
 			if (url != null)
 				httpSession.setAttribute("url", url);
-			return "redirect:/login";
+			return REDIRECT;
 		}
 		try {
 			authorService.addAuthorLikeByUser(userName, bookId);
@@ -273,7 +264,7 @@ public class AuthorController {
 	}
 
 	/**
-	 * 
+	 * to remove the author like
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
@@ -284,13 +275,12 @@ public class AuthorController {
 	@RequestMapping(value = "/authors/{authorId}/deletelike", method = RequestMethod.GET)
 	public Object deleteLike(HttpSession httpSession, @PathVariable("authorId") Long bookId,
 			HttpServletRequest httpServletRequest, Model model) {
-		String userName = (String) httpSession.getAttribute("userName");
+		String userName = (String) httpSession.getAttribute(USERNAME);
 		if (userName == null) {
 			String url = httpServletRequest.getRequestURI();
-			System.out.println(url);
 			if (url != null)
 				httpSession.setAttribute("url", url);
-			return "redirect:/login";
+			return REDIRECT;
 		}
 
 		try {
@@ -340,7 +330,7 @@ public class AuthorController {
 	@RequestMapping(value = "/authors/{authorId}", method = RequestMethod.DELETE)
 	public String removeAuthor(@PathVariable("authorId") Long authorId,
 			@Valid @ModelAttribute("delete") ChoiceDto choiceDto, Model model, HttpSession httpSession) {
-		if (httpSession.getAttribute("userName") != null && (httpSession.getAttribute("role").equals("admin"))) {
+		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN))) {
 			try {
 				authorService.removeAuthor(authorId);
 				return "redirect:/authors";

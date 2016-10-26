@@ -34,15 +34,24 @@ public class GenreController {
 	BookService bookService;
 	@Autowired
 	AuthorService authorService;
+	
+	/**
+	 * to get the books and authors of a particular genre
+	 * @param genreName
+	 * @param pagenoa
+	 * @param pagenob
+	 * @param httpSession
+	 * @return
+	 */
 	@RequestMapping(value="/genre/{genreName}", method = RequestMethod.GET)
 	public Object getGenre(@PathVariable("genreName") String genreName, @RequestParam(value = "pagenoa", defaultValue = "1") int pagenoa, @RequestParam(value = "pagenob", defaultValue = "1") int pagenob, HttpSession httpSession){
 		Page<Book> bookList;
-		if(httpSession.getAttribute("userName") != null &&(httpSession.getAttribute("role").equals("admin") || httpSession.getAttribute("role").equals("moderator")))
+		if(httpSession.getAttribute("userName") != null && ("admin").equals(httpSession.getAttribute("role")) || ("moderator").equals(httpSession.getAttribute("role")))
 		bookList = bookService.getBookByGenreAdmin(genreName,pagenob,6);
 		else
 		bookList = bookService.getBookByGenre(genreName,true, pagenob,6);
 		
-		 int totalPagesBook = bookList.getTotalPages();
+	    int totalPagesBook = bookList.getTotalPages();
 		Page<Author> authorList = authorService.getAuthorByGenre(genreName,pagenoa, 6);
 		List<Author> authors = authorList.getContent();
 		int totalPagesAuthor = authorList.getTotalPages();

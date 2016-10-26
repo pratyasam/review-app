@@ -15,8 +15,6 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private BookService bookService;
     @Autowired
     private AuthorService authorService;

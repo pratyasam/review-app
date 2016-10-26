@@ -32,8 +32,6 @@ public class ReviewServiceImpl implements ReviewService {
 	@Autowired
 	private BookService bookService;
 	@Autowired
-	private AuthorService authorService;
-	@Autowired
 	private ReviewBookRepository reviewBookRepository;
 	@Autowired
 	private ReviewAuthorRepository reviewAuthorRepository;
@@ -70,7 +68,6 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewBook.setUser(user);
 		reviewBook.setBook(book);
 		reviewBook = reviewBookRepository.save(reviewBook);
-		System.out.println("Book review Saved");
 		if (reviewBook == null) {
 			throw new RuntimeException("");
 		}
@@ -133,7 +130,6 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewAuthor.setUser(user);
 		reviewAuthor.setAuthor(author);
 		reviewAuthor = reviewAuthorRepository.save(reviewAuthor);
-		System.out.println("Author review saved");
 		if (reviewAuthor == null) {
 			throw new RuntimeException("");
 		}
@@ -212,7 +208,8 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/**
-	 * 
+	 * returns number of book reviews liked
+	 * @param user
 	 */
 
 	@Override
@@ -221,7 +218,10 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/**
-	 * 
+	 * like the author review
+	 * @param userName
+	 * @param reviewAuthorId
+	 * @exception AlreadyReviewedException
 	 */
 
 	@Override
@@ -254,6 +254,9 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/**
+	 * @param userName
+	 * @param reviewAuthorId
+	 * @exception ReviewDoesnotExistException
 	 * 
 	 */
 	@Override
@@ -280,7 +283,10 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/**
-	 * 
+	 * like the book review
+	 * @param userName
+	 * @param reviewBookId
+	 * @exception AlreadyReviewedException
 	 */
 	@Override
 	public void addLikeForBookReview(String userName, Long reviewBookId) throws AlreadyReviewedException {
@@ -312,7 +318,10 @@ public class ReviewServiceImpl implements ReviewService {
 		
 	}
 	/**
-	 * 
+	 * dislike the book review
+	 * @param userName
+	 * @param reviewBookId
+	 * @exception ReviewDoesnotExistException
 	 */
 	
 	
@@ -342,6 +351,10 @@ public class ReviewServiceImpl implements ReviewService {
 		
 	}
 	
+	/**
+	 * returns number of book review likes
+	 * @param reviewBook
+	 */
 	@Override
 	public int getNumberOfReviewLikesByBook(ReviewBook reviewBook){
 		
@@ -359,7 +372,8 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/**
-	 * 
+	 * returns number of author review likes
+	 * @param reviewAuthor
 	 */
 	@Override
 	public int getNumberOfReviewLikesByAuthor(ReviewAuthor reviewAuthor){
@@ -376,7 +390,8 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	/**
-	 * 
+	 * returns number of dislikes for book review
+	 * @param reviewBook
 	 */
 	@Override
 	public int getNumberOfReviewDislikesByBook(ReviewBook reviewBook){
@@ -393,6 +408,10 @@ public class ReviewServiceImpl implements ReviewService {
 		
 	}
 	
+	/**
+	 * returns number of author review dislikes
+	 * @param reviewAuthor
+	 */
 	@Override
 	public int getNumberOfReviewDislikesByAuthor(ReviewAuthor reviewAuthor){
 		int x = 0;
@@ -407,6 +426,10 @@ public class ReviewServiceImpl implements ReviewService {
 		
 	}
 	
+	/**
+	 * get total review likes by a user
+	 * @param user
+	 */
 	@Override
 	public int getNumberOfReviewLikesByUser(User user){
 		 int authorReviewLike = reviewAuthorLikeRepository.findByUser(user).size();
