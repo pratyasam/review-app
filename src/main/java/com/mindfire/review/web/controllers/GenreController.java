@@ -60,6 +60,7 @@ public class GenreController {
 		modelAndView.addObject("name",genreName);
 		modelAndView.addObject("totalpagesb", totalPagesBook);
 		modelAndView.addObject("totalpagesa", totalPagesAuthor);
+		modelAndView.addObject("genreName", genreName);
 		modelAndView.addObject("search", new SearchDto());
 		return modelAndView;
 	}

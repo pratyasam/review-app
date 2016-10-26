@@ -98,20 +98,7 @@ public class BookController {
 			return "addbook";
 		}
 	}
-	// @RequestMapping(value = "/books/{bookId}/verifybooks", method =
-	// RequestMethod.GET)
-	// public Object verifyBookGet(@PathVariable("bookId") Long bookId,
-	// HttpSession httpSession, Model model) {
-	// if (httpSession.getAttribute("userName") != null &&
-	// ((httpSession.getAttribute("role").equals("admin")) ||
-	// httpSession.getAttribute("role").equals("moderator"))) {
-	// model.addAttribute("choice", new ChoiceDto());
-	// return model;
-	// }
-	//
-	// return "null";
-	// }
-
+	
 	/**
 	 *
 	 * @param bookId

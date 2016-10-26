@@ -29,10 +29,4 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         return new Filter[]{new HiddenHttpMethodFilter(), new MultipartFilter(), new OpenEntityManagerInViewFilter()};
     }
 
-//    @Override
-//    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
-//        registration.setInitParameter("defaultHtmlEscape", "true");
-//        registration.setInitParameter("spring.profiles.active", "default");
-//    }
-  
 }

@@ -6,8 +6,11 @@ import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -36,14 +39,6 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         requestMappingHandlerMapping.setUseTrailingSlashMatch(false);
         return requestMappingHandlerMapping;
     }
-
-//    @Bean(name = "messageSource")
-//    public MessageSource messageSource() {
-//        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-//        messageSource.setBasename(MESSAGE_SOURCE);
-//        messageSource.setCacheSeconds(5);
-//        return messageSource;
-//    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -74,7 +69,6 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	 String rootPath =  System.getProperty("user.home") + "/Desktop/Wotkspace/git";
     	 String imagePath = "file:"+rootPath + File.separator + "uploads/";
-         System.out.println(imagePath);
          registry.addResourceHandler("/uploads/**").addResourceLocations(imagePath);   
     }
 
@@ -83,14 +77,4 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         configurer.enable();
     }
 
-    /**
-     * Handles favicon.ico requests assuring no <code>404 Not Found</code> error is returned.
-     */
-//    @Controller
-//    static class FaviconController {
-//        @RequestMapping("favicon.ico")
-//        String favicon() {
-//            return "forward:/resources/images/favicon.ico";
-//        }
-//    }
 }

@@ -277,9 +277,9 @@ ul {
 							<div class="col-lg-8">
 								<div class="panel panel-default">
 									<div class="panel-body" >
-										<a href="/reviewBook/books/<%=book.getBookId()%>">
-											<div style="font-size: 120%; border-bottom: 2px #CCC solid; overflow : hidden ;text-overflow: ellipsis;"><%=book.getBookName()%></div>
-										</a>
+										<div style="font-size: 120%; border-bottom: 2px #CCC solid; overflow : hidden ;text-overflow: ellipsis;"><a href="/reviewBook/books/<%=book.getBookId()%>">
+											<%=book.getBookName()%>
+										</a> </div>
 										<%
 											for (Author a : authors) {
 										%>
@@ -288,9 +288,9 @@ ul {
 											}
 										%>
 										<% if(authors.size() == 0){ %>
-										<br>
+										<h6>Unknown</h6>
 										<%} %>
-										<div data-rateyo="rateYo" class="text-center" data-rating="<%= book.getBookRating() %>" style="margin-left: 55px;"></div> <br>
+										<a href="#" data-toggle="tooltip" title="<%= book.getBookRating() %>"><div data-rateyo="rateYo" class="text-center" data-rating="<%= book.getBookRating() %>" style="margin-left: 55px;"></div></a> <br>
 										<div class="sidebar-box">
 										<p class="read-more"></p>
 											<p><%=book.getBookDescription()%></p>
@@ -655,6 +655,11 @@ ul {
 		});
 		
 	</script>
+	<script>
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();
+		});
+</script>
 </body>
 
 </html>
