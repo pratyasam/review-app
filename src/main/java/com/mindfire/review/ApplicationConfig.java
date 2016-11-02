@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @PropertySource("classpath:persistence.properties")
 @PropertySource("classpath:application.properties")
-@ComponentScan(basePackageClasses = Application.class)
+@ComponentScan(basePackageClasses = ApplicationConfig.class)
 class ApplicationConfig {
 	
     @Bean

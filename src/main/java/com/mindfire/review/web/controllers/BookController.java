@@ -1,5 +1,6 @@
 package com.mindfire.review.web.controllers;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,11 @@ public class BookController {
 	public static final String USERNAME = "userName";
 	public static final String MODERATOR = "moderator";
 	public static final String ADMIN = "admin";
+	public static final String ADDBOOK = "addbook";
+	public static final String REDIRECTLOGIN = "redirect:/login";
+	public static final String REDIRECTBOOKSBOOKID = "redirect:/books/{bookId}";
+	public static final String REVIEW = "review";
+	public static final String BOOKPROFILE = "bookprofile";
 	
 	@Autowired
 	private BookService bookService;
@@ -59,38 +65,40 @@ public class BookController {
 	private ReviewService reviewService;
 
 	/**
-	 * get book add page for moderator and admin
-	 *
+	 * This method renders the page to add a book and its information to the database by the admin or the moderator.
 	 * @param httpSession
-	 * @return
+	 * @return Object
 	 */
 
 	@RequestMapping(value = "/addbook", method = RequestMethod.GET)
 	public Object bookController(HttpSession httpSession) {
-		if (((ADMIN).equals(httpSession.getAttribute("role")) && httpSession.getAttribute(USERNAME) != null )
+		
+		if (((ADMIN).equals(httpSession.getAttribute("role")) 
+				&& httpSession.getAttribute(USERNAME) != null )
 				|| (MODERATOR).equals(httpSession.getAttribute("role"))) {
 
-			return new ModelAndView("addbook", "book", new BookDto());
+			return new ModelAndView(ADDBOOK, "book", new BookDto());
+			
 		} else {
 
-			return "redirect:/login";
+			return REDIRECTLOGIN;
 		}
 	}
 
 	/**
-	 * the book add page info to be persisted by admin or moderator
-	 *
+	 * This method will persist the book along with its information passed by the admin or moderator, into the database.
 	 * @param bookDto
 	 * @param bindingResult
 	 * @param model
 	 * @param httpSession
-	 * @return
+	 * @return String as a view name
 	 */
 	@RequestMapping(value = "/addbook", method = RequestMethod.POST)
-	public String addBook(@Valid @ModelAttribute("book") BookDto bookDto, BindingResult bindingResult, Model model,
+	public String addBookPost(@Valid @ModelAttribute("book") BookDto bookDto, BindingResult bindingResult, Model model,
 			HttpSession httpSession) {
+		
 		if (bindingResult.hasErrors()) {
-			return "addbook";
+			return ADDBOOK;
 		}
 		try {
 
@@ -100,18 +108,18 @@ public class BookController {
 
 		} catch (BookExistException bex) {
 			model.addAttribute("bookExist", bex);
-			return "addbook";
+			return ADDBOOK;
 		}
 	}
 	
 	/**
-	 *to mark the book verified by the admin
+	 * This method is used to mark a book as verified, searched by the book id, by the admin or moderator.
 	 * @param bookId
 	 * @param choiceDto
 	 * @param bindingResult
 	 * @param model
 	 * @param httpSession
-	 * @return
+	 * @return String as a view name
 	 */
 
 	@RequestMapping(value = "/books/{bookId}/verifybooks", method = RequestMethod.POST)
@@ -121,19 +129,20 @@ public class BookController {
 		if (httpSession.getAttribute(USERNAME) != null && ((httpSession.getAttribute("role").equals(ADMIN))
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
 			bookService.verifyBook(bookId, choiceDto);
-			return "redirect:/books/{bookId}";
+			return REDIRECTBOOKSBOOKID;
 		}
 
 		return "null";
 	}
 
 	/**
-	 * to get all verified books
-	 * 
-	 * @return
+	 * This method render the page displaying all the verified books for the normal user.
+	 * @param httpSession
+	 * @return Object
 	 */
 	@RequestMapping(value = "/books", method = RequestMethod.GET)
 	public Object getAllBooks(@RequestParam(value = "pageno", defaultValue="1") int pageno,HttpSession httpSession) {
+		
 		Page<Book> books = bookService.getVerifiedBook(true, pageno,6);
         int totalPages = books.getTotalPages();
 		List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>();
@@ -146,8 +155,10 @@ public class BookController {
 			bookAuthorListDto2.setBook(b);
 			bookAuthorListDto.add(bookAuthorListDto2);
 		}
+		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
+			
 			List<Book> bookList = bookService.getBooks(pageno,6).getContent(); 
 															
 			List<BookAuthorListDto> bookAuthorListDto3 = new ArrayList<>();
@@ -173,16 +184,21 @@ public class BookController {
 	}
 
 	/**
-	 * returns single book page for all
-	 *
+	 * This method renders the book profile page of a book.
+	 * @param httpSession
 	 * @param bookId
-	 * @returny
+	 * @return Object
 	 */
 	@RequestMapping(value = "/books/{bookId}", method = RequestMethod.GET)
-	public Object getBook(@RequestParam(value="pagenou", defaultValue="1") int pagenou,@RequestParam(value="pagenor", defaultValue="1") int pagenor,@PathVariable("bookId") Long bookId, HttpSession httpSession) throws BookDoesNotExistException{
+	public Object getBook(@RequestParam(value="pagenou", defaultValue="1") int pagenou,
+			@RequestParam(value="pagenor", defaultValue="1") int pagenor,@PathVariable("bookId") Long bookId, 
+			HttpSession httpSession) throws Exception{
+		
+		ModelAndView modelAndView = new ModelAndView();
 		
 		if(bookService.getBookById(bookId) == null)
 			throw new BookDoesNotExistException("book doesnt exist");
+		
 		String name = bookService.getBookById(bookId).getBookName();
 		List<Author> author = bookService.getAuthorByBook(name);
 		Page<ReviewBook> reviewBooks = bookService.getBookReviewByBook(name,pagenor,6);
@@ -190,6 +206,10 @@ public class BookController {
 		int totalPagesr =reviewBooks.getTotalPages();
 		int totalPagesu = users.getTotalPages();
 		ReviewBookDto reviewBookDto = new ReviewBookDto();
+		
+		if(httpSession.getAttribute(REVIEW) != null){
+			reviewBookDto = (ReviewBookDto) httpSession.getAttribute(REVIEW);
+		}
 		
 		List<ReviewBookLikesDto> reviewBookLikesDtos = new ArrayList<>();
 		
@@ -203,26 +223,20 @@ public class BookController {
 		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
-			if(httpSession.getAttribute("review") != null){
-				reviewBookDto = (ReviewBookDto) httpSession.getAttribute("review");
-			}
-			ModelAndView modelAndView = new ModelAndView("adminbookprofile");
-			modelAndView.addObject("book", bookService.getBookById(bookId));
-			modelAndView.addObject("authors", author);
-			modelAndView.addObject("users", users);
-			modelAndView.addObject("reviews",reviewBookLikesDtos);
-			modelAndView.addObject("totalpagesr", totalPagesr);
-			modelAndView.addObject("totalpagesu", totalPagesu);
+			
+			modelAndView.setViewName("adminbookprofile");
 			modelAndView.addObject("updatebook", new BookDto());
-			modelAndView.addObject("delete", new ChoiceDto());
 			modelAndView.addObject("verify", new ChoiceDto());
-			modelAndView.addObject("bookprofile", reviewBookDto);
-            modelAndView.addObject("totallikes", bookService.getNumberOfBookLikesByUsers(bookId));
-            modelAndView.addObject("totalreviews", bookService.getTotalBookReviewByBook(name));
-			return modelAndView;
 		}
-
-		ModelAndView modelAndView = new ModelAndView("bookprofile");
+		
+		else if(bookService.getBookById(bookId).getBookVerified()){
+			modelAndView.setViewName(BOOKPROFILE);
+		}
+		
+		else{
+			throw new FileNotFoundException("unauthorised access");
+		}
+		
 		modelAndView.addObject("reviews",reviewBooks.getContent());
 		modelAndView.addObject("book", bookService.getBookById(bookId));
 		modelAndView.addObject("users", users);
@@ -231,86 +245,99 @@ public class BookController {
 		modelAndView.addObject("authors", author);
 		modelAndView.addObject("totallikes", bookService.getNumberOfBookLikesByUsers(bookId));
 		modelAndView.addObject("totalreviews", bookService.getTotalBookReviewByBook(name));
-		modelAndView.addObject("reviews",reviewBookLikesDtos);
-		
-		if(httpSession.getAttribute("review") != null){
-			reviewBookDto = (ReviewBookDto) httpSession.getAttribute("review");
-		}
-		
-		modelAndView.addObject("bookprofile", reviewBookDto);
+		modelAndView.addObject(REVIEW,reviewBookLikesDtos);
+		modelAndView.addObject(BOOKPROFILE, reviewBookDto);
 		modelAndView.addObject("delete", new ChoiceDto());
 		return modelAndView;
 	}
 	
 	/**
-	 * to like a book by the user who is logged in
+	 * This method will increase the likes of a book by a count of 1.
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
 	 * @param model
-	 * @return
+	 * @return Object
 	 */
 	
 	@RequestMapping(value = "/books/{bookId}/addlike", method = RequestMethod.GET)
 	public Object addLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, HttpServletRequest httpServletRequest, Model model){
 		
 		String userName = (String) httpSession.getAttribute(USERNAME);
+		
 		if(userName==null){
+			
 			String url = httpServletRequest.getRequestURI();
-    		if(url != null)
+			
+    		if(url != null){
+    			
     		httpSession.setAttribute("url", url);
-    		 return "redirect:/login";
+    		}
+    		
+    		 return REDIRECTLOGIN;
 		}
+		
 		try{
+			
 		bookService.addBookLikeByUser(userName, bookId);
-		return "redirect:/books/{bookId}";
+		return REDIRECTBOOKSBOOKID;
+		
 		}
 		catch (AlreadyReviewedException e) {
+			
 			model.addAttribute("exception", e);
-			return "redirect:/books/{bookId}";
+			return REDIRECTBOOKSBOOKID;
 		}
 	}
 	
 	/**
-	 * to dislike
+	 * This method will decrease the book likes for a book by a count of 1.
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
 	 * @param model
-	 * @return
+	 * @return Object
 	 */
 	
 	@RequestMapping(value = "/books/{bookId}/deletelike", method = RequestMethod.GET)
 	public Object deleteLike(HttpSession httpSession, @PathVariable("bookId") Long bookId, HttpServletRequest httpServletRequest, Model model){
+		
 		String userName = (String) httpSession.getAttribute(USERNAME);
+		
 		if(userName == (null)){
+			
 			String url = httpServletRequest.getRequestURI();
-    		if(url != null)
+			
+    		if(url != null){
     		httpSession.setAttribute("url", url);
-    		 return "redirect:/login";
+    		}
+    		
+    		 return REDIRECTLOGIN;
 		}
 		
 		try{
 			bookService.removeBookLikeByUser(userName, bookId);
-			return "redirect:/books/{bookId}";
+			return REDIRECTBOOKSBOOKID;
+			
 			}
 			catch (ReviewDoesnotExistException e) {
 				model.addAttribute("exception", e);
-				return "redirect:/books/{bookId}";
+				return REDIRECTBOOKSBOOKID;
 			}
 	}
 
 	/**
-	 * the book update page can be requested by the admin or the moderator
-	 *
+	 * This method will render the page to update the information for a book by the admin or moderator
 	 * @param bookId
 	 * @param httpSession
-	 * @return
+	 * @return Object
 	 */
 	@RequestMapping(value = "/books/{bookId}/update", method = RequestMethod.GET)
 	public Object updateBookGetView(@PathVariable("bookId") Long bookId, HttpSession httpSession) {
+		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
+			
 			ModelAndView modelAndView = new ModelAndView("bookupdate");
 			Book book = bookService.getBookById(bookId);
 			modelAndView.addObject("book", book);
@@ -325,33 +352,36 @@ public class BookController {
 			bookDto.setBookReview(book.getBookReview());
 			modelAndView.addObject("bookupdatedto",bookDto);
 			return modelAndView;
+			
 		} else {
-			return "redirect:/login";
+			return REDIRECTLOGIN;
 		}
 
 	}
 
 	/**
-	 * the updated info can be persisted by the admin or the moderator
-	 *
+	 * This method persists the book updates entered by the admin or moderator,in the database.
 	 * @param bookId
 	 * @param bookDto
 	 * @param bindingResult
 	 * @param model
 	 * @param httpSession
-	 * @return
+	 * @return String as a view name
 	 */
 	@RequestMapping(value = "/books/{bookId}", method = RequestMethod.PUT)
 	public String updateBook(@PathVariable("bookId") Long bookId,
 			@Valid @ModelAttribute("bookupdatedto") BookDto bookDto, BindingResult bindingResult, Model model,
 			HttpSession httpSession) {
+		
 		if (bindingResult.hasErrors()) {
 			return "authorupdate";
 		}
+		
 		try {
 			bookService.updateBook(bookId, bookDto);
-			return "redirect:/books/{bookId}";
+			return REDIRECTBOOKSBOOKID;
 		} catch (BookDoesNotExistException b) {
+			
 			model.addAttribute("BookDoesNotExist", b);
 			return "authorupdate";
 		}
@@ -359,16 +389,16 @@ public class BookController {
 	}
 
 	/**
-	 * Book can be deleted by the admin
-	 * 
+	 * This method deletes a book and all its records from the database and can be accessed by the admin or moderator.
 	 * @param bookId
 	 * @param httpSession
 	 * @param model
-	 * @return
+	 * @return Object
 	 */
 	@RequestMapping(value = "/books/{bookId}", method = RequestMethod.DELETE)
 	public Object removeBook(@PathVariable("bookId") Long bookId, @ModelAttribute("delete") ChoiceDto choiceDto,
 			HttpSession httpSession, Model model) throws BookDoesNotExistException{
+		
 		if (httpSession.getAttribute(USERNAME) != null && ADMIN.equals(httpSession.getAttribute("role"))) {
 			try {
 				bookService.removeBook(bookId);
@@ -382,36 +412,43 @@ public class BookController {
 	}
 	
     /**
-     * to get the view to set authors for the book 
+     * This method renders the page listing all the books and authors and allows the admin or moderator to link them.
      * @param httpSession
-     * @return
+     * @return Object
      */
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.GET)
 	public Object getBookAuthorLinkPage(HttpSession httpSession) {
+		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
+			
 			ModelAndView modelAndView = new ModelAndView("bookauthorlink", "bookauthorlink", new BookAuthorLinkDto());
 			List<Book> books = bookService.getBooks();
 			List<Author> authors = authorService.getAllAuthor();
 			List<String> bookList = new ArrayList<>();
 			List<String> authorList = new ArrayList<>();
+			
 			for (Book b : books) {
 				bookList.add(b.getBookName());
 			}
+			
 			for (Author a : authors) {
 				authorList.add(a.getAuthorName());
 			}
+			
 			modelAndView.addObject("booklist",bookList);
 			modelAndView.addObject("authorlist", authorList);
 			return modelAndView;
 		}
+		
 		return "redirect:/profile";
 	}
+	
     
 	/**
-	 * to set authors for the book 
+	 * This method will link the author and the book and persist the change in the database.
 	 * @param bookAuthorLinkDto
-	 * @return
+	 * @return String as a view name
 	 */
 	@RequestMapping(value = "/linkBookAndAuthor", method = RequestMethod.POST)
 	public String postBookAuthorLinkPage(@ModelAttribute("bookauthorlink") BookAuthorLinkDto bookAuthorLinkDto) {

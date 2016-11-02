@@ -17,7 +17,9 @@ public interface AuthorService {
 
     /**
      * returns all the authors in page format
-     * @return
+     * @param int
+     * @param int
+     * @return Page<Author>
      */
 
     Page<Author> getAllAuthor(int pageno, int size);
@@ -32,7 +34,7 @@ public interface AuthorService {
      * returns the authors with name similar to the parameter in page form
      * @param name
      * @param page
-     * @return
+     * @return Page<Author>
      */
 
     Page<Author> getAuthorByNameLike(String name,int page);
@@ -40,7 +42,7 @@ public interface AuthorService {
     /**
      * returns specific author
      * @param name
-     * @return
+     * @return Author
      */
 
     Author getAuthorByName(String name);
@@ -50,7 +52,7 @@ public interface AuthorService {
      * @param rating
      * @param pageno
      * @param size
-     * @return
+     * @return Page<Author> 
      */
 
     Page<Author> getAuthorByRating(float rating, int pageno, int size);
@@ -58,7 +60,7 @@ public interface AuthorService {
     /**
      * returns authors by rating in list
      * @param rating
-     * @return
+     * @return List<Author>
      */
     List<Author> getAuthorByRating(float rating);
 
@@ -67,7 +69,7 @@ public interface AuthorService {
      * @param genre
      * @param pageno
      * @param size
-     * @return
+     * @return Page<Author>
      */
 
     Page<Author> getAuthorByGenre(String genre, int pageno, int size);
@@ -75,14 +77,14 @@ public interface AuthorService {
     /**
      * returns list of authors by genre
      * @param genre
-     * @return
+     * @return List<Author>
      */
     List<Author> getAuthorByGenre(String genre);
 
     /**
      * returns list of reviews for an author
      * @param name
-     * @return
+     * @return List<ReviewAuthor>
      */
 
     List<ReviewAuthor> getAuthorReviewByAuthorName(String name);
@@ -91,7 +93,7 @@ public interface AuthorService {
      * @param name
      * @param pageno
      * @param size
-     * @return
+     * @return Page<ReviewAuthor>
      */
     Page<ReviewAuthor> getAuthorReviewByAuthorName(String name, int pageno, int size);
     /**
@@ -99,14 +101,14 @@ public interface AuthorService {
      * @param name
      * @param pageno
      * @param size
-     * @return
+     * @return  Page<ReviewBook>
      */
     Page<ReviewBook> getBookReviewByAuthorName(String name, int pageno, int size);
 
     /**
      * returns list of books by author
      * @param name
-     * @return
+     * @return List<Book>
      */
 
     List<Book> getBookByAuthor(String name);
@@ -114,7 +116,7 @@ public interface AuthorService {
     /**
      * returns list of users who reviewed the author
      * @param name
-     * @return
+     * @return List<User>
      */
 
     List<User> getUserByAuthor(String name);
@@ -123,14 +125,14 @@ public interface AuthorService {
      * @param name
      * @param pageno
      * @param size
-     * @return
+     * @return Page<User>
      */
     Page<User> getUserByAuthor(String name, int pageno, int size);
 
     /**
      * 
      * @param name
-     * @return
+     * @return List<ReviewBook>
      */
     List<ReviewBook> getBookReviewByAuthorName(String name);
     /**
@@ -138,14 +140,14 @@ public interface AuthorService {
      * @param name
      * @param pageno
      * @param size
-     * @return
+     * @return  Page<Book>
      */
     Page<Book> getBookByAuthor(String name, int pageno, int size);
 
     /**
      * find an author
      * @param authorId
-     * @return
+     * @return Author
      */
      Author getAuthorById(Long authorId);
 
@@ -169,7 +171,7 @@ public interface AuthorService {
      * @param authorId
      * @throws AuthorExistenceException
      */
-    public void removeAuthor(Long authorId) throws AuthorExistenceException;
+    void removeAuthor(Long authorId) throws AuthorExistenceException;
     
     /**
      * like the author
@@ -191,7 +193,7 @@ public interface AuthorService {
     /**
      * returns number of likes for an author
      * @param authorId
-     * @return
+     * @return int
      */
     
     int getNumberOfLikesByUser(Long authorId);
@@ -199,14 +201,14 @@ public interface AuthorService {
     /**
      * returns total number of reviews made on the author
      * @param name
-     * @return
+     * @return int
      */
     
     int getTotalAuthorReviewByAuthorName(String name);
     
     /**
      * returns top 10 authors whose likes is greater than 0
-     * @return
+     * @return List<Author>
      */
     List<Author> getTop10Authors();
 

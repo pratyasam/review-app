@@ -25,30 +25,12 @@
 	href="/reviewBook/assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css"
 	href="/reviewBook/assets/css/animation.css">
+	<link rel="stylesheet" type="text/css"
+	href="/reviewBook/assets/css/admin-style.css">
 	<link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 
 </head>
-<style>
-.sidebar-box {
-	max-height: 120px;
-	position: relative;
-	overflow: hidden;
-}
-
-.sidebar-box .read-more {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	text-align: center;
-	margin: 0;
-	padding: 30px 0;
-	/* "transparent" only works here because == rgba(0,0,0,0) */
-	background-image: linear-gradient(to bottom, transparent, grey);
-}
-
-</style>
 
 <body>
 	<nav class="navbar navbar-default navbackground">
@@ -79,6 +61,7 @@
 							<li><a href="/reviewBook/authors">All Authors</a></li>
 							<li><a href="/reviewBook/users">All Users</a></li>
 						</ul></li>
+						<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
 						<li><img src="/reviewBook/uploads/${userImage}"
 						class="img-circle img-responsive" alt="user"
 						style="height: 60px; width: 60px;"></li>
@@ -241,7 +224,6 @@
 				<div class="col-lg-12 text-center">
 					<%
 						if (((List<Author>) request.getAttribute("authors")).size() != 0) {
-							System.out.println("author list not empty");
 					%>
 					<ul class="pagination">
 						<%

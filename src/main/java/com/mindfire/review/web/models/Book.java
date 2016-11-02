@@ -50,7 +50,7 @@ public class Book implements Serializable {
     private boolean bookVerified = false;
     
     @Column(name = "image", length = 4005)
-    private String bookImage;
+    private String bookImage = "book.jpg";
 
     //bi-directional many-to-one association to BookAuthor
     @OneToMany(mappedBy = "book")

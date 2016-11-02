@@ -21,10 +21,80 @@ import com.mindfire.review.services.SearchService;
 @SessionAttributes("search")
 @Controller
 public class SearchController {
+	
+	public static final String BOOKS = "books";
+	public static final String SEARCHPARAM = "searchParam";
 
 
 	@Autowired
 	private SearchService searchService;
+	
+	/**
+	 * This method is a helper method to process the non XML HTTP Requests. It returns the search results.
+	 * @param searchCategory
+	 * @param model
+	 * @param searchResult
+	 * @param query
+	 * @return ModelAndView
+	 */
+	private ModelAndView nonXhrSearch(SearchType searchCategory, ModelAndView model, Map<SearchType, Page> searchResult, String query){
+		model.setViewName("searchresult");
+		model.addObject("SEARCH_TYPE", searchCategory);
+		switch(searchCategory){
+			case BOOKS:
+				model.addObject(BOOKS,searchResult.get(SearchType.BOOKS));
+				break;
+				
+			case AUTHORS:
+				model.addObject("authors",searchResult.get(SearchType.AUTHORS));
+				break;
+				
+			case USERS:
+				model.addObject("users",searchResult.get(SearchType.USERS));
+				break;
+				
+			default:
+				model.addObject(BOOKS,searchResult.get(SearchType.BOOKS));
+				break;
+		}
+		model.addObject(SEARCHPARAM, query);
+		return model;
+	}
+	
+	/**
+	 * This is a helper method which sets the model view and appends appropriate search results according to the category required.
+	 * @param model
+	 * @param searchResult
+	 * @param query
+	 * @param searchCategory
+	 */
+	private void xhrSearch(ModelAndView model, Map<SearchType, Page> searchResult, String query,SearchType searchCategory){
+		switch(searchCategory){
+		case BOOKS:
+			model.setViewName("bookpartial");
+			model.addObject(BOOKS,searchResult.get(SearchType.BOOKS));
+			model.addObject(SEARCHPARAM, query);
+			break;
+			
+		case AUTHORS:
+			model.setViewName("authorpartial");
+			model.addObject("authors",searchResult.get(SearchType.AUTHORS));
+			model.addObject(SEARCHPARAM, query);
+			break;
+			
+		case USERS:
+			model.setViewName("userpartial");
+			model.addObject("users",searchResult.get(SearchType.USERS));
+			model.addObject(SEARCHPARAM, query);
+			break;
+			
+		default:
+			model.setViewName("bookpartial");
+			model.addObject(BOOKS,searchResult.get(SearchType.BOOKS));
+			model.addObject(SEARCHPARAM, query);
+			break;
+	}
+	}
 	
 	/**
 	 * to return the search result according to the search category of book or author or user
@@ -37,8 +107,8 @@ public class SearchController {
 	 */
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public Object search(HttpSession httpSession, HttpServletRequest httpServletRequest,
-			@RequestParam("searchParam") String query,
-			@RequestParam(value = "category", defaultValue = "BOOKS") String category,
+			@RequestParam(SEARCHPARAM) String query,
+			@RequestParam(value = "category", defaultValue = BOOKS) String category,
 			@RequestParam(value = "page", defaultValue = "1") int page) {
 		
 	
@@ -74,55 +144,11 @@ public class SearchController {
 		
 		// Check to see if its a XHR
 		if(httpServletRequest.getHeader("X-Requested-With") == null){
-			model.setViewName("searchresult");
-			model.addObject("SEARCH_TYPE", searchCategory);
-			switch(searchCategory){
-				case BOOKS:
-					model.addObject("books",searchResult.get(SearchType.BOOKS));
-					break;
-					
-				case AUTHORS:
-					model.addObject("authors",searchResult.get(SearchType.AUTHORS));
-					break;
-					
-				case USERS:
-					model.addObject("users",searchResult.get(SearchType.USERS));
-					break;
-					
-				default:
-					model.addObject("books",searchResult.get(SearchType.BOOKS));
-					break;
-			}
-			model.addObject("searchParam", query);
-			return model;
+			 nonXhrSearch(searchCategory, model, searchResult, query);
 		}
 		
-		switch(searchCategory){
-			case BOOKS:
-				model.setViewName("bookpartial");
-				model.addObject("books",searchResult.get(SearchType.BOOKS));
-				model.addObject("searchParam", query);
-				break;
-				
-			case AUTHORS:
-				model.setViewName("authorpartial");
-				model.addObject("authors",searchResult.get(SearchType.AUTHORS));
-				model.addObject("searchParam", query);
-				break;
-				
-			case USERS:
-				model.setViewName("userpartial");
-				model.addObject("users",searchResult.get(SearchType.USERS));
-				model.addObject("searchParam", query);
-				break;
-				
-			default:
-				model.setViewName("bookpartial");
-				model.addObject("books",searchResult.get(SearchType.BOOKS));
-				model.addObject("searchParam", query);
-				break;
-		}
-		
+
+		xhrSearch(model, searchResult, query, searchCategory);
 	
 		return model;
 	}

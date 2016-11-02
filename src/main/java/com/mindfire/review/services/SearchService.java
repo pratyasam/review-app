@@ -12,11 +12,11 @@ import com.mindfire.review.web.dto.SearchDto;
  * Created by pratyasa on 18/8/16.
  */
 public interface SearchService {
-	//Map<String, Object> search(SearchDto searchDto, String session,int pagenoa,int pagenob, int pagenou);
+	
 	
 	/**
-	 * Comment
-	 * 
+	 * This method returns a map of search types and their corresponding results as the key value pair.
+	 * The search type can be authors, books or users.
 	 * @param query The search query
 	 * @param searchType The category
 	 * @param page The nth page
@@ -25,16 +25,16 @@ public interface SearchService {
 	Map<SearchType, Page> search(String query, String role, SearchType searchType, int page);
 	
 	/**
-	 * 
+	 * This method returns a map of search results by searching for the genre.
 	 * @param searchDto
-	 * @return
+	 * @return {@link Map} of search results
 	 */
     Map<String, Object> searchByGenre(SearchDto searchDto);
 
     /**
-     * 
+     * This method returns a map of search results by searching for the rating.
      * @param rating
-     * @return
+     * @return {@link Map} of search results
      */
     Map<String, Object> searchByRating(float rating);
 }

@@ -47,6 +47,12 @@ public class AuthorController {
 	public static final String ADMIN = "admin";
 	public static final String MODERATOR = "moderator";
 	public static final String ADDAUTHOR = "addauthor";
+	public static final String REVIEW = "review";
+	public static final String AUTHOR = "author";
+	public static final String AUTHORUPDATE = "authorupdate";
+	public static final String REDIRECTAUTHORAUTHORID = "redirect:/authors/{authorId}";
+	public static final String DELETE = "delete";
+	public static final String AUTHORPROFILE = "authorprofile";
 	
 	@Autowired
 	private ReviewService reviewService;
@@ -57,50 +63,64 @@ public class AuthorController {
 	
 
 	/**
-	 * to get the add author page by the admin or moderator
-	 * 
+	 * This method renders the page to add author.
+	 * This route is accessed by the admin or moderator only.
 	 * @param httpSession
-	 * @return
-	 */
+	 * @return String as a view name
+	 */ 
+	
 	@RequestMapping(value = "/addauthor", method = RequestMethod.GET)
 	public Object addAuthorGet(HttpSession httpSession) {
+		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
+			
 			ModelAndView modelAndView = new ModelAndView(ADDAUTHOR);
 			modelAndView.addObject(ADDAUTHOR, new AuthorDto());
+			
 			return modelAndView;
 		}
+		
 		return REDIRECT;
 
 	}
 
 	/**
-	 * to add the author by the admin and the moderator
-	 * 
+	 * This method is used to add the author to the database.
+	 * The post method is accessed by the admin or moderator.
 	 * @param authorDto
 	 * @param bindingResult
 	 * @param model
 	 * @param httpSession
-	 * @return
+	 * @return String as a view name
 	 */
 
 	@RequestMapping(value = "/addauthor", method = RequestMethod.POST)
 	public String addAuthorPost(@Valid @ModelAttribute(ADDAUTHOR) AuthorDto authorDto, BindingResult bindingResult,
 			Model model, HttpSession httpSession, HttpServletRequest request) {
+		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
+			
 			if (bindingResult.hasErrors()){
+				
 				model.addAttribute(ADDAUTHOR, new AuthorDto());
+				
 				return ADDAUTHOR;
 			}
 			
 
 				try {
+					
 					authorService.addAuthor(authorDto);
+					
 				} catch (AuthorExistenceException e) {
+					
 					model.addAttribute("authorexists", e);
 					return ADDAUTHOR;
+					
 				}
+				
 				httpSession.setAttribute("authorName", authorDto.getAuthorName());
 				return "authoradded";
 			
@@ -109,13 +129,13 @@ public class AuthorController {
 	}
 
 	/**
-	 * to view all authors by all
-	 * 
-	 * @return
+	 * This method renders the all authors page for all the users.
+	 * @return ModelAndView
 	 */
 
 	@RequestMapping(value = "/authors", method = RequestMethod.GET)
 	public ModelAndView getAllAuthors(@RequestParam(value = "pageno", defaultValue = "1") int pageno) {
+		
 		Page<Author> authorpage = authorService.getAllAuthor(pageno, 6);
 		List<Author> authors = authorpage.getContent();
 		int totalPage = authorpage.getTotalPages();
@@ -127,11 +147,12 @@ public class AuthorController {
 	}
 
 	/**
-	 * to view the author profile separately by admin/moderator and normal user
-	 * 
+	 * This method renders two different views of the author profile page.
+	 * If the user is an admin, it will return an author admin profile page.
+	 * If the user is not logged in or is a normal user, it will return a  normal author profile page. 
 	 * @param authorId
 	 * @param httpSession
-	 * @return
+	 * @return Object
 	 */
 
 	@RequestMapping(value = "/authors/{authorId}", method = RequestMethod.GET)
@@ -140,9 +161,13 @@ public class AuthorController {
 			@RequestParam(value = "pagenor", defaultValue = "1") int pagenor, @PathVariable("authorId") Long authorId,
 			HttpSession httpSession) throws AuthorExistenceException {
 		
+		ModelAndView modelAndView = new ModelAndView();
 		String authorName = authorService.getAuthorById(authorId).getAuthorName();
-		if(authorName == null)
+		
+		if(authorName == null) {
 			throw new AuthorExistenceException("author doesnt exist");
+		}
+		
 		Page<Book> book = authorService.getBookByAuthor(authorName, pagenob, 6);
 		Page<ReviewAuthor> reviewAuthors = authorService.getAuthorReviewByAuthorName(authorName, pagenob, 6);
 		Page<User> users = authorService.getUserByAuthor(authorName, pagenob, 6);
@@ -152,6 +177,10 @@ public class AuthorController {
 		List<BookAuthorListDto> bookAuthorListDto = new ArrayList<>();
 		ReviewAuthorDto reviewAuthorDto = new ReviewAuthorDto();
 		List<ReviewAuthorLikesDto> reviewAuthorLikesDtos = new ArrayList<>();
+		
+		if (httpSession.getAttribute(REVIEW) != null) {
+			reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute(REVIEW);
+		}
 
 		for (ReviewAuthor ra : reviewAuthors.getContent()) {
 			ReviewAuthorLikesDto reviewAuthorLikesDto2 = new ReviewAuthorLikesDto();
@@ -172,57 +201,44 @@ public class AuthorController {
 
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
-			if (httpSession.getAttribute("review") != null) {
-				reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute("review");
-			}
-			ModelAndView modelAndView = new ModelAndView("adminauthorprofile");
-			modelAndView.addObject("author", authorService.getAuthorById(authorId));
-			modelAndView.addObject("delete", new ChoiceDto());
-			modelAndView.addObject("authorprofile", reviewAuthorDto);
-			modelAndView.addObject("reviews", reviewAuthorLikesDtos);
-			modelAndView.addObject("books", bookAuthorListDto);
-			modelAndView.addObject("delete", new ChoiceDto());
+			
+			modelAndView .setViewName("adminauthorprofile");
 			modelAndView.addObject("authorId", authorId);
-			modelAndView.addObject("users", users.getContent());
-			modelAndView.addObject("totalpagesr", totalpagesr);
-			modelAndView.addObject("totalpagesb", totalpagesb);
-			modelAndView.addObject("totalpagesu", totalpagesu);
-			modelAndView.addObject("totalreviews", authorService.getTotalAuthorReviewByAuthorName(authorName));
-			modelAndView.addObject("totallikes", authorService.getNumberOfLikesByUser(authorId));
-			return modelAndView;
 		}
-		if (httpSession.getAttribute("review") != null) {
-			reviewAuthorDto = (ReviewAuthorDto) httpSession.getAttribute("review");
+		
+		else{
+			modelAndView .setViewName(AUTHORPROFILE);
 		}
-		ModelAndView modelAndView = new ModelAndView("authorprofile");
-		modelAndView.addObject("author", authorService.getAuthorById(authorId));
-		modelAndView.addObject("authorprofile", reviewAuthorDto);
+		
+		modelAndView.addObject(AUTHOR, authorService.getAuthorById(authorId));
+		modelAndView.addObject(AUTHORPROFILE, reviewAuthorDto);
 		modelAndView.addObject("reviews", reviewAuthorLikesDtos);
 		modelAndView.addObject("users", users.getContent());
 		modelAndView.addObject("books", bookAuthorListDto);
 		modelAndView.addObject("totalpagesr", totalpagesr);
 		modelAndView.addObject("totalpagesb", totalpagesb);
 		modelAndView.addObject("totalpagesu", totalpagesu);
-		modelAndView.addObject("delete", new ChoiceDto());
+		modelAndView.addObject(DELETE, new ChoiceDto());
 		modelAndView.addObject("totalreviews", authorService.getTotalAuthorReviewByAuthorName(authorName));
 		modelAndView.addObject("totallikes", authorService.getNumberOfLikesByUser(authorId));
 		return modelAndView;
 	}
 
 	/**
-	 * to update the author info by the admin and the moderator
-	 * 
+	 * This method renders the update page for the user account
 	 * @param authorId
 	 * @param httpSession
-	 * @return
+	 * @return Object
 	 */
 
 	@RequestMapping(value = "/authors/{authorId}/update", method = RequestMethod.GET)
 	public Object updateAuthorGet(@PathVariable("authorId") Long authorId, HttpSession httpSession) {
+		
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN)
 				|| httpSession.getAttribute("role").equals(MODERATOR))) {
-			ModelAndView modelAndView = new ModelAndView("authorupdate");
-			modelAndView.addObject("author", authorService.getAuthorById(authorId));
+			
+			ModelAndView modelAndView = new ModelAndView(AUTHORUPDATE);
+			modelAndView.addObject(AUTHOR, authorService.getAuthorById(authorId));
 			Author author = authorService.getAuthorById(authorId);
 			AuthorDto authorDto = new AuthorDto();
 			authorDto.setAuthorDescription(author.getAuthorDescription());
@@ -232,49 +248,57 @@ public class AuthorController {
 			modelAndView.addObject("authorupdatedto", authorDto);
 			return modelAndView;
 		}
-		return "redirect:/authors/{authorId}";
+		
+		return REDIRECTAUTHORAUTHORID;
 	}
 
 	/**
-	 * to like the author
+	 * This method increases the like of an author by 1.
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
 	 * @param model
-	 * @return
+	 * @return Object
 	 */
 
 	@RequestMapping(value = "/authors/{authorId}/addlike", method = RequestMethod.GET)
 	public Object addAuthorLike(HttpSession httpSession, @PathVariable("authorId") Long bookId,
 			HttpServletRequest httpServletRequest, Model model) {
+		
 		String userName = (String) httpSession.getAttribute(USERNAME);
+		
 		if (userName == null) {
 			String url = httpServletRequest.getRequestURI();
 			if (url != null)
 				httpSession.setAttribute("url", url);
 			return REDIRECT;
 		}
+		
 		try {
+			
 			authorService.addAuthorLikeByUser(userName, bookId);
-			return "redirect:/authors/{authorId}";
+			return REDIRECTAUTHORAUTHORID;
+			
 		} catch (AlreadyReviewedException e) {
+			
 			model.addAttribute("exception", e);
-			return "redirect:/authors/{authorId}";
+			return REDIRECTAUTHORAUTHORID;
 		}
 	}
 
 	/**
-	 * to remove the author like
+	 * This method is used to remove the like of an author by 1.
 	 * @param httpSession
 	 * @param bookId
 	 * @param httpServletRequest
 	 * @param model
-	 * @return
+	 * @return Object
 	 */
 
 	@RequestMapping(value = "/authors/{authorId}/deletelike", method = RequestMethod.GET)
 	public Object deleteLike(HttpSession httpSession, @PathVariable("authorId") Long bookId,
 			HttpServletRequest httpServletRequest, Model model) {
+		
 		String userName = (String) httpSession.getAttribute(USERNAME);
 		if (userName == null) {
 			String url = httpServletRequest.getRequestURI();
@@ -285,7 +309,7 @@ public class AuthorController {
 
 		try {
 			authorService.removeAuthorLikeByUser(userName, bookId);
-			return "redirect:/authors/{authorId}";
+			return REDIRECTAUTHORAUTHORID;
 		} catch (ReviewDoesnotExistException e) {
 			model.addAttribute("exception", e);
 			return "/authors/{authorId}";
@@ -293,50 +317,49 @@ public class AuthorController {
 	}
 
 	/**
-	 * to post the updated info by the admin and the moderator
-	 * 
+	 * This method saves the updated info about the user and updates the database
 	 * @param authorId
 	 * @param authorDto
 	 * @param bindingResult
 	 * @param model
 	 * @param httpSession
-	 * @return
+	 * @return String as a view name.
 	 */
 	@RequestMapping(value = "/authors/{authorId}", method = RequestMethod.PUT)
 	public String updateAuthorPost(@PathVariable("authorId") Long authorId,
 			@Valid @ModelAttribute("authorupdatedto") AuthorDto authorDto, BindingResult bindingResult, Model model,
 			HttpSession httpSession) {
+		
 		if (bindingResult.hasErrors()) {
-			return "authorupdate";
+			return AUTHORUPDATE;
 		}
 		try {
 			authorService.updateAuthor(authorDto, authorId);
-			return "redirect:/authors/{authorId}";
+			return REDIRECTAUTHORAUTHORID;
 		} catch (AuthorExistenceException e) {
 			model.addAttribute("authordoesnotexist", e);
-			return "authorupdate";
+			return AUTHORUPDATE;
 		}
 	}
 
 	/**
-	 * to delete the author by the admin
-	 * 
+	 * This method is used to delete the records of an author from the database.
 	 * @param authorId
 	 * @param choiceDto
 	 * @param model
 	 * @param httpSession
-	 * @return
+	 * @return String as a view name
 	 */
 	@RequestMapping(value = "/authors/{authorId}", method = RequestMethod.DELETE)
 	public String removeAuthor(@PathVariable("authorId") Long authorId,
-			@Valid @ModelAttribute("delete") ChoiceDto choiceDto, Model model, HttpSession httpSession) {
+			@Valid @ModelAttribute(DELETE) ChoiceDto choiceDto, Model model, HttpSession httpSession) {
 		if (httpSession.getAttribute(USERNAME) != null && (httpSession.getAttribute("role").equals(ADMIN))) {
 			try {
 				authorService.removeAuthor(authorId);
 				return "redirect:/authors";
 			} catch (AuthorExistenceException e) {
 				model.addAttribute("authordoesnotexist", e);
-				return "redirect:/authors/{authorId}";
+				return REDIRECTAUTHORAUTHORID;
 			}
 		}
 		return "redirect/login";

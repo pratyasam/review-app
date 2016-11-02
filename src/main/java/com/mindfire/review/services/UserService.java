@@ -17,7 +17,7 @@ import com.mindfire.review.web.models.User;
 public interface UserService {
 
     /**
-     * Service method to fetch a user by username.
+     * Service method to fetch a user by username,from the database.
      *
      * @param userName
      * @return {@link User} The user
@@ -25,90 +25,107 @@ public interface UserService {
     User getUser(String userName);
 
     /**
-     * @param i 
-     * @param pageno 
-     * @return
+     * This method returns all the users listed in the database. Can be accessed by the admin.
+     * @return List<User>
      */
     List<User> getUsers();
+    
+    /**
+     * This method returns all the users present in the database in the page form, and can be accessed by the admin.
+     * @param pageno
+     * @param size
+     * @return Page<User>
+     */
     Page<User> getUsers(int pageno, int size);
 
      /**
-     * 
+     * This method returns a list of all the users having their first name similar to the parameter, in page format.
      * @param firstName
      * @param page
-     * @return
+     * @return Page<User>
      */
     
     Page<User> getUserFirstName(String firstName, int page);
 
     /**
+     * This method returns the list of all users having their last name equal to the parameter.
      * @param lastName
-     * @return
+     * @return List<User>
      */
     List<User> getUserlastName(String lastName);
 
     /**
+     * This method returns the list of all the users by their role, can be accessed by the admin.
      * @param type
-     * @return
+     * @return  List<User>
      */
-
     List<User> getUserByType(String type);
 
     /**
+     * This method returns the list of all the reviews for the author made by the user, searched by the user name.
      * @param user
-     * @return
+     * @return  List<ReviewAuthor>
      */
-
     List<ReviewAuthor> getAuthorReviewByUser(String user);
+    
     /**
-     * 
+     * This method returns the list of authors that a user has reviewed, searched by the user name.
      * @param user
-     * @return
+     * @return  List<Author>
      */
     List<Author> getAuthorReviewedByUser(String user);
+    
     /**
-     * 
+     * This method returns the list of all the authors, in the page format, that have been reviewed by the user searched by the user name
      * @param user
      * @param pageno
      * @param size
-     * @return
+     * @return Page<Author>
      */
     Page<Author> getAuthorReviewedByUser(String user, int pageno, int size);
 
     /**
+     * This method returns a list of all the reviews made on the books by a user, searched by the user name.
      * @param user
-     * @return
+     * @return  List<ReviewBook>
      */
 
     List<ReviewBook> getBookReviewByUser(String user);
+    
     /**
-     * 
+     * This method returns the list of all the books reviewed by a particular user, searched by the user name.
      * @param user
-     * @return
+     * @return List<Book>
      */
     List<Book> getBookReviewedByUser(String user);
+    
     /**
-     * 
+     * This method returns the list of all the books, in page format, reviewed by a particular user, searched by the user name.
      * @param user
      * @param pageno
      * @param size
-     * @return
+     * @return Page<Book>
      */
     Page<Book> getBookReviewedByUser(String user, int pageno, int size);
 
     /**
+     * This method confirms whether the user exists or not, by searching for the user name in the database.
      * @param userName
-     * @return
+     * @return Boolean
      */
     Boolean doesUserNameExist(String userName);
 
     /**
+     * This method is called upon persisting the user into the database.
+     * This method throws an exception when the user exists with the same user name.
      * @param signupDto
      * @throws UserExistException
      */
     void addUser(SignupDto signupDto) throws UserExistException;
 
     /**
+     * This method is called to remove or delete the user and his data, from the database.
+     * This method throws an exception when the requested user is not found in the database.
      * @param userId
      * @throws UserDoesNotExistException
      */

@@ -36,6 +36,12 @@ import com.mindfire.review.web.models.User;
  */
 @Controller
 public class UploadController {
+	
+	public static final String USERNAME = "userName";
+	public static final String REDIRECTLOGIN = "redirect:/login";
+	public static final String PATHNAME = "javax.servlet.context.tempdir";
+	public static final String IMAGEURL = "imageurl";
+	public static final String IMAGENAME = "imagename";
 
 	@Autowired
 	private ServletContext servletContext;
@@ -62,14 +68,13 @@ public class UploadController {
 	@RequestMapping(value = "/userupload", method = RequestMethod.GET)
 	public Object uploadPage(HttpSession httpSession, HttpServletRequest httpServletRequest)  {
 
-		if (httpSession.getAttribute("userName") != null) {
-			ModelAndView modelAndView = new ModelAndView("userfileupload");
-			return modelAndView;
+		if (httpSession.getAttribute(USERNAME) != null) {
+			return new ModelAndView("userfileupload");
 		} else {
 			String url = httpServletRequest.getRequestURI();
 			if (url != null)
 				httpSession.setAttribute("url", url);
-			return "redirect:/login";
+			return REDIRECTLOGIN;
 		}
 
 	}
@@ -85,7 +90,7 @@ public class UploadController {
 	@RequestMapping(value = "/userupload", method = RequestMethod.POST)
 	public String saveFile(HttpServletRequest request, HttpSession httpSession, Model model) throws FileUploadException {
 
-		User user = userService.getUser((String) httpSession.getAttribute("userName"));
+		User user = userService.getUser((String) httpSession.getAttribute(USERNAME));
 
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			return "redirect:/userupload";
@@ -95,7 +100,7 @@ public class UploadController {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
 		/// Configure a repository (to ensure a secure temp location is used)
-		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+		File repository = (File) servletContext.getAttribute(PATHNAME);
 		factory.setRepository(repository);
 
 		// Create a new file upload handler
@@ -106,13 +111,12 @@ public class UploadController {
 			if (items.size() == 1) {
 				FileItem file = items.get(0);
 
-				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
-				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+				String imageUrl = uploadService.simpleUpload(file, true);
+				String imageName = imageUrl.substring(imageUrl.lastIndexOf('/')+1, imageUrl.length());
 
 				uploadService.uploadUserImage(user, imageName);
-				model.addAttribute("imageurl", imageUrl);
-				model.addAttribute("imagename",imageName);
-				httpSession.setAttribute("image", imageUrl);
+				model.addAttribute(IMAGEURL, imageUrl);
+				model.addAttribute(IMAGENAME,imageName);
 				
 				return "uploadsuccess";
 
@@ -135,9 +139,9 @@ public class UploadController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/authors/{authorId}/authorupload", method = RequestMethod.GET)
-	public Object authorUploadPage(@PathVariable("authorId") int authorId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
+	public Object authorUploadPage(@PathVariable("authorId") int authorId, HttpSession httpSession, HttpServletRequest httpServletRequest) {
 
-		if (httpSession.getAttribute("userName") != null) {
+		if (httpSession.getAttribute(USERNAME) != null) {
 			ModelAndView modelAndView = new ModelAndView("authorupload");
 			modelAndView.addObject("authorId",authorId);
 			return modelAndView;
@@ -145,7 +149,7 @@ public class UploadController {
 			String url = httpServletRequest.getRequestURI();
 			if (url != null)
 				httpSession.setAttribute("url", url);
-			return "redirect:/login";
+			return REDIRECTLOGIN;
 		}
 
 	}
@@ -171,7 +175,7 @@ public class UploadController {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
 		/// Configure a repository (to ensure a secure temp location is used)
-		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+		File repository = (File) servletContext.getAttribute(PATHNAME);
 		factory.setRepository(repository);
 
 		// Create a new file upload handler
@@ -182,12 +186,11 @@ public class UploadController {
 			if (items.size() == 1) {
 				FileItem file = items.get(0);
 
-				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
-				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+				String imageUrl = uploadService.simpleUpload(file, true);
+				String imageName = imageUrl.substring(imageUrl.lastIndexOf('/')+1, imageUrl.length());
 				uploadService.uploadAuthorImage(author, imageName);
-				model.addAttribute("imageurl", imageUrl);
-				model.addAttribute("imagename",imageName);
-				httpSession.setAttribute("image", imageUrl);
+				model.addAttribute(IMAGEURL, imageUrl);
+				model.addAttribute(IMAGENAME,imageName);
 				return "redirect:/authors/{authorId}";
 
 			}
@@ -207,9 +210,9 @@ public class UploadController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/books/{bookId}/bookupload", method = RequestMethod.GET)
-	public Object bookUploadPage(@PathVariable("bookId") int bookId, HttpSession httpSession, HttpServletRequest httpServletRequest) throws Exception {
+	public Object bookUploadPage(@PathVariable("bookId") int bookId, HttpSession httpSession, HttpServletRequest httpServletRequest)  {
 
-		if (httpSession.getAttribute("userName") != null) {
+		if (httpSession.getAttribute(USERNAME) != null) {
 			ModelAndView modelAndView = new ModelAndView("bookupload");
 			modelAndView.addObject("bookId",bookId);
 			return modelAndView;
@@ -217,7 +220,7 @@ public class UploadController {
 			String url = httpServletRequest.getRequestURI();
 			if (url != null)
 				httpSession.setAttribute("url", url);
-			return "redirect:/login";
+			return REDIRECTLOGIN;
 		}
 
 	}
@@ -243,7 +246,7 @@ public class UploadController {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
 		/// Configure a repository (to ensure a secure temp location is used)
-		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+		File repository = (File) servletContext.getAttribute(PATHNAME);
 		factory.setRepository(repository);
 
 		// Create a new file upload handler
@@ -254,12 +257,11 @@ public class UploadController {
 			if (items.size() == 1) {
 				FileItem file = items.get(0);
 
-				String imageUrl = uploadService.simpleUpload(file, httpSession, true);
-				String imageName = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+				String imageUrl = uploadService.simpleUpload(file, true);
+				String imageName = imageUrl.substring(imageUrl.lastIndexOf('/')+1, imageUrl.length());
 				uploadService.uploadBookImage(book, imageName);
-				model.addAttribute("imageurl", imageUrl);
-				model.addAttribute("imagename",imageName);
-				httpSession.setAttribute("image", imageUrl);
+				model.addAttribute(IMAGEURL, imageUrl);
+				model.addAttribute(IMAGENAME,imageName);
 				return "redirect:/books/{bookId}";
 
 			}

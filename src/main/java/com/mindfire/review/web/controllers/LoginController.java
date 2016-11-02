@@ -23,6 +23,7 @@ import javax.validation.Valid;
 public class LoginController {
 	
 	public static final String LOGIN = "login";
+	public static final String USERNAME = "userName";
 	
     @Autowired
     private UserService userService;
@@ -34,7 +35,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Object loginGet(HttpSession httpSession) {
-        if (httpSession.getAttribute("userName") != null) {
+		if (httpSession.getAttribute(USERNAME) != null) {
             return "redirect:/profile";
         }
 
@@ -52,8 +53,8 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String authenticateUser(@Valid @ModelAttribute(LOGIN) LoginDto LoginDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("userName") != null) {
+    public String authenticateUser(@Valid @ModelAttribute(LOGIN) LoginDto loginDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+        if (httpSession.getAttribute(USERNAME) != null) {
             return null;
         }
 
@@ -62,17 +63,18 @@ public class LoginController {
         }
 
 
-        String userName = LoginDto.getUserName();
-        String password = LoginDto.getPassword();
+        String userName = loginDto.getUserName();
+        String password = loginDto.getPassword();
         try {
 
             User user = userService.loginAuthenticate(userName, password);
-            httpSession.setAttribute("userName", user.getUserName());
+            httpSession.setAttribute(USERNAME, user.getUserName());
             httpSession.setAttribute("userFirstName", user.getFirstName());
             httpSession.setAttribute("userLastName", user.getLastName());
             httpSession.setAttribute("role", user.getRole());
             httpSession.setAttribute("userId", user.getUserId());
             httpSession.setAttribute("userImage", user.getUserImage());
+            
             if(httpSession.getAttribute("url") != null){
             	String url = (String)httpSession.getAttribute("url");
             	url = url.replaceFirst("/reviewBook", "");

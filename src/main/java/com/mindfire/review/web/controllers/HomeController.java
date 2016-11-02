@@ -18,7 +18,12 @@ public class HomeController {
     private BookService bookService;
     @Autowired
     private AuthorService authorService;
-
+    
+    /**
+     * This method renders the home page of the application.
+     * @param httpSession
+     * @return Object
+     */
     @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
     public Object home(HttpSession httpSession) {
          ModelAndView modelAndView = new ModelAndView("homepage");

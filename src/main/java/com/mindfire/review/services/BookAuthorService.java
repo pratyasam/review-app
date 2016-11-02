@@ -6,7 +6,7 @@ import com.mindfire.review.web.dto.BookAuthorLinkDto;
 
 public interface BookAuthorService {
 	/**
-	 * 
+	 * links book with author
 	 * @param bookAuthorLinkDto
 	 */
 

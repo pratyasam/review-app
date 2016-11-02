@@ -138,6 +138,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	 * @param page
 	 * @return
 	 */
-	Page<Book> findByBookNameContainingOrBookGenreContainingOrBookIsbnContaining(String name, String genre, String isbn, Pageable page);
+	Page<Book> findByBookNameContainingOrBookGenreContainingOrBookIsbnContainingAndBookVerified(String name, String genre, String isbn, boolean choice, Pageable page);
 	
 }

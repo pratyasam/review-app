@@ -18,145 +18,13 @@
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
-<link rel="stylesheet" href="assets/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="assets/css/animation.css">
-<link rel="stylesheet" type="text/css"
-	href="assets/css/home-pagestyle.css">
-<link href='https://fonts.googleapis.com/css?family=Bree+Serif'
-	rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+<link rel="stylesheet" href="/reviewBook/assets/css/homepage-style.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 </head>
-<style>
-.carousel-inner>.item>img, .carousel-inner>.item>a>img {
-	width: 90%;
-	margin: auto;
-}
 
-.hero {
-	position: relative;
-	height: 640px;
-	background-image: url(/reviewBook/assets/img/1.jpg);
-	background-size: cover;
-	background-position: bottom;
-}
-
-.overlay {
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
-}
-
-.btn-default {
-	border: 1px solid black;
-	border-width: 2px;
-	font-size: 120%;
-}
-
-.btn-author {
-	border: 1px solid black;
-	border-width: 2px;
-	font-size: 120%;
-}
-
-.btn-default a {
-	background-color: #fff;
-	color: #000;
-}
-
-.btn-author {
-	background-color: #ccc;
-	color: #000;
-}
-
-.btn-default:hover {
-	background-color: #000;
-	color: #fff;
-}
-
-.btn-author:hover {
-	background-color: #000;
-	color: #fff;
-}
-
-a:hover {
-	color: #fff;
-}
-
-a {
-	color: black;
-}
-
-.section-1 {
-	background-color: #ccc;
-	background-size: cover;
-	position: relative;
-}
-
-.overlay2 a {
-	color: white;
-}
-
-.overlay2 {
-	height: 0%;
-	width: 100%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.9);
-	overflow-y: hidden;
-	transition: 0.5s;
-}
-
-.overlay2-content {
-	position: relative;
-	top: 25%;
-	width: 100%;
-	text-align: center;
-	margin-top: 30px;
-}
-
-.overlay2 .closebtn {
-	position: absolute;
-	top: 20px;
-	right: 45px;
-	font-size: 60px;
-}
-
-@media screen and (max-height: 450px) {
-	.overlay2 {
-		overflow-y: auto;
-	}
-	.overlay2 a {
-		font-size: 20px;
-		color: white;
-	}
-	.overlay2 .closebtn {
-		font-size: 40px;
-		top: 15px;
-		right: 35px;
-	}
-}
-
-.user {
-	display: inline-block;
-	height: 60px;
-	width: 60px;
-}
-
-.user img {
-	float: left;
-	padding-top: 10px;
-	height: 60px;
-	width: 60px;
-	border-radius: 50%;
-}
-</style>
 
 <body>
 	<div id="myNav" class="overlay2">
@@ -241,7 +109,7 @@ a {
 											class="img-circle" alt="user" /></a>
 									</div>
 								</li>
-								<li><a href="logout"><span
+								<li><a href="/reviewBook/logout"><span
 										class="glyphicon glyphicon-log-in"></span> LogOut</a></li>
 
 							</ul>

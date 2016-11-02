@@ -28,73 +28,11 @@
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
-<link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
+<link href="/reviewBook/assets/css/authorprofile-style.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
-<style>
-.sidebar-box {
-	max-height: 120px;
-	position: relative;
-	overflow: hidden;
-}
 
-.sidebar-box .read-more {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	text-align: center;
-	margin: 0;
-	padding: 30px 0;
-	/* "transparent" only works here because == rgba(0,0,0,0) */
-	background-image: linear-gradient(to bottom, transparent, grey);
-}
-.overlay2 a {
-	color: white;
-}
-
-.overlay2 {
-	height: 0%;
-	width: 100%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.9);
-	overflow-y: hidden;
-	transition: 0.5s;
-}
-
-.overlay2-content {
-	position: relative;
-	top: 25%;
-	width: 100%;
-	text-align: center;
-	margin-top: 30px;
-}
-
-.overlay2 .closebtn {
-	position: absolute;
-	top: 20px;
-	right: 45px;
-	font-size: 60px;
-}
-@media screen and (max-height: 450px) {
-	.overlay2 {
-		overflow-y: auto;
-	}
-	.overlay2 a {
-		font-size: 20px;
-		color: white;
-	}
-	.overlay2 .closebtn {
-		font-size: 40px;
-		top: 15px;
-		right: 35px;
-	}
-}
-</style>
 <body>
     <%
     Book book = null;

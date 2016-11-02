@@ -38,7 +38,7 @@ public class User implements Serializable {
     private String userGender;
     
     @Column(name = "image", length = 4005)
-    private String userImage;
+    private String userImage = "user.png";
     
     //bi-directional many-to-one association to ReviewAuthor
     @OneToMany(mappedBy = "user")

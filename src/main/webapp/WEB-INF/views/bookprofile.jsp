@@ -16,79 +16,23 @@
 <head>
 <title>${book.bookName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
-<link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
-<link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
-<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/bookprofile-style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
+<link rel="stylesheet"
+	href="/reviewBook/assets/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css"
+	href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet" type="text/css"
+	href="/reviewBook/assets/css/bookprofile-style.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
-<style>
-.sidebar-box {
-	max-height: 120px;
-	position: relative;
-	overflow: hidden;
-}
-
-.sidebar-box .read-more {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	text-align: center;
-	margin: 0;
-	padding: 30px 0;
-	/* "transparent" only works here because == rgba(0,0,0,0) */
-	background-image: linear-gradient(to bottom, transparent, grey);
-}
-.overlay2 a {
-	color: white;
-}
-
-.overlay2 {
-	height: 0%;
-	width: 100%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.9);
-	overflow-y: hidden;
-	transition: 0.5s;
-}
-
-.overlay2-content {
-	position: relative;
-	top: 25%;
-	width: 100%;
-	text-align: center;
-	margin-top: 30px;
-}
-
-.overlay2 .closebtn {
-	position: absolute;
-	top: 20px;
-	right: 45px;
-	font-size: 60px;
-}
-@media screen and (max-height: 450px) {
-	.overlay2 {
-		overflow-y: auto;
-	}
-	.overlay2 a {
-		font-size: 20px;
-		color: white;
-	}
-	.overlay2 .closebtn {
-		font-size: 40px;
-		top: 15px;
-		right: 35px;
-	}
-}
-</style>
 
 <body>
+
+	<div class="se-pre-con"></div>
+
 	<%
 		if (session.getAttribute("userName") != null && ("normal").equals(session.getAttribute("role"))) {
 	%>
@@ -104,8 +48,8 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><i class="fa fa-search fa-2x"
-						onclick="openNav()"></i> </a></li>
+					<li><a href="#"><i class="fa fa-search fa-2x"
+							onclick="openNav()"></i> </a></li>
 					<li><a href="/">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
@@ -114,9 +58,10 @@
 							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
+					<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
 					<li><img src="/reviewBook/uploads/${userImage}"
-						class="img-circle img-responsive" alt="book" width="100"
-						height="100"></li>
+						class="img-circle img-responsive" alt="book" width="50"
+						height="50"></li>
 					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> LogOut</a></li>
 				</ul>
@@ -137,12 +82,12 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">ReviewApp</a>
+				<a class="navbar-brand" href="/reviewBook/home">ReviewApp</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
-				<li><a href="/reviewBook/home"><i class="fa fa-search fa-2x"
-						onclick="openNav()"></i> </a></li>
+					<li><a href="/reviewBook/home"><i
+							class="fa fa-search fa-2x" onclick="openNav()"></i> </a></li>
 					<li><a href="/reviewBook/home">Home</a></li>
 					<li><a href="/reviewBook/login"><span
 							class="glyphicon glyphicon-log-in"></span> LogIn</a></li>
@@ -156,30 +101,30 @@
 		}
 	%>
 	<div id="myNav" class="overlay2">
-				<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-				<div class="overlay2-content">
-					<form action="/reviewBook/search" method="get">
-						<fieldset>
-							<div class="col-lg-6 col-lg-offset-3">
-								<div class="form-group">
-									<input name="searchParam" type="text" class="form-control"
-										id="search" placeholder="Search Authors or Books" /> <input
-										name="page" value="1" type="hidden" /> <br> <br>
-									<div class="col-lg-10 col-lg-offset-2">
-										<button type="submit" class="btn btn-primary">Submit</button>
-									</div>
-								</div>
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<div class="overlay2-content">
+			<form action="/reviewBook/search" method="get">
+				<fieldset>
+					<div class="col-lg-6 col-lg-offset-3">
+						<div class="form-group">
+							<input name="searchParam" type="text" class="form-control"
+								id="search" placeholder="Search Authors or Books" /> <input
+								name="page" value="1" type="hidden" /> <br> <br>
+							<div class="col-lg-10 col-lg-offset-2">
+								<button type="submit" class="btn btn-primary">Submit</button>
 							</div>
-						</fieldset>
-					</form>
-				</div>
-			</div>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
 	<div class="container-fluid">
 		<div class="col-lg-6 col-lg-offset-3">
 			<div class="col-lg-3">
 				<div class="row">
 					<div class="col-lg-12" style="height: 20%">
-						<img src="/reviewBook/uploads/${book.bookImage}>"
+						<img src="/reviewBook/uploads/${book.bookImage}"
 							style="height: 100%; width: 100%;">
 					</div>
 					<div class="nav">
@@ -251,19 +196,19 @@
 					<div class="jumbotron text-center">
 						<h3>Community Reviews</h3>
 						<%
-							for (ReviewBookLikesDto reviewBookLikesDto : (List<ReviewBookLikesDto>) request.getAttribute("reviews")) {
+							for (ReviewBookLikesDto reviewBookLikesDto : (List<ReviewBookLikesDto>) request.getAttribute("review")) {
 						%>
 						<%
-						    ReviewBook rb = reviewBookLikesDto.getReviewBook();
-						int likes = reviewBookLikesDto.getLikes();
-						int dislikes = reviewBookLikesDto.getDislikes();
-							request.setAttribute("bookId", rb.getBook().getBookId());
+							ReviewBook rb = reviewBookLikesDto.getReviewBook();
+								int likes = reviewBookLikesDto.getLikes();
+								int dislikes = reviewBookLikesDto.getDislikes();
+								request.setAttribute("bookId", rb.getBook().getBookId());
 								request.setAttribute("reviewId", rb.getReviewId());
 						%>
 						<div class="media">
 							<div class="media-left">
-								<img src="/reviewBook/uploads/${userImage}" alt="avatar"
-									class="media-object" style="width: 60px">
+								<img src="/reviewBook/uploads/<%=rb.getUser().getUserImage()%>"
+									alt="avatar" class="media-object" style="width: 60px">
 							</div>
 							<div class="media-body">
 								<h4 class="media-heading"><%=rb.getUser().getFirstName()%>
@@ -276,20 +221,24 @@
 										</form:form>
 									</span>
 								</h4>
-								 <br>
+								<br>
 								<p><%=rb.getReviewText()%></p>
 							</div>
 						</div>
-							<div class="row nav">
-								<div class="col-lg-12 col-md-12 col-sm-12">
-									<div class="col-lg-6 col-xs-4 well">
-										<a href="/reviewBook/books/${bookId}/reviews/${reviewId}/addlike"><i class="fa fa-thumbs-up fa-2x"><%= likes %></i></a>
-									</div>
-									<div class="col-lg-6 col-xs-4 well">
-										<a href="/reviewBook/books/${bookId}/reviews/${reviewId}/deletelike"><i class="fa fa-thumbs-down fa-2x"><%= dislikes %></i></a>
-									</div>
+						<div class="row nav">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="col-lg-6 col-xs-4 well">
+									<a
+										href="/reviewBook/books/${bookId}/reviews/${reviewId}/addlike"><i
+										class="fa fa-thumbs-up fa-2x"><%=likes%></i></a>
+								</div>
+								<div class="col-lg-6 col-xs-4 well">
+									<a
+										href="/reviewBook/books/${bookId}/reviews/${reviewId}/deletelike"><i
+										class="fa fa-thumbs-down fa-2x"><%=dislikes%></i></a>
 								</div>
 							</div>
+						</div>
 
 						<%
 							}
@@ -650,11 +599,16 @@
 	c-0.049-0.366-0.046-0.739-0.025-1.11c0.009-0.125,0.024-0.25,0.042-0.375C12.122,17.814,12.141,17.732,12.164,17.65z"></path>
     </g>
 </svg>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
-	 <script>
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script
+			src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript"
+			src="/reviewBook/assets/js/animation.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+	
+	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";
 		}
@@ -663,7 +617,8 @@
 			document.getElementById("myNav").style.height = "0%";
 		}
 	</script>
-		<script type="text/javascript">
+	
+	<script type="text/javascript">
 
 	    $(function star1() {
 	 

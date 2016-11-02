@@ -41,6 +41,10 @@ import com.mindfire.review.web.models.User;
 public class UserController {
 	
 	public static final String USERNAME = "userName";
+	public static final String USERUPDATE = "userupdate";
+	public static final String ADMIN = "admin";
+	public static final String USERID = "userId";
+	public static final String NORMAL = "normal";
 	
 	@Autowired
 	private UserService userService;
@@ -59,7 +63,7 @@ public class UserController {
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public Object getUsers(@RequestParam(value = "pageno", defaultValue="1") int pageno,HttpSession httpSession) {
 
-		if (httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("admin")) {
+		if (httpSession.getAttribute(USERNAME) != null && (ADMIN).equals(httpSession.getAttribute("role"))) {
 			Page<User> users = userService.getUsers(pageno, 6);
 			ModelAndView modelAndView = new ModelAndView("users");
 			modelAndView.addObject("userslist", users.getContent());
@@ -79,10 +83,10 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
-	public Object getUser(@RequestParam(value = "pagenob", defaultValue="1") int pagenob, @RequestParam(value = "pagenoa", defaultValue="1") int pagenoa, @PathVariable("userId") Long userId, HttpSession httpSession) throws UserDoesNotExistException{
+	public Object getUser(@RequestParam(value = "pagenob", defaultValue="1") int pagenob, @RequestParam(value = "pagenoa", defaultValue="1") int pagenoa, @PathVariable(USERID) Long userId, HttpSession httpSession) throws UserDoesNotExistException{
 		
 		ModelAndView modelAndView =null;
-		if ((httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("userId").equals(userId))) {
+		if ((httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals(ADMIN)) || (httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute(USERID).equals(userId))) {
 			Page<Book> bookList = userService.getBookReviewedByUser(userService.getUserById(userId).getUserName(), pagenob, 4);
 			Page<Author> authorList = userService.getAuthorReviewedByUser(userService.getUserById(userId).getUserName(), pagenoa, 4);
 			int totalpagesb = bookList.getTotalPages();
@@ -95,12 +99,12 @@ public class UserController {
 				bookAuthorListDto.setBook(b);
 				ba.add(bookAuthorListDto);
 			}
-			if((httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("admin")) || (httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("moderator")))
+			if((httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals(ADMIN)) || (httpSession.getAttribute(USERNAME) != null && ("moderator").equals(httpSession.getAttribute("role"))))
 			{ 
-				modelAndView = new ModelAndView("admin");
+				modelAndView = new ModelAndView(ADMIN);
 				modelAndView.addObject("user", userService.getUser((String) httpSession.getAttribute(USERNAME)));
 			}
-			if(httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("role").equals("normal")){
+			if(httpSession.getAttribute(USERNAME) != null && (NORMAL).equals(httpSession.getAttribute("role"))){
 				modelAndView = new ModelAndView("userprofile");
 				modelAndView.addObject("user", userService.getUserById(userId));
 			}
@@ -115,7 +119,9 @@ public class UserController {
 			modelAndView.addObject("totalreviewsmade", userService.totalReviewsMadeByTheUser(userService.getUserById(userId)));
 			return modelAndView;
 		}
+		
 		throw new UserDoesNotExistException("User doesnot exist or unauthorised access");
+		
 	}
 
 	/**
@@ -125,12 +131,12 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/users/{userId}/update", method = RequestMethod.GET)
-	public Object updateUserGet(@PathVariable("userId") Long userId, HttpSession httpSession) throws UserDoesNotExistException {
+	public Object updateUserGet(@PathVariable(USERID) Long userId, HttpSession httpSession) throws UserDoesNotExistException {
 		
-		if(httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("userId")== userId){
-		ModelAndView modelAndView = new ModelAndView("userupdate");
+		if(httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute(USERID)== userId){
+		ModelAndView modelAndView = new ModelAndView(USERUPDATE);
 		modelAndView.addObject("user",userService.getUserById(userId));
-		modelAndView.addObject("userupdate", new SignupDto());
+		modelAndView.addObject(USERUPDATE, new SignupDto());
 		return modelAndView;
 		}
 		throw new UserDoesNotExistException("User doesnot exist or unauthorised access");
@@ -146,12 +152,12 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "users/{userId}", method = RequestMethod.PUT)
-	public Object updateUserPost(@PathVariable("userId") Long userId,
-			@Valid @ModelAttribute("userupdate") SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+	public Object updateUserPost(@PathVariable(USERID) Long userId,
+			@Valid @ModelAttribute(USERUPDATE) SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
 		if (bindingResult.hasErrors()) {
-			return "userupdate";
+			return USERUPDATE;
 		}
-		if(httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute("userId")== userId){
+		if(httpSession.getAttribute(USERNAME) != null && httpSession.getAttribute(USERID)== userId){
 		try {
 			userService.updateUser(userId, signupDto);
 			return "userprofile";
@@ -173,23 +179,22 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
-	public String removeAccout(@PathVariable("userId") Long userId, HttpSession httpSession, Model model, @ModelAttribute("delete") ChoiceDto choiceDto) throws UserDoesNotExistException {
+	public String removeAccout(@PathVariable(USERID) Long userId, HttpSession httpSession, Model model, @ModelAttribute("delete") ChoiceDto choiceDto) throws UserDoesNotExistException {
 		if (httpSession.getAttribute(USERNAME) == null) {
 			return "redirect:/login";
 		}
-		if (("admin").equals(httpSession.getAttribute("role")) || ("normal").equals(httpSession.getAttribute("role")) && httpSession.getAttribute("userId")== userId) {
+		if ((ADMIN).equals(httpSession.getAttribute("role")) || ((NORMAL).equals(httpSession.getAttribute("role")) && httpSession.getAttribute(USERID).equals(userId))) {
 			
 				try {
 					userService.removeUser(userId);
 					httpSession.invalidate();
-					return "redirect:/login";
+					return "redirect:/";
 				} catch (UserDoesNotExistException e) {
 					throw e;
 				}
 
 			
 		}
-
 		return null;
 
 	}
@@ -202,14 +207,14 @@ public class UserController {
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public Object getProfile(HttpSession httpSession) {
 		if(httpSession.getAttribute(USERNAME) != null){
-		if (("admin").equals(httpSession.getAttribute("role")) || ("moderator").equals(httpSession.getAttribute("role"))) {
+		if ((ADMIN).equals(httpSession.getAttribute("role")) || ("moderator").equals(httpSession.getAttribute("role"))) {
 			
-            Long userId = (Long)httpSession.getAttribute("userId");
+            Long userId = (Long)httpSession.getAttribute(USERID);
 			return "redirect:/users/" + userId;
 		}
-		if (httpSession.getAttribute("role").equals("normal")) {
+		if ((NORMAL).equals(httpSession.getAttribute("role"))) {
 
-			Long userId = (Long)httpSession.getAttribute("userId");
+			Long userId = (Long)httpSession.getAttribute(USERID);
 			return "redirect:/users/" + userId;
 		}
 		}

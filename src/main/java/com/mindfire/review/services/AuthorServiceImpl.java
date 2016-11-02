@@ -274,7 +274,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
 	public void addAuthor(AuthorDto authorDto) throws AuthorExistenceException{
         if(authorDto == null){
-            throw new RuntimeException("");
+            throw new RuntimeException("Sorry for the internal error caused.");
         }
         if(authorRepository.findByAuthorNameIgnoreCase(authorDto.getAuthorName()) != null){
             throw new AuthorExistenceException("Author already exists.");
@@ -297,7 +297,7 @@ public class AuthorServiceImpl implements AuthorService {
 	public void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException{
         Author author = authorRepository.findOne(authorId);
         if(authorDto == null){
-            throw new RuntimeException("");
+            throw new RuntimeException("Sorry for the internal error caused.");
         }
         if (author == null){
             throw new AuthorExistenceException("Author does not esist");
@@ -348,7 +348,7 @@ public class AuthorServiceImpl implements AuthorService {
     	 authorRepository.save(author);
     	 
     	 if(authorLike == null){
-    		 throw new RuntimeException("");
+    		 throw new RuntimeException("Sorry for the internal error caused.");
     	 }
     }
     

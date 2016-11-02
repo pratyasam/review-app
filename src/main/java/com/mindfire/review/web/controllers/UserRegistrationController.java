@@ -23,6 +23,10 @@ import javax.validation.Valid;
  */
 @Controller
 public class UserRegistrationController {
+	
+	public static final String USERNAME = "userName";
+	public static final String SIGNUP = "signup";
+	
     @Autowired
     private UserService userService;
 
@@ -32,12 +36,12 @@ public class UserRegistrationController {
      * @return
      */
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public Object signup(HttpSession httpSession) {
-        if (httpSession.getAttribute("userName") != null) {
+    public Object signupGet(HttpSession httpSession) {
+        if (httpSession.getAttribute(USERNAME) != null) {
             return "redirect:/profile";
         }
 
-        return new ModelAndView("signup", "signUp", new SignupDto());
+        return new ModelAndView(SIGNUP, SIGNUP, new SignupDto());
     }
 
     /**
@@ -49,22 +53,22 @@ public class UserRegistrationController {
      * @return
      */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String addUser(@Valid @ModelAttribute("signUp") SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("userName") != null) {
+    public String addUser(@Valid @ModelAttribute(SIGNUP) SignupDto signupDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
+        if (httpSession.getAttribute(USERNAME) != null) {
             return null;
         }
 
         if (bindingResult.hasErrors()) {
-            return "signup";
+            return SIGNUP;
         }
 
         try {
             userService.addUser(signupDto);
-            model.addAttribute("userName", signupDto.getFirstName());
+            model.addAttribute(USERNAME, signupDto.getFirstName());
             return "thankyou";
         } catch (UserExistException ex) {
             model.addAttribute("userExist", ex);
-            return "signup";
+            return SIGNUP;
         }
 
 

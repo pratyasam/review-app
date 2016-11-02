@@ -34,43 +34,55 @@ public class GenreController {
 	BookService bookService;
 	@Autowired
 	AuthorService authorService;
-	
+
 	/**
-	 * to get the books and authors of a particular genre
+	 * This method will render the genre profile page for each genre consisting
+	 * of all the listed books. The listed books are verified for the normal
+	 * users.
 	 * @param genreName
 	 * @param pagenoa
 	 * @param pagenob
 	 * @param httpSession
-	 * @return
+	 * @return Object
 	 */
-	@RequestMapping(value="/genre/{genreName}", method = RequestMethod.GET)
-	public Object getGenre(@PathVariable("genreName") String genreName, @RequestParam(value = "pagenoa", defaultValue = "1") int pagenoa, @RequestParam(value = "pagenob", defaultValue = "1") int pagenob, HttpSession httpSession){
+	@RequestMapping(value = "/genre/{genreName}", method = RequestMethod.GET)
+	public Object getGenre(@PathVariable("genreName") String genreName,
+			@RequestParam(value = "pagenoa", defaultValue = "1") int pagenoa,
+			@RequestParam(value = "pagenob", defaultValue = "1") int pagenob, HttpSession httpSession) {
+
 		Page<Book> bookList;
-		if(httpSession.getAttribute("userName") != null && ("admin").equals(httpSession.getAttribute("role")) || ("moderator").equals(httpSession.getAttribute("role")))
-		bookList = bookService.getBookByGenreAdmin(genreName,pagenob,6);
-		else
-		bookList = bookService.getBookByGenre(genreName,true, pagenob,6);
 		
-	    int totalPagesBook = bookList.getTotalPages();
-		Page<Author> authorList = authorService.getAuthorByGenre(genreName,pagenoa, 6);
+		if (httpSession.getAttribute("userName") != null && ("admin").equals(httpSession.getAttribute("role"))
+				|| ("moderator").equals(httpSession.getAttribute("role"))) {
+			bookList = bookService.getBookByGenreAdmin(genreName, pagenob, 6);
+		}
+		else {
+			bookList = bookService.getBookByGenre(genreName, true, pagenob, 6);
+		}
+
+		int totalPagesBook = bookList.getTotalPages();
+		Page<Author> authorList = authorService.getAuthorByGenre(genreName, pagenoa, 6);
 		List<Author> authors = authorList.getContent();
 		int totalPagesAuthor = authorList.getTotalPages();
 		List<BookAuthorListDto> ba = new ArrayList<>();
-		for (Book b:bookList.getContent()){
+		
+		for (Book b : bookList.getContent()) {
 			BookAuthorListDto bookAuthorListDto = new BookAuthorListDto();
 			List<Author> a = bookService.getAuthorByBook(b.getBookName());
 			bookAuthorListDto.setAuthorList(a);
 			bookAuthorListDto.setBook(b);
 			ba.add(bookAuthorListDto);
 		}
+		
 		ModelAndView modelAndView = new ModelAndView("genreprofile");
 		modelAndView.addObject("booklist", ba);
-		modelAndView.addObject("authors",authors);
-		modelAndView.addObject("name",genreName);
+		modelAndView.addObject("authors", authors);
+		modelAndView.addObject("name", genreName);
 		modelAndView.addObject("totalpagesb", totalPagesBook);
 		modelAndView.addObject("totalpagesa", totalPagesAuthor);
 		modelAndView.addObject("genreName", genreName);
 		modelAndView.addObject("search", new SearchDto());
+		
 		return modelAndView;
 	}
 

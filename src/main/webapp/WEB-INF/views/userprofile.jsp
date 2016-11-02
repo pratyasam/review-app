@@ -22,34 +22,17 @@
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="/reviewBook/assets/css/font-awesome.min.css">
-
 <link rel="stylesheet" type="text/css"
 	href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet" type="text/css"
+	href="/reviewBook/assets/css/userprofile-style.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 </head>
-<style>
-.sidebar-box {
-	max-height: 120px;
-	position: relative;
-	overflow: hidden;
-}
 
-.sidebar-box .read-more {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	text-align: center;
-	margin: 0;
-	padding: 30px 0;
-	/* "transparent" only works here because == rgba(0,0,0,0) */
-	background-image: linear-gradient(to bottom, transparent, grey);
-}
-</style>
 
 <body>
-	<nav class="navbar navbar-default navbar-inverse">
+	<nav class="navbar navbar-default ">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -66,16 +49,15 @@
 						data-toggle="dropdown" href="#">Options <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="/reviewBook/userupload">Update Info</a></li>
-							<form:form action="${user.userId}" method="delete"
-								modelAttribute="delete">
-								<fieldset>
-									<div class="form-group">
-										<li><a href="#">Delete Account</a></li>
-									</div>
-								</fieldset>
-							</form:form>
+							<li><a data-toggle="modal" data-target="#myModal">Delete
+									Account</a></li>
 						</ul></li>
-					<li><a href="logout"><span
+					<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
+					<li><img src="/reviewBook/uploads/${userImage}"
+						class="img-circle img-responsive" alt="user"
+						style="height: 60px; width: 60px;"></li>
+					<li><a href="/reviewBook/profile">Profile </a></li>
+					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 				</ul>
 			</div>
@@ -180,7 +162,7 @@
 						<%
 							}
 						%>
-						<br> <br>
+
 						<div
 							class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center">
 							<%
@@ -211,6 +193,7 @@
 					</div>
 				</div>
 			</div>
+			<br>
 			<div class="col-lg-12 text-center">
 				<h4 style="border-bottom: 2px #CCC solid;">Authors Reviewed by
 					${user.firstName} ${user.lastName} :</h4>
@@ -254,7 +237,6 @@
 				<div class="col-lg-12 text-center">
 					<%
 						if (((List<Author>) request.getAttribute("authors")).size() != 0) {
-							System.out.println("author list not empty");
 					%>
 					<ul class="pagination">
 						<%
@@ -287,6 +269,38 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal-->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Are you sure you want to delete?</h4>
+				</div>
+				<div class="modal-body">Are you sure to delete this record?</div>
+				<div class="modal-footer">
+
+					<form:form method="delete"
+						action="/reviewBook/users/${user.userId}" modelAttribute="delete">
+						<fieldset>
+							<div class="form-group">
+								<div class="col-lg-10 col-lg-offset-2">
+
+									<br>
+									<form:button type="submit" class="btn btn-sm btn-danger "> Delete</form:button>
+									<form:button type="button" class="btn btn-sm btn-primary "
+										data-dismiss="modal"> Cancel</form:button>
+								</div>
+							</div>
+						</fieldset>
+					</form:form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="particles"></div>
 	<svg id="svg-source" height="0" version="1.1"
 		xmlns="http://www.w3.org/2000/svg"
@@ -587,8 +601,8 @@
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
-		
-		<script type="text/javascript">
+
+	<script type="text/javascript">
 		$(function() {
 			var ratedEntities = $('div[data-rateyo]');
 

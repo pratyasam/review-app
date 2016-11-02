@@ -10,113 +10,13 @@
 <title>All books</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-<link rel="stylesheet" href="assets/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="assets/css/animation.css">
-<link rel="stylesheet" type="text/css" href="assets/css/home-pagestyle.css">
+<link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/home-pagestyle.css">
+<link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/adminbooks-style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
-<style>
-.sidebar-box {
-	max-height: 120px;
-	position: relative;
-	overflow: hidden;
-}
-
-.sidebar-box .read-more {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	text-align: center;
-	margin: 0;
-	padding: 30px 0;
-	/* "transparent" only works here because == rgba(0,0,0,0) */
-	background-image: linear-gradient(to bottom, transparent, grey);
-}
-
-.sidenav {
-	height: 185%;
-	/**width: 200px;
-	top: 0;*/
-	position: absolute;
-	z-index: 1;
-	left: 0;
-	background-color: #111;
-	overflow-x: hidden;
-	padding-top: 60px;
-}
-
-.sidenav a {
-	padding: 8px 8px 8px 32px;
-	text-decoration: none;
-	font-size: 15px;
-	color: #818181;
-	display: block;
-	transition: 0.3s;
-	cursor: pointer;
-}
-
-.sidenav a:hover, .offcanvas a:focus {
-	color: #f1f1f1;
-}
-
-ul {
-	list-style-type: none;
-}
-
-.overlay2 a {
-	color: white;
-}
-
-.overlay2 {
-	height: 0%;
-	width: 100%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.9);
-	overflow-y: hidden;
-	transition: 0.5s;
-}
-
-.overlay2-content {
-	position: relative;
-	top: 25%;
-	width: 100%;
-	text-align: center;
-	margin-top: 30px;
-}
-
-.overlay2 .closebtn {
-	position: absolute;
-	top: 20px;
-	right: 45px;
-	font-size: 60px;
-}
-
-@media screen and (max-height: 450px) {
-	.sidenav {
-		padding-top: 15px;
-	}
-	.sidenav a {
-		font-size: 18px;
-	}
-	.overlay2 {
-		overflow-y: auto;
-	}
-	.overlay2 a {
-		font-size: 20px;
-		color: white;
-	}
-	.overlay2 .closebtn {
-		font-size: 40px;
-		top: 15px;
-		right: 35px;
-	}
-}
-</style>
-
+</head>
 <body>
 
 	<nav class="navbar navbar-default">
@@ -153,7 +53,7 @@ ul {
 						class="img-circle img-responsive" alt="user"
 						style="height: 60px; width: 60px;"></li>
 				<li><a href="/reviewBook/profile">Profile </a></li>
-				<li><a href="logout"><span
+				<li><a href="/reviewBook/logout"><span
 						class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 			</ul>
 		</div>

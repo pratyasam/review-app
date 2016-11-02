@@ -538,7 +538,7 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Page<Book> searchForBooks(String name, String genre, String isbn, int page) {
 
-		return bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContaining(name, genre, isbn, Utility.buildPageRequest(10, page)); 
+		return bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContainingAndBookVerified(name, genre, isbn, true, Utility.buildPageRequest(10, page)); 
 	}
 	/**
 	 * returns top 10 books

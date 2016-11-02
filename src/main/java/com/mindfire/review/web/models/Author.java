@@ -34,7 +34,7 @@ public class Author{
     private int authorLikes = 0;
     
     @Column(name = "image", length = 4005)
-    private String authorImage;
+    private String authorImage = "user.png";
 
 
     //bi-directional many-to-one association to BookAuthor

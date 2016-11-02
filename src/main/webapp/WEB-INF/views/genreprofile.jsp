@@ -17,6 +17,8 @@
 	href="/reviewBook/assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css"
 	href="/reviewBook/assets/css/animation.css">
+<link rel="stylesheet" type="text/css"
+	href="/reviewBook/assets/css/genreprofile-style.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 <script
@@ -25,107 +27,7 @@
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
 </head>
-<style>
-.sidebar-box {
-	max-height: 120px;
-	position: relative;
-	overflow: hidden;
-}
 
-.sidebar-box .read-more {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	text-align: center;
-	margin: 0;
-	padding: 30px 0;
-	/* "transparent" only works here because == rgba(0,0,0,0) */
-	background-image: linear-gradient(to bottom, transparent, grey);
-}
-
-.sidenav {
-	height: 324%;
-	/**width: 200px;
-	top: 0;*/;
-	position: absolute;
-	z-index: 1;
-	left: 0;
-	background-color: #111;
-	overflow-x: hidden;
-	padding-top: 60px;
-}
-
-.sidenav a {
-	padding: 8px 8px 8px 32px;
-	text-decoration: none;
-	font-size: 15px;
-	color: #818181;
-	display: block;
-	transition: 0.3s;
-	cursor: pointer;
-}
-
-.sidenav a:hover, .offcanvas a:focus {
-	color: #f1f1f1;
-}
-
-ul {
-	list-style-type: none;
-}
-
-.overlay2 a {
-	color: white;
-}
-
-.overlay2 {
-	height: 0%;
-	width: 100%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.9);
-	overflow-y: hidden;
-	transition: 0.5s;
-}
-
-.overlay2-content {
-	position: relative;
-	top: 25%;
-	width: 100%;
-	text-align: center;
-	margin-top: 30px;
-}
-
-.overlay2 .closebtn {
-	position: absolute;
-	top: 20px;
-	right: 45px;
-	font-size: 60px;
-}
-
-@media screen and (max-height: 450px) {
-	.sidenav {
-		padding-top: 15px;
-	}
-	.sidenav a {
-		font-size: 18px;
-	}
-	.overlay2 {
-		overflow-y: auto;
-	}
-	.overlay2 a {
-		font-size: 20px;
-		color: white;
-	}
-	.overlay2 .closebtn {
-		font-size: 40px;
-		top: 15px;
-		right: 35px;
-	}
-}
-</style>
 
 <body>
 	<%
@@ -199,11 +101,11 @@ ul {
 							<li><a href="/reviewBook/authors">All Authors</a></li>
 							<li><a href="/reviewBook/users">All Users</a></li>
 						</ul></li>
-						<li><img src="/reviewBook/uploads/${userImage}"
-					class="img-circle img-responsive" alt="user"
-					style="height: 60px; width: 60px;"></li>
+					<li><img src="/reviewBook/uploads/${userImage}"
+						class="img-circle img-responsive" alt="user"
+						style="height: 60px; width: 60px;"></li>
 					<li><a href="/reviewBook/profile">Profile </a></li>
-					<li><a href="logout"><span
+					<li><a href="/reviewBook/logout"><span
 							class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 				</ul>
 			</div>
@@ -313,7 +215,7 @@ ul {
 		</div>
 
 		<div class="col-md-9 col-md-offset-3 col-xs-12">
-			<div class="col-lg-12" ">
+			<div class="col-lg-12"">
 				<div class="well well-md text-center">
 					<h5>
 						Book Results for <b>${name}</b>
@@ -321,72 +223,73 @@ ul {
 				</div>
 			</div>
 			<div class="col-lg-8 col-lg-offset-2 col-xs-12">
-				
-					<%
-						for (BookAuthorListDto bal : (List<BookAuthorListDto>) request.getAttribute("booklist")) {
-							Book book = bal.getBook();
-							List<Author> authors = bal.getAuthorList();
-					%>
-					<div class="col-lg-6">
 
-						<div class="col-lg-4" style="padding: 2px;">
-							<img src="/reviewBook/uploads/<%= book.getBookImage() %>" alt="book1"
-								style="width: 100%; height: 30%;" />
-						</div>
-						<div class="col-lg-8">
-							<div class="panel panel-default">
-								<div class="panel-body">
-									<p
-											style="font-size: 150%; border-bottom: 2px #CCC solid; overflow: hidden; height: 37;"><a href="/reviewBook/books/<%=book.getBookId()%>">
-										<%=book.getBookName()%>
-									</a></p>
-									<%
-										for (Author a : authors) {
-									%>
-									<%
-										if (a.getAuthorName() != null) {
-									%>
+				<%
+					for (BookAuthorListDto bal : (List<BookAuthorListDto>) request.getAttribute("booklist")) {
+						Book book = bal.getBook();
+						List<Author> authors = bal.getAuthorList();
+				%>
+				<div class="col-lg-6">
 
-									<h6><%=a.getAuthorName()%></h6>
+					<div class="col-lg-4" style="padding: 2px;">
+						<img src="/reviewBook/uploads/<%=book.getBookImage()%>"
+							alt="book1" style="width: 100%; height: 30%;" />
+					</div>
+					<div class="col-lg-8">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<p
+									style="font-size: 150%; border-bottom: 2px #CCC solid; overflow: hidden; height: 37;">
+									<a href="/reviewBook/books/<%=book.getBookId()%>"> <%=book.getBookName()%>
+									</a>
+								</p>
+								<%
+									for (Author a : authors) {
+								%>
+								<%
+									if (a.getAuthorName() != null) {
+								%>
 
-									<%
-										}
-									%>
+								<h6><%=a.getAuthorName()%></h6>
 
-									<%
-										}
-									%>
+								<%
+									}
+								%>
 
-									<%
-										if (authors.size() == 0) {
-									%>
-									<h6>Unknown</h6>
-									<%
-										}
-									%>
-									<div data-rateyo="rateYo" class="text-center"
-										data-rating="<%=book.getBookRating()%>"
-										style="margin-left: 55px;"></div>
-									<br>
-									<div class="sidebar-box">
-										<p>
-											x<%=book.getBookDescription()%></p>
-										<p class="read-more">
-										<div class="button"></div>
-										</p>
-									</div>
+								<%
+									}
+								%>
+
+								<%
+									if (authors.size() == 0) {
+								%>
+								<h6>Unknown</h6>
+								<%
+									}
+								%>
+								<div data-rateyo="rateYo" class="text-center"
+									data-rating="<%=book.getBookRating()%>"
+									style="margin-left: 55px;"></div>
+								<br>
+								<div class="sidebar-box">
+									<p>
+										x<%=book.getBookDescription()%></p>
+									<p class="read-more">
+									<div class="button"></div>
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
-					<br>
+				</div>
+				<br>
 
-					<%
-						}
-					%>
+				<%
+					}
+				%>
 
 
-				
+
 				<div class="col-lg-12 text-center">
 					<%
 						if (((List<BookAuthorListDto>) request.getAttribute("booklist")).size() != 0) {
@@ -415,7 +318,7 @@ ul {
 
 			</div>
 			<div class="col-lg-12">
-				<div class="col-lg-12" ">
+				<div class="col-lg-12"">
 					<div class="well well-md text-center">
 						<h5>
 							Author Results for <b>${name}</b>
@@ -423,42 +326,43 @@ ul {
 					</div>
 				</div>
 				<div class="col-lg-8 col-lg-offset-2 col-xs-12">
-						<%
-							for (Author a : (List<Author>) request.getAttribute("authors")) {
-						%>
-						<div class="col-lg-6">
-							<div class="row">
-								<div class="col-lg-4" style="padding: 2px;">
-									<img src="/reviewBook/uploads/<%= a.getAuthorImage() %>" alt="book1"
-										style="width: 100%; height: 30%;" />
-								</div>
+					<%
+						for (Author a : (List<Author>) request.getAttribute("authors")) {
+					%>
+					<div class="col-lg-6">
+						<div class="row">
+							<div class="col-lg-4" style="padding: 2px;">
+								<img src="/reviewBook/uploads/<%=a.getAuthorImage()%>"
+									alt="book1" style="width: 100%; height: 30%;" />
+							</div>
 
-								<div class="col-lg-8">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<p style="font-size: 150%; border-bottom: 2px #CCC solid;"><a href="/reviewBook/authors/<%=a.getAuthorId()%>">
-												<%=a.getAuthorName()%>
-											</a></p>
+							<div class="col-lg-8">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<p style="font-size: 150%; border-bottom: 2px #CCC solid;">
+											<a href="/reviewBook/authors/<%=a.getAuthorId()%>"> <%=a.getAuthorName()%>
+											</a>
+										</p>
 
-											<div data-rateyo1="rateYo" class="text-center"
-												data-rating="<%=a.getAuthorRating()%>"
-												style="margin-left: 55px;"></div>
-											<br>
-											<div class="sidebar-box">
-												<p><%=a.getAuthorDescription()%></p>
-												<p class="read-more"></p>
-											</div>
+										<div data-rateyo1="rateYo" class="text-center"
+											data-rating="<%=a.getAuthorRating()%>"
+											style="margin-left: 55px;"></div>
+										<br>
+										<div class="sidebar-box">
+											<p><%=a.getAuthorDescription()%></p>
+											<p class="read-more"></p>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<%
-							}
-						%>
+					</div>
+					<%
+						}
+					%>
 
 
-					
+
 					<div class="col-lg-12 text-center">
 						<%
 							if (((List<Author>) request.getAttribute("authors")).size() != 0) {
@@ -496,7 +400,7 @@ ul {
 			</div>
 		</div>
 	</div>
-	
+
 
 	<div id="particles"></div>
 	<svg id="svg-source" height="0" version="1.1"
@@ -796,7 +700,8 @@ ul {
 	<script
 		src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/reviewBook/assets/js/animation.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("myNav").style.height = "100%";

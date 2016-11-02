@@ -32,7 +32,8 @@ import com.mindfire.review.web.repositories.UserRepository;
 @Service
 public class UploadService {
 
-	private final String UPLOAD_DIRECTORY = "/home/pratyasa/Desktop/Wotkspace/git/uploads";
+	public static final String UPLOADDIRECTORY = "/home/pratyasa/Desktop/Wotkspace/git/uploads";
+	public static final String IOMESSAGE = "unable to create directory.";
 
 	@Autowired
 	private UserRepository userRepository;
@@ -44,14 +45,14 @@ public class UploadService {
 	private AuthorRepository authorRepository;
 
 	/**
-	 * method to upload user image
+	 * method to upload user image and return the file name.
 	 * @param file1
 	 * @param httpSession
 	 * @param encryption
-	 * @return
+	 * @return String
 	 */
 
-	public String simpleUpload(FileItem file1, HttpSession httpSession, boolean encryption) {
+	public String simpleUpload(FileItem file1, boolean encryption) {
 
 		String fileName = null;
 		MultipartFile file = new CommonsMultipartFile(file1);
@@ -62,7 +63,7 @@ public class UploadService {
 
 				if (encryption) {
 					String currentFileName = file.getOriginalFilename();
-					String extension = currentFileName.substring(currentFileName.lastIndexOf("."),
+					String extension = currentFileName.substring(currentFileName.lastIndexOf('.'),
 							currentFileName.length());
 					Long nameRandom = Calendar.getInstance().getTimeInMillis();
 					String newFileName = nameRandom + extension;
@@ -70,13 +71,13 @@ public class UploadService {
 				} else
 					fileName = file.getOriginalFilename();
 
-				byte bytes[] = file.getBytes();
-				File dir = new File(UPLOAD_DIRECTORY);
+				byte[] bytes = file.getBytes();
+				File dir = new File(UPLOADDIRECTORY);
 
-				if (!dir.exists()) {
-					if (!dir.mkdir()) {
-						throw new IOException("Unable to create directory");
-					}
+				if (!dir.exists() && !dir.mkdir()) {
+					
+						throw new IOException(IOMESSAGE);
+					
 
 				}
 
@@ -106,11 +107,11 @@ public class UploadService {
 	}
 
 	/**
-	 * method to upload author image
+	 * method to upload author image and return the file name.
 	 * @param file1
 	 * @param httpSession
 	 * @param encryption
-	 * @return
+	 * @return String
 	 */
 
 	public String simpleUploadAuthor(FileItem file1, boolean encryption) {
@@ -131,14 +132,13 @@ public class UploadService {
 				} else
 					fileName = file.getOriginalFilename();
 
-				byte bytes[] = file.getBytes();
-				File dir = new File(UPLOAD_DIRECTORY);
+				byte[] bytes = file.getBytes();
+				File dir = new File(UPLOADDIRECTORY);
 
-				if (!dir.exists()) {
-					if (!dir.mkdir()) {
-						throw new IOException("Unable to create directory");
-					}
-
+				if (!dir.exists() && !dir.mkdir()) {
+					
+						throw new IOException(IOMESSAGE);
+					
 				}
 
 				File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
@@ -166,11 +166,11 @@ public class UploadService {
 
 	}
 	/**
-	 * method to upload book image
+	 * method to upload book image and return the file name.
 	 * @param file1
 	 * @param httpSession
 	 * @param encryption
-	 * @return
+	 * @return String
 	 */
 	
 	public String simpleUploadBook(FileItem file1, boolean encryption) {
@@ -191,15 +191,15 @@ public class UploadService {
 				} else
 					fileName = file.getOriginalFilename();
 
-				byte bytes[] = file.getBytes();
-				File dir = new File(UPLOAD_DIRECTORY);
+				byte[] bytes = file.getBytes();
+				File dir = new File(UPLOADDIRECTORY);
 
-				if (!dir.exists()) {
-					if (!dir.mkdir()) {
-						throw new IOException("Unable to create directory");
+				if (!dir.exists() && !dir.mkdir()) {
+					
+						throw new IOException(IOMESSAGE);
 					}
 
-				}
+				
 
 				File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(serverFile));

@@ -1,0 +1,102 @@
+.sidebar-box {
+	max-height: 120px;
+	position: relative;
+	overflow: hidden;
+}
+
+.sidebar-box .read-more {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	margin: 0;
+	padding: 30px 0;
+	/* "transparent" only works here because == rgba(0,0,0,0) */
+	background-image: linear-gradient(to bottom, transparent, grey);
+}
+
+.sidenav {
+	height: 188%;
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	background-color: #111;
+	overflow-x: hidden;
+	padding-top: 60px;
+}
+
+.sidenav a {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 15px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.sidenav a:hover, .offcanvas a:focus {
+	color: #f1f1f1;
+}
+
+.overlay2 a {
+	color: white;
+}
+
+.overlay2 {
+	height: 0%;
+	width: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.9);
+	overflow-y: hidden;
+	transition: 0.5s;
+}
+
+.overlay2-content {
+	position: relative;
+	top: 25%;
+	width: 100%;
+	text-align: center;
+	margin-top: 30px;
+}
+
+.overlay2 .closebtn {
+	position: absolute;
+	top: 20px;
+	right: 45px;
+	font-size: 60px;
+}
+
+}
+ul {
+	list-style-type: none;
+}
+
+.navbar {
+	margin-bottom: 0px !important;
+}
+
+@media screen and (max-height: 450px) {
+	.sidenav {
+		padding-top: 15px;
+	}
+	.sidenav a {
+		font-size: 18px;
+	}
+	.overlay2 {
+		overflow-y: auto;
+	}
+	.overlay2 a {
+		font-size: 20px;
+		color: white;
+	}
+	.overlay2 .closebtn {
+		font-size: 40px;
+		top: 15px;
+		right: 35px;
+	}
+}
