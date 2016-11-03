@@ -18,57 +18,95 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+/**
+ * This class defines all the connections to the database via DataDource object
+ * and manages the database transactions. Defines the base
+ * package to scan for Spring Data repositories
+ * 
+ * @author pratyasa
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackageClasses = ApplicationConfig.class)
 class JpaConfig {
 
-    @Value("${dataSource.driverClassName}")
-    private String driver;
-    @Value("${dataSource.url}")
-    private String url;
-    @Value("${dataSource.username}")
-    private String username;
-    @Value("${dataSource.password}")
-    private String password;
-    @Value("${hibernate.dialect}")
-    private String dialect;
-    @Value("${hibernate.hbm2ddl.auto}")
-    private String hbm2ddlAuto;
+	@Value("${dataSource.driverClassName}")
+	private String driver;
+	@Value("${dataSource.url}")
+	private String url;
+	@Value("${dataSource.username}")
+	private String username;
+	@Value("${dataSource.password}")
+	private String password;
+	@Value("${hibernate.dialect}")
+	private String dialect;
+	@Value("${hibernate.hbm2ddl.auto}")
+	private String hbm2ddlAuto;
 
+	// A factory for connections to the physical data source that this
+	// DataSource object represents. An alternative to the DriverManager
+	// facility, a DataSource object is the preferred means of getting a
+	// connection to the database.
+	@Bean
+	public DataSource dataSource() {
 
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driver);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
-    }
+		// Simple implementation of the standard JDBC DataSource interface
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactoryBean.setDataSource(dataSource);
+		// Setting the properties
+		dataSource.setDriverClassName(driver);
+		dataSource.setUrl(url);
+		dataSource.setUsername(username);
+		dataSource.setPassword(password);
 
-        String entities = ClassUtils.getPackageName(ApplicationConfig.class);
-        String converters = ClassUtils.getPackageName(Jsr310JpaConverters.class);
-        entityManagerFactoryBean.setPackagesToScan(entities, converters);
+		return dataSource;
+	}
 
-        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+	// Container Managed entity manager. This type of entity manager is most
+	// appropriate for use by a Java EE container that wants to maintain
+	// some control over JPA configuration beyond what’s specified in
+	// persistence.xml and can override the location of the persistence.xml
+	// file.
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 
-        Properties jpaProperties = new Properties();
-        jpaProperties.put(AvailableSettings.DIALECT, dialect);
-        jpaProperties.put(AvailableSettings.HBM2DDL_AUTO, hbm2ddlAuto);
-        jpaProperties.put(AvailableSettings.SHOW_SQL, true);
-        entityManagerFactoryBean.setJpaProperties(jpaProperties);
+		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
-        return entityManagerFactoryBean;
-    }
+		// Specify the JDBC DataSource that the JPA persistence provider is
+		// supposed to use for accessing the database.
+		entityManagerFactoryBean.setDataSource(dataSource);
 
-    @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
+		String entities = ClassUtils.getPackageName(ApplicationConfig.class);
+		String converters = ClassUtils.getPackageName(Jsr310JpaConverters.class);
+
+		// Set whether to use Spring-based scanning for entity classes in the
+		// classpath instead of using JPA's standard scanning of jar files with
+		// persistence.xml markers in them.
+		entityManagerFactoryBean.setPackagesToScan(entities, converters);
+
+		// Specify the JpaVendorAdapter implementation for the desired JPA
+		// provider, if any.
+		entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+
+		// The Properties class represents a persistent set of properties.
+		Properties jpaProperties = new Properties();
+		jpaProperties.put(AvailableSettings.DIALECT, dialect);
+		jpaProperties.put(AvailableSettings.HBM2DDL_AUTO, hbm2ddlAuto);
+		jpaProperties.put(AvailableSettings.SHOW_SQL, true);
+		entityManagerFactoryBean.setJpaProperties(jpaProperties);
+
+		return entityManagerFactoryBean;
+	}
+
+	// Programmatic transaction management approach, which allows us to manage
+	// the transaction with the help of programming in the source code.
+	// It drives the transaction.
+	@Bean
+	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+
+		// Set the EntityManagerFactory that this instance should manage
+		// transactions for.
+		return new JpaTransactionManager(entityManagerFactory);
+	}
 }
