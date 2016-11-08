@@ -11,7 +11,7 @@ public class LoginDto {
     @Size(min = 3, max = 20, message = "User Name should be between 3 and 20")
     private String userName;
     @NotNull(message = "Password cannot be blank")
-    @Size(min = 6, max = 50, message = "Password size must be within 6 and 50")
+    @Size(min = 6, max = 264, message = "Password size must be within 6 and 50")
     private String password;
 
     /**

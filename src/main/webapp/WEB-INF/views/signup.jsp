@@ -114,6 +114,19 @@
 								</div>
 								<br>
 								<div class="form-group">
+									<div class="col-lg-12">
+										<div class="input-group">
+											<span class="input-group-addon"> <span
+												class="fa fa-pencil fa-2x"></span>
+											</span>
+											<form:input type="email" path="email"
+												cssClass="form-control" id="recipient"
+												placeholder="Email Address " required="required"></form:input>
+										</div>
+									</div>
+								</div>
+								<br>
+								<div class="form-group">
 									<label class="col-lg-2 control-label"><b>Gender</b></label>
 									<div class="col-lg-10">
 										<div class="radio">

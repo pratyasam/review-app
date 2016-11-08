@@ -37,7 +37,8 @@ panel-body {
 					<b>404</b>
 				</h4>
 				<h2>Looks like the page/resource you are looking for is
-					missing. Don't worry, our best man is on the case.</h2>
+					missing. Don't worry, our best man is on the case. <a href="/reviewBook/home">Home!</a></h2>
+					
 			</div>
 
 

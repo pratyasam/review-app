@@ -17,12 +17,11 @@
 <html lang="en">
 
 <head>
-<title><b>${book.bookName}</b></title>
+<title>${book.bookName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
-<link href="/reviewBook/assets/css/home-style.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/animation.css">
 <link rel="stylesheet" type="text/css" href="/reviewBook/assets/css/adminbookprofile-style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
@@ -120,7 +119,7 @@
 						<h4>
 							<em>${book.bookIsbn}</em>
 						</h4>
-						by : Author name:
+						by : 
 						<%
 							for (Author a : (List<Author>) request.getAttribute("authors")) {
 						%>
@@ -131,11 +130,11 @@
 						%>
 					</div>
 					<div class="panel-body">
-						<h4>Book Genre: ${book.bookGenre}</h4>
+						<h4>Genre: ${book.bookGenre}</h4>
 						<div id="rateYo" onchange="star1()"></div>
-						<h4>Book Cost:${book.bookCost}</h4>
+						<h4>Cost:${book.bookCost}</h4>
 						<h5>
-							Book Link: <a href=#> Download <span
+							Link: <a href=#> Download <span
 								class="fa  fa-arrow-circle-down"></span>
 							</a>
 						</h5>
@@ -178,7 +177,7 @@
 				</div>
 			</div>
 			<div class="col-lg-12">
-				<h3 class="text-center" style="border-bottom: 2px #CCC solid;">Book
+				<h3 class="text-center" style="border-bottom: 2px #CCC solid;">
 					Description :</h3>
 				<p>${book.bookDescription}</p>
 			</div>
@@ -309,36 +308,6 @@
 				</div>
 			</div>
 			<br>
-			<div class="col-lg-12">
-				<form:form method="post" action="${book.bookId}"
-					class="form-horizontal" modelAttribute="bookprofile">
-					<fieldset>
-						<div class="col-lg-12">
-							<div class="form-group">
-								<div class="well-primary well-sm ">
-									<h6 class="text-right">
-										Please <a href="/login.html">Log-In</a> to Review.
-									</h6>
-								</div>
-								<label>Enter Review: </label>
-								<form:textarea path="reviewText" cols="91" rows="5"></form:textarea>
-							</div>
-						</div>
-						<br>
-						<div class="form-group">
-							<div class="col-lg-10 col-lg-offset-2">
-								<button type="reset" class="btn btn-default pull-right">
-									Cancel</button>
-								<button type="submit" class="btn btn-primary pull-right">
-									Submit</button>
-							</div>
-						</div>
-					</fieldset>
-				</form:form>
-			</div>
-			<div class="footer text-center ">
-				<small>Copyright &copy; Pratyasha</small>
-			</div>
 		</div>
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" role="dialog">

@@ -273,12 +273,16 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
 	public void addAuthor(AuthorDto authorDto) throws AuthorExistenceException{
+    	
         if(authorDto == null){
-            throw new RuntimeException("Sorry for the internal error caused.");
+            throw new NullPointerException("Author Dto sjould not be null.");
         }
+        
         if(authorRepository.findByAuthorNameIgnoreCase(authorDto.getAuthorName()) != null){
+        	
             throw new AuthorExistenceException("Author already exists.");
         }
+        
         Author author = new Author();
         author.setAuthorDescription(authorDto.getAuthorDescription());
         author.setAuthorGenre(authorDto.getAuthorGenre());
@@ -295,13 +299,17 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Override
 	public void updateAuthor(AuthorDto authorDto, Long authorId) throws AuthorExistenceException{
+    	
         Author author = authorRepository.findOne(authorId);
+        
         if(authorDto == null){
-            throw new RuntimeException("Sorry for the internal error caused.");
+            throw new NullPointerException("Sorry for the internal error caused.");
         }
+        
         if (author == null){
             throw new AuthorExistenceException("Author does not esist");
         }
+        
         author.setAuthorRating(authorDto.getAuthorRating());
         author.setAuthorName(authorDto.getAuthorName());
         author.setAuthorGenre(authorDto.getAuthorGenre());
@@ -316,8 +324,11 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Override
 	public void removeAuthor(Long authorId) throws AuthorExistenceException{
+    	
         Author author = authorRepository.findOne(authorId);
+        
         if(author == null){
+        	
             throw new AuthorExistenceException("Author does not exist");
         }
         
@@ -333,9 +344,12 @@ public class AuthorServiceImpl implements AuthorService {
     
     @Override
 	public void addAuthorLikeByUser(String userName, Long authorId) throws AlreadyReviewedException{
+    	
     	User user = userService.getUser(userName);
     	Author author = getAuthorById(authorId);
+    	
     	 if(authorLikeRepository.findByAuthorAndUser(author, user) != null){
+    		 
     		 throw new AlreadyReviewedException("already liked the author");
     	 }
     	 
@@ -348,7 +362,8 @@ public class AuthorServiceImpl implements AuthorService {
     	 authorRepository.save(author);
     	 
     	 if(authorLike == null){
-    		 throw new RuntimeException("Sorry for the internal error caused.");
+    		 
+    		 throw new NullPointerException("Unable to persist into the database. "+author.getAuthorName());
     	 }
     }
     

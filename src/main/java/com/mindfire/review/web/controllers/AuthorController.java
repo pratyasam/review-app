@@ -1,26 +1,33 @@
 package com.mindfire.review.web.controllers;
 
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.mindfire.review.exceptions.AlreadyReviewedException;
 import com.mindfire.review.exceptions.AuthorExistenceException;
+import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.ReviewDoesnotExistException;
+import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.ReviewService;
@@ -53,6 +60,7 @@ public class AuthorController {
 	public static final String REDIRECTAUTHORAUTHORID = "redirect:/authors/{authorId}";
 	public static final String DELETE = "delete";
 	public static final String AUTHORPROFILE = "authorprofile";
+	public static final String DEFAULT_ERROR_VIEW = "resourcenotfound";
 	
 	@Autowired
 	private ReviewService reviewService;
@@ -60,6 +68,8 @@ public class AuthorController {
 	private AuthorService authorService;
 	@Autowired
 	private BookService bookService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(AuthorController.class);
 	
 
 	/**
@@ -116,6 +126,7 @@ public class AuthorController {
 					
 				} catch (AuthorExistenceException e) {
 					
+					logger.warn("Author exists" + e.getMessage());
 					model.addAttribute("authorexists", e);
 					return ADDAUTHOR;
 					
@@ -281,6 +292,7 @@ public class AuthorController {
 			
 		} catch (AlreadyReviewedException e) {
 			
+			logger.warn("The user has already liked " +e.getMessage());
 			model.addAttribute("exception", e);
 			return REDIRECTAUTHORAUTHORID;
 		}
@@ -311,6 +323,8 @@ public class AuthorController {
 			authorService.removeAuthorLikeByUser(userName, bookId);
 			return REDIRECTAUTHORAUTHORID;
 		} catch (ReviewDoesnotExistException e) {
+			
+			logger.warn("The like doesnt exist to be deleted " +e.getMessage());
 			model.addAttribute("exception", e);
 			return "/authors/{authorId}";
 		}
@@ -337,6 +351,8 @@ public class AuthorController {
 			authorService.updateAuthor(authorDto, authorId);
 			return REDIRECTAUTHORAUTHORID;
 		} catch (AuthorExistenceException e) {
+			
+			logger.error("The author to be updated doesnt exist " +e.getMessage());
 			model.addAttribute("authordoesnotexist", e);
 			return AUTHORUPDATE;
 		}
@@ -358,10 +374,26 @@ public class AuthorController {
 				authorService.removeAuthor(authorId);
 				return "redirect:/authors";
 			} catch (AuthorExistenceException e) {
+				
+				logger.error("The author to be deleted doesnt exist "+ e.getMessage());
 				model.addAttribute("authordoesnotexist", e);
 				return REDIRECTAUTHORAUTHORID;
 			}
 		}
 		return "redirect/login";
+	}
+	
+	/**
+	 * Exception handling method for author controller
+	 * @param request
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler({FileNotFoundException.class,BookDoesNotExistException.class, UserDoesNotExistException.class})
+	public String defaultErrorHandler(HttpServletRequest request, Exception ex) {
+		
+		logger.error("Resource not found"+" Error Occured:: URL="+request.getRequestURL());
+		// Send the user to a resource not found error-view.
+		return DEFAULT_ERROR_VIEW;
 	}
 }

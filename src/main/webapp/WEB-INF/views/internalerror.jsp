@@ -23,6 +23,8 @@ img {
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
 			<img alt="sorry 500 error"
 				src="/reviewBook/assets/img/inspired500.png">
+				
+				<a href="/reviewBook/home"><p>Home !</p></a>
 		</div>
 	</div>
 </body>

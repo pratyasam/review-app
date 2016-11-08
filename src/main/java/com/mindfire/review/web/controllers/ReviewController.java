@@ -1,20 +1,26 @@
 package com.mindfire.review.web.controllers;
 
 import com.mindfire.review.exceptions.AlreadyReviewedException;
+import com.mindfire.review.exceptions.BookDoesNotExistException;
 import com.mindfire.review.exceptions.ReviewDoesnotExistException;
+import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.services.ReviewService;
 import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.ReviewAuthorDto;
 import com.mindfire.review.web.dto.ReviewBookDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import java.io.FileNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -31,9 +37,12 @@ public class ReviewController {
 	public static final String REDIRECTBOOKSBOOKID = "redirect:/books/{bookId}";
 	public static final String EXCEPTION = "exception";
 	public static final String REDIRECTAUTHORSAUTHORID = "redirect:/authors/{authorId}";
+	public static final String DEFAULT_ERROR_VIEW = "resourcenotfound";
 	
 	@Autowired
 	private ReviewService reviewService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
 	
 	private void urlCheckAndReviewPreserveBook(String url, ReviewBookDto reviewBookDto, HttpSession httpSession){
 		
@@ -95,6 +104,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.addBookReview(reviewBookDto, (String) httpSession.getAttribute(USERNAME), bookId);
 			return REDIRECTBOOKSBOOKID;
 		} catch (AlreadyReviewedException e) {
+			
+			logger.warn("The user has already reviewed the book "+ e.getMessage());
 			model.addAttribute("alreadyReviewedException", e);
 			return REDIRECTBOOKSBOOKID;
 		}
@@ -127,6 +138,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.addAuthorReview(reviewAuthorDto, authorId, (String) httpSession.getAttribute(USERNAME));
 			return REDIRECTAUTHORSAUTHORID;
 		} catch (AlreadyReviewedException e) {
+			
+			logger.warn("The user has already reviewed the author "+e.getMessage());
 			model.addAttribute("alreadyreviewedexception", e);
 			return REDIRECTAUTHORSAUTHORID;
 		}
@@ -197,6 +210,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 				reviewService.removeBookReview(reviewBookId);
 				return "redirect:/books/" + bookId;
 			} catch (ReviewDoesnotExistException e) {
+				
+				logger.warn("The book review to be deleted doesnt exist. "+e.getMessage());
 				model.addAttribute("reviewdoesnotexistexception", e);
 				if (bookId > 0) {
 					return "redirect:/books/" + bookId;
@@ -253,6 +268,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.updateAuthorReview(reviewAuthorDto, reviewAuthorId);
 			return REDIRECTAUTHORSAUTHORID;
 		} catch (ReviewDoesnotExistException e) {
+			
+			logger.warn("The author review to be updated doesnt exist. "+e.getMessage());
 			model.addAttribute("reviewdoesnotexist", e);
 			return "redirect:/authors/{authorId}/update";
 		}
@@ -303,7 +320,9 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 		try {
 			reviewService.updateBookReview(reviewBookDto, reviewBookId);
 			return REDIRECTBOOKSBOOKID;
-		} catch (ReviewDoesnotExistException e) {
+		} catch (ReviewDoesnotExistException e) { 
+			
+			logger.warn("The book review to be updated doesnt exist "+e.getMessage());
 			model.addAttribute("reviewdoesnotexist", e);
 			return "redirect:/books/{bookId}/{reviewBookId}/update";
 		}
@@ -334,6 +353,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.addLikeForBookReview(userName, reviewBookId);
 			return REDIRECTBOOKSBOOKID;
 		} catch (AlreadyReviewedException e) {
+			
+			logger.warn(userName +" "+e.getMessage());
 			model.addAttribute(EXCEPTION, e);
 			return REDIRECTBOOKSBOOKID;
 		}
@@ -364,6 +385,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.removeLikeForBookReview(userName, reviewBookId);
 			return REDIRECTBOOKSBOOKID;
 		} catch (ReviewDoesnotExistException e) {
+			
+			logger.warn("The book review doesnt exist "+e.getMessage()+userName);
 			model.addAttribute(EXCEPTION, e);
 			return REDIRECTBOOKSBOOKID;
 		}
@@ -393,6 +416,8 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.addLikeForAuthorReview(userName, reviewAuthorId);
 			return REDIRECTAUTHORSAUTHORID;
 		} catch (AlreadyReviewedException e) {
+			
+			logger.warn(userName+" "+e.getMessage());
 			model.addAttribute(EXCEPTION, e);
 			return REDIRECTAUTHORSAUTHORID;
 		}
@@ -423,9 +448,25 @@ private void urlCheckAndReviewPreserveAuthor(String url, ReviewAuthorDto reviewA
 			reviewService.removeLikeForAuthorReview(userName, reviewAuthorId);
 			return REDIRECTAUTHORSAUTHORID;
 		} catch (ReviewDoesnotExistException e) {
+			
+			logger.warn(userName+" "+e.getMessage());
 			model.addAttribute(EXCEPTION, e);
 			return "/authors/{authorId}";
 		}
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler({FileNotFoundException.class,BookDoesNotExistException.class, UserDoesNotExistException.class, ReviewDoesnotExistException.class})
+	public String defaultErrorHandler(HttpServletRequest request, Exception ex) {
+		
+		logger.error("Resource not found"+" Error Occured:: URL="+request.getRequestURL());
+		// Send the user to a resource not found error-view.
+		return DEFAULT_ERROR_VIEW;
 	}
 
 }

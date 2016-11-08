@@ -54,12 +54,11 @@
 				<ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><i class="fa fa-search fa-2x"
 						onclick="openNav()"></i> </a></li>
-					<li><a href="/">Home</a></li>
+					<li><a href="/reviewBook/home">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="/reviewBook/userupload">Update Info</a></li>
-							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
 					<li><img src="/reviewBook/uploads/${userImage}"
@@ -153,7 +152,7 @@
 						<h3>${author.authorName}</h3>
 					</div>
 					<div class="panel-body">
-						<h4>Author Genre: ${author.authorGenre}</h4>
+						<h4>Genre: ${author.authorGenre}</h4>
 						<div id="rateYo" onchange="star1()"></div>
 					</div>
 					<div class="panel-footer">
@@ -171,7 +170,7 @@
 				</div>
 			</div>
 			<div class="col-lg-12">
-				<h4 class="text-center" style="border-bottom: 2px #CCC solid;">Author
+				<h4 class="text-center" style="border-bottom: 2px #CCC solid;">
 					Description :</h4>
 				<p>${author.authorDescription}</p>
 			</div>

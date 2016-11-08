@@ -28,14 +28,20 @@ public class User implements Serializable {
     @Column(name = "user_name", unique = true, nullable = false, length = 255)
     private String userName;
     
-    @Column(name = "password", nullable = false, length = 64)
+    @Column(name = "password", nullable = false, length = 264)
     private String userPassword;
+    
+    @Column(name = "email", nullable = false, length = 264)
+    private String userEmail;
     
     @Column(name = "role", nullable = false, length = 45)
     private String role = "normal";
     
     @Column(name = "gender", nullable = false, length = 45)
     private String userGender;
+    
+    @Column(name = "verification", nullable = true, length = 405)
+    private String userVerification = null;
     
     @Column(name = "image", length = 4005)
     private String userImage = "user.png";
@@ -108,9 +114,18 @@ public class User implements Serializable {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+    
+    
 
+    public String getUserVerification() {
+		return userVerification;
+	}
 
-    public List<ReviewAuthor> getReviewAuthors() {
+	public void setUserVerification(String userVerification) {
+		this.userVerification = userVerification;
+	}
+
+	public List<ReviewAuthor> getReviewAuthors() {
         return this.reviewAuthors;
     }
 
@@ -148,6 +163,16 @@ public class User implements Serializable {
 
 	public void setUserImage(String userImage) {
 		this.userImage = userImage;
+	}
+	
+	
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 	public ReviewBook addReview(ReviewBook reviewBook) {

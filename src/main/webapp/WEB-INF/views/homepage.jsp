@@ -20,8 +20,6 @@
 <link rel="stylesheet" href="/reviewBook/assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/font-awesome.min.css">
 <link rel="stylesheet" href="/reviewBook/assets/css/homepage-style.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 </head>
 
@@ -69,7 +67,7 @@
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="#"><i class="fa fa-search fa-2x"
 										onclick="openNav()"></i> </a></li>
-								<li><a href="home">Home</a></li>
+								<li><a href="/reviewBook/home">Home</a></li>
 
 								<li><a href="/reviewBook/login"><span
 										class="glyphicon glyphicon-log-in"></span> LogIn</a></li>
@@ -100,7 +98,7 @@
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="#"><i class="fa fa-search fa-2x"
 										onclick="openNav()"></i> </a></li>
-								<li><a href="home">Home</a></li>
+								<li><a href="/reviewBook/home">Home</a></li>
 								<li><a href="/reviewBook/profile">Profile</a></li>
 								<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
 								<li>
@@ -148,8 +146,8 @@
 				<%for (Book b : (List<Book>) request.getAttribute("booklist")){ %>
 					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
 						<div style="border: 1px solid #ccc;">
-							<img src="/reviewBook/uploads/<%= b.getBookImage() %>" alt="book"
-								style="width: 100%; height: 220px;">
+							<a href="/reviewBook/books/<%= b.getBookId()%>"><img src="/reviewBook/uploads/<%= b.getBookImage() %>" alt="book"
+								style="width: 100%; height: 220px;"></a></a>
 						</div>
 					</div>
 				<%} %>
@@ -175,8 +173,8 @@
 							<div style="border: 1px solid #ccc; background-color: white;">
 								<div style="padding: 10px;">
 									<div>
-										<img src="/reviewBook/uploads/<%= a.getAuthorImage() %>" class="img-circle"
-											alt="author" style="width: 100%; height: 200px;">
+										<a href="reviewBook/authors/<%= a.getAuthorId() %>"><img src="/reviewBook/uploads/<%= a.getAuthorImage() %>" class="img-circle"
+											alt="author" style="width: 100%; height: 200px;"></a>
 									</div>
 									<div class="text-center"><%= a.getAuthorName() %></div>
 								</div>

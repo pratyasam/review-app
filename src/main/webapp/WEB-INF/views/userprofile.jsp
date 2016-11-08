@@ -15,7 +15,7 @@
 <html lang="en">
 
 <head>
-<title>${user.firstName}${user.lastName}</title>
+<title>${user.firstName} ${user.lastName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -46,9 +46,10 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/reviewBook/home">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#">Options <span class="caret"></span></a>
+						data-toggle="dropdown" href="#">Update <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="/reviewBook/userupload">Update Info</a></li>
+							<li><a href="/reviewBook/userupload">profile picture</a></li>
+							<li><a href="/reviewBook/users/${user.userId}/update ">password or Email</a></li>
 							<li><a data-toggle="modal" data-target="#myModal">Delete
 									Account</a></li>
 						</ul></li>
@@ -73,7 +74,7 @@
 				<div class="col-sm-8 col-lg-8 pad">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3>${user.firstName}${user.lastName}</h3>
+							<h3>${user.firstName} ${user.lastName}</h3>
 						</div>
 						<div class="panel-body">
 							<p>User Name: ${user.userName}</p>

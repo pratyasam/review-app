@@ -59,12 +59,11 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Home</a></li>
+					<li><a href="/reviewBook/home">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="/reviewBook/userupload">Update Info</a></li>
-							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
 					<li><img src="/reviewBook/uploads/${userImage}"

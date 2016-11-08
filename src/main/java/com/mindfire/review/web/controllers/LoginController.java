@@ -83,6 +83,7 @@ public class LoginController {
             return "redirect:/";
 
         } catch (LoginFailException lex) {
+        	
             model.addAttribute("exception", lex);
             return LOGIN;
 

@@ -4,6 +4,7 @@
 package com.mindfire.review.web.controllers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -14,14 +15,19 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mindfire.review.exceptions.BookDoesNotExistException;
+import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.services.AuthorService;
 import com.mindfire.review.services.BookService;
 import com.mindfire.review.services.UploadService;
@@ -42,6 +48,10 @@ public class UploadController {
 	public static final String PATHNAME = "javax.servlet.context.tempdir";
 	public static final String IMAGEURL = "imageurl";
 	public static final String IMAGENAME = "imagename";
+    public static final String DEFAULT_ERROR_VIEW = "resourcenotfound";
+    public static final String ERRORINTERNAL = "internalerror";
+	
+	private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
 
 	@Autowired
 	private ServletContext servletContext;
@@ -118,7 +128,7 @@ public class UploadController {
 				model.addAttribute(IMAGEURL, imageUrl);
 				model.addAttribute(IMAGENAME,imageName);
 				
-				return "uploadsuccess";
+				return "redirect:/profile";
 
 			}
 		} catch (FileUploadException e) {
@@ -270,6 +280,33 @@ public class UploadController {
 		}
 
 		return "redirect:/books/{bookId}/bookupload";
+	}
+	
+	/**
+	 * Exception handler for handling 404 exceptions.
+	 * @param request
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler({FileNotFoundException.class,BookDoesNotExistException.class, UserDoesNotExistException.class})
+	public String defaultErrorHandler(HttpServletRequest request, Exception ex) {
+		
+		logger.error("Resource not found"+" Error Occured:: URL="+request.getRequestURL());
+		// Send the user to a resource not found error-view.
+		return DEFAULT_ERROR_VIEW;
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler({RuntimeException.class, FileUploadException.class})
+	public String internalError(HttpServletRequest request, Exception ex) {
+		
+		logger.info("Internal Occured:: URL="+request.getRequestURL());
+		return ERRORINTERNAL;
 	}
 	
 }

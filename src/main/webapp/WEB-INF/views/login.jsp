@@ -73,6 +73,9 @@
 					</form:form>
 				</div>
 				<div class="panel-footer">
+				    <p>
+				        Forgot Password ? <a href="/reviewBook/verification">Click Here.</a>
+				    </p>
 					<p>
 						New Here ? <a href="signup"><b>Sign Up</b></a> now.
 					</p>

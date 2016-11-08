@@ -17,12 +17,24 @@ public class SignupDto {
     @Size(min = 3, max = 20, message = "User name should be between 3 and 20")
     private String userName;
     @NotNull(message = "Password cannot be Blank")
-    @Size(min = 6, max = 64, message = "password should be between 6 and 64")
+    @Size(min = 6, max = 264, message = "password should be between 6 and 264")
     private String password;
+    @NotNull(message = "Email cannot be Blank")
+    @Size(min = 6, max = 264, message = "Email should be between 6 and 264")
+    private String email;
     @NotNull
     private String gender;
 
-    public String getGender() {
+    
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getGender() {
         return gender;
     }
 

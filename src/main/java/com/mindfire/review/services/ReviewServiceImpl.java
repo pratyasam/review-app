@@ -54,13 +54,17 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void addBookReview(ReviewBookDto reviewBookDto, String userName, Long bookId)
 			throws AlreadyReviewedException {
+
 		Book book = bookService.getBookById(bookId);
 		User user = userService.getUser(userName);
+
 		if (reviewBookDto == null) {
-			throw new RuntimeException("");
+
+			throw new NullPointerException("Review Dto for book should not be null.");
 		}
 
 		if (reviewBookRepository.findByUserAndBook(user, book) != null) {
+
 			throw new AlreadyReviewedException("You have already Reviewed this book.");
 		}
 		ReviewBook reviewBook = new ReviewBook();
@@ -68,23 +72,29 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewBook.setUser(user);
 		reviewBook.setBook(book);
 		reviewBook = reviewBookRepository.save(reviewBook);
+
 		if (reviewBook == null) {
-			throw new RuntimeException("");
+
+			throw new NullPointerException(
+					"Error persisting the book review in the database. " + userName + " " + bookId);
 		}
 	}
 
 	/**
 	 * Remove Review service for Book
-	 *
+	 * 
 	 * @param reviewId
 	 * @throws ReviewDoesnotExistException
 	 */
 
 	@Override
 	public void removeBookReview(Long reviewId) throws ReviewDoesnotExistException {
+
 		if (reviewBookRepository.findOne(reviewId) == null) {
+
 			throw new ReviewDoesnotExistException("The Review doesn't exist");
 		}
+
 		reviewBookRepository.delete(reviewBookRepository.findByReviewBookId(reviewId));
 	}
 
@@ -97,10 +107,14 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public void updateBookReview(ReviewBookDto reviewBookDto, Long reviewId) throws ReviewDoesnotExistException {
+
 		ReviewBook rb = reviewBookRepository.findOne(reviewId);
+
 		if (rb == null) {
+
 			throw new ReviewDoesnotExistException("The Book Review doesn't exit.");
 		}
+
 		rb.setReviewText(reviewBookDto.getReviewText());
 		reviewBookRepository.save(rb);
 
@@ -117,21 +131,29 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void addAuthorReview(ReviewAuthorDto reviewAuthorDto, Long authorId, String userName)
 			throws AlreadyReviewedException {
+
 		User user = userService.getUser(userName);
 		Author author = authorRepository.findOne(authorId);
+
 		if (reviewAuthorDto == null) {
-			throw new RuntimeException("");
+
+			throw new NullPointerException("Author Review Dto cannot be null.");
 		}
+
 		if (reviewAuthorRepository.findByUserAndAuthor(user, author) != null) {
+
 			throw new AlreadyReviewedException("You have already reviewed this author.");
 		}
+
 		ReviewAuthor reviewAuthor = new ReviewAuthor();
 		reviewAuthor.setReviewAuthorText(reviewAuthorDto.getReviewText());
 		reviewAuthor.setUser(user);
 		reviewAuthor.setAuthor(author);
 		reviewAuthor = reviewAuthorRepository.save(reviewAuthor);
+
 		if (reviewAuthor == null) {
-			throw new RuntimeException("");
+
+			throw new NullPointerException("Error persisting author review in database. " + authorId + " " + userName);
 		}
 	}
 
@@ -143,11 +165,12 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public void removeAuthorReview(Long reviewAuthorId) throws ReviewDoesnotExistException {
-		
+
 		// Fetch the author from the DB
 		ReviewAuthor reviewAuthor = reviewAuthorRepository.findOne(reviewAuthorId);
 
 		if (reviewAuthor == null) {
+
 			throw new ReviewDoesnotExistException("The Author Review doesn't exist.");
 		}
 
@@ -165,10 +188,14 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void updateAuthorReview(ReviewAuthorDto reviewAuthorDto, Long reviewAuthorId)
 			throws ReviewDoesnotExistException {
+
 		ReviewAuthor reviewAuthor = reviewAuthorRepository.findOne(reviewAuthorId);
+
 		if (reviewAuthor == null) {
+
 			throw new ReviewDoesnotExistException("The Author Review doesn't not exist.");
 		}
+
 		reviewAuthor.setReviewAuthorText(reviewAuthorDto.getReviewText());
 		reviewAuthorRepository.save(reviewAuthor);
 	}
@@ -182,6 +209,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public ReviewAuthor getReviewAuthorById(Long reviewAuthorId) {
+
 		return reviewAuthorRepository.findOne(reviewAuthorId);
 	}
 
@@ -193,6 +221,7 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public ReviewBook getReviewBookById(Long reviewBookId) {
+
 		return reviewBookRepository.findOne(reviewBookId);
 	}
 
@@ -204,21 +233,25 @@ public class ReviewServiceImpl implements ReviewService {
 	 */
 	@Override
 	public int getNumberOfAuthorReviewsLikedByTheUser(User user) {
+
 		return reviewAuthorLikeRepository.findByUser(user).size();
 	}
-	
+
 	/**
 	 * returns number of book reviews liked
+	 * 
 	 * @param user
 	 */
 
 	@Override
 	public int getNumberOfBookReviewsLikedByTheUser(User user) {
+
 		return reviewBookLikeRepository.findByUser(user).size();
 	}
-	
+
 	/**
 	 * like the author review
+	 * 
 	 * @param userName
 	 * @param reviewAuthorId
 	 * @exception AlreadyReviewedException
@@ -234,25 +267,26 @@ public class ReviewServiceImpl implements ReviewService {
 		if (reviewAuthorLike2 != null && reviewAuthorLike2.getReviewAuthorLikeFlag() == 1) {
 			throw new AlreadyReviewedException("You have already liked this author review.");
 		}
-        
-		if(reviewAuthorLike2 == null){
-		ReviewAuthorLike reviewAuthorLike = new ReviewAuthorLike();
-		reviewAuthorLike.setReviewAuthor(reviewAuthor);
-		reviewAuthorLike.setUser(user);
-		reviewAuthorLike.setReviewAuthorLikeFlag(1);
-		reviewAuthorLike = reviewAuthorLikeRepository.save(reviewAuthorLike);
-		if (reviewAuthorLike == null) {
-			throw new RuntimeException("");
+
+		if (reviewAuthorLike2 == null) {
+			ReviewAuthorLike reviewAuthorLike = new ReviewAuthorLike();
+			reviewAuthorLike.setReviewAuthor(reviewAuthor);
+			reviewAuthorLike.setUser(user);
+			reviewAuthorLike.setReviewAuthorLikeFlag(1);
+			reviewAuthorLike = reviewAuthorLikeRepository.save(reviewAuthorLike);
+
+			if (reviewAuthorLike == null) {
+				throw new NullPointerException("Sorry for the internal error caused.");
+			}
 		}
-		}
-		
-		if(reviewAuthorLike2 != null && reviewAuthorLike2.getReviewAuthorLikeFlag() == -1){
+
+		if (reviewAuthorLike2 != null && reviewAuthorLike2.getReviewAuthorLikeFlag() == -1) {
 			reviewAuthorLike2.setReviewAuthorLikeFlag(1);
 			reviewAuthorLikeRepository.saveAndFlush(reviewAuthorLike2);
 		}
 
 	}
-	
+
 	/**
 	 * @param userName
 	 * @param reviewAuthorId
@@ -265,178 +299,202 @@ public class ReviewServiceImpl implements ReviewService {
 		User user = userService.getUser(userName);
 		ReviewAuthor reviewAuthor = getReviewAuthorById(reviewAuthorId);
 		ReviewAuthorLike reviewAuthorLike = reviewAuthorLikeRepository.findByReviewAuthorAndUser(reviewAuthor, user);
-		
+
 		if (reviewAuthorLike != null && reviewAuthorLike.getReviewAuthorLikeFlag() == -1) {
+
 			throw new ReviewDoesnotExistException("The Author Review dislike exists.");
 		}
-		if (reviewAuthorLike == null ){
+
+		if (reviewAuthorLike == null) {
+
 			ReviewAuthorLike reviewAuthorLike2 = new ReviewAuthorLike();
 			reviewAuthorLike2.setReviewAuthorLikeFlag(-1);
 			reviewAuthorLike2.setUser(user);
 			reviewAuthorLike2.setReviewAuthor(reviewAuthor);
 		}
-		if(reviewAuthorLike != null && reviewAuthorLike.getReviewAuthorLikeFlag() == 1){
+
+		if (reviewAuthorLike != null && reviewAuthorLike.getReviewAuthorLikeFlag() == 1) {
+
 			reviewAuthorLike.setReviewAuthorLikeFlag(-1);
 			reviewAuthorLikeRepository.saveAndFlush(reviewAuthorLike);
 		}
-		
+
 	}
-	
+
 	/**
 	 * like the book review
+	 * 
 	 * @param userName
 	 * @param reviewBookId
 	 * @exception AlreadyReviewedException
 	 */
 	@Override
 	public void addLikeForBookReview(String userName, Long reviewBookId) throws AlreadyReviewedException {
-		
+
 		User user = userService.getUser(userName);
 		ReviewBook reviewBook = getReviewBookById(reviewBookId);
 		ReviewBookLike reviewBookLike = reviewBookLikeRepository.findByReviewBookAndUser(reviewBook, user);
-		
-		if(reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == 1){
+
+		if (reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == 1) {
+
 			throw new AlreadyReviewedException("You have already liked this book review.");
 		}
-		
-		if(reviewBookLike == null){
-		ReviewBookLike reviewBookLike2 = new ReviewBookLike();
-		reviewBookLike2.setReviewBook(reviewBook);
-		reviewBookLike2.setUser(user);
-		reviewBookLike2.setReviewBookLikeFlag(1);
-		reviewBookLike2 = reviewBookLikeRepository.save(reviewBookLike2);
-		
-		if(reviewBookLike2 == null){
-			throw new RuntimeException("");
+
+		if (reviewBookLike == null) {
+
+			ReviewBookLike reviewBookLike2 = new ReviewBookLike();
+			reviewBookLike2.setReviewBook(reviewBook);
+			reviewBookLike2.setUser(user);
+			reviewBookLike2.setReviewBookLikeFlag(1);
+			reviewBookLike2 = reviewBookLikeRepository.save(reviewBookLike2);
+
+			if (reviewBookLike2 == null) {
+
+				throw new NullPointerException("Sorry for the internal error caused.");
+			}
 		}
-		}
-		
-		if(reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == -1){
+
+		if (reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == -1) {
 			reviewBookLike.setReviewBookLikeFlag(1);
 			reviewBookLikeRepository.saveAndFlush(reviewBookLike);
 		}
-		
+
 	}
+
 	/**
 	 * dislike the book review
+	 * 
 	 * @param userName
 	 * @param reviewBookId
 	 * @exception ReviewDoesnotExistException
 	 */
-	
-	
+
 	@Override
 	public void removeLikeForBookReview(String userName, Long reviewBookId) throws ReviewDoesnotExistException {
 		User user = userService.getUser(userName);
 		ReviewBook reviewBook = getReviewBookById(reviewBookId);
-		
+
 		ReviewBookLike reviewBookLike = reviewBookLikeRepository.findByReviewBookAndUser(reviewBook, user);
-		
-		if(reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == -1){
-			throw new ReviewDoesnotExistException("The Author Review dislike exists."); 
+
+		if (reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == -1) {
+
+			throw new ReviewDoesnotExistException("The Book Review dislike doesnt exist.");
 		}
-		
-		if(reviewBookLike == null){
+
+		if (reviewBookLike == null) {
+
 			ReviewBookLike reviewBookLike2 = new ReviewBookLike();
 			reviewBookLike2.setReviewBook(reviewBook);
 			reviewBookLike2.setUser(user);
 			reviewBookLike2.setReviewBookLikeFlag(-1);
 			reviewBookLikeRepository.save(reviewBookLike2);
 		}
-		
-		if(reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == 1){
+
+		if (reviewBookLike != null && reviewBookLike.getReviewBookLikeFlag() == 1) {
+
 			reviewBookLike.setReviewBookLikeFlag(-1);
 			reviewBookLikeRepository.save(reviewBookLike);
 		}
-		
+
 	}
-	
+
 	/**
 	 * returns number of book review likes
+	 * 
 	 * @param reviewBook
 	 */
 	@Override
-	public int getNumberOfReviewLikesByBook(ReviewBook reviewBook){
-		
+	public int getNumberOfReviewLikesByBook(ReviewBook reviewBook) {
+
 		List<ReviewBookLike> reviewBookLikes = reviewBookLikeRepository.findByReviewBook(reviewBook);
-		int x=0;
-		
-		for(ReviewBookLike rb : reviewBookLikes){
+		int x = 0;
+
+		for (ReviewBookLike rb : reviewBookLikes) {
+
 			int y = rb.getReviewBookLikeFlag();
-		    if(y == 1)
-			x = x+ y;
+			if (y == 1)
+				x = x + y;
 		}
+
 		return x;
-		
-		
+
 	}
-	
+
 	/**
 	 * returns number of author review likes
+	 * 
 	 * @param reviewAuthor
 	 */
 	@Override
-	public int getNumberOfReviewLikesByAuthor(ReviewAuthor reviewAuthor){
+	public int getNumberOfReviewLikesByAuthor(ReviewAuthor reviewAuthor) {
+
 		List<ReviewAuthorLike> reviewAuthorLikes = reviewAuthorLikeRepository.findByReviewAuthor(reviewAuthor);
 		int x = 0;
-		
-		for(ReviewAuthorLike ra : reviewAuthorLikes){
-			int y =ra.getReviewAuthorLikeFlag();
-			if(y == 1)
-			x = x + y;
+
+		for (ReviewAuthorLike ra : reviewAuthorLikes) {
+
+			int y = ra.getReviewAuthorLikeFlag();
+			if (y == 1)
+				x = x + y;
 		}
-		
+
 		return x;
 	}
-	
+
 	/**
 	 * returns number of dislikes for book review
+	 * 
 	 * @param reviewBook
 	 */
 	@Override
-	public int getNumberOfReviewDislikesByBook(ReviewBook reviewBook){
+	public int getNumberOfReviewDislikesByBook(ReviewBook reviewBook) {
+
 		List<ReviewBookLike> reviewBookLikes = reviewBookLikeRepository.findByReviewBook(reviewBook);
-		int x=0;
-		
-		for(ReviewBookLike rb : reviewBookLikes){
+		int x = 0;
+
+		for (ReviewBookLike rb : reviewBookLikes) {
+
 			int y = rb.getReviewBookLikeFlag();
-		    if(y == -1)
-			x = x+ y;
+			if (y == -1)
+				x = x + y;
 		}
-		
+
 		return -1 * x;
-		
+
 	}
-	
+
 	/**
 	 * returns number of author review dislikes
+	 * 
 	 * @param reviewAuthor
 	 */
 	@Override
-	public int getNumberOfReviewDislikesByAuthor(ReviewAuthor reviewAuthor){
+	public int getNumberOfReviewDislikesByAuthor(ReviewAuthor reviewAuthor) {
 		int x = 0;
 		List<ReviewAuthorLike> reviewAuthorLikes = reviewAuthorLikeRepository.findByReviewAuthor(reviewAuthor);
-		
-		for(ReviewAuthorLike ra : reviewAuthorLikes){
+
+		for (ReviewAuthorLike ra : reviewAuthorLikes) {
 			int y = ra.getReviewAuthorLikeFlag();
-			if(y == -1)
-				x= x+y;
+			if (y == -1)
+				x = x + y;
 		}
 		return -1 * x;
-		
+
 	}
-	
+
 	/**
 	 * get total review likes by a user
+	 * 
 	 * @param user
 	 */
 	@Override
-	public int getNumberOfReviewLikesByUser(User user){
-		 int authorReviewLike = reviewAuthorLikeRepository.findByUser(user).size();
-		 int bookReviewLike = reviewBookLikeRepository.findByUser(user).size();
-		 return authorReviewLike + bookReviewLike;
-		
+	public int getNumberOfReviewLikesByUser(User user) {
+
+		int authorReviewLike = reviewAuthorLikeRepository.findByUser(user).size();
+		int bookReviewLike = reviewBookLikeRepository.findByUser(user).size();
+
+		return authorReviewLike + bookReviewLike;
+
 	}
-	
 
 }

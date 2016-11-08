@@ -50,12 +50,11 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="#"><i class="fa fa-search fa-2x"
 							onclick="openNav()"></i> </a></li>
-					<li><a href="/">Home</a></li>
+					<li><a href="/reviewBook/home">Home</a></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Options<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="/reviewBook/userupload">Update Info</a></li>
-							<li><a href="#">Delete Account</a></li>
 							<li><a href="/reviewBook/profile">Profile</a></li>
 						</ul></li>
 					<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
@@ -160,11 +159,11 @@
 						%>
 					</div>
 					<div class="panel-body">
-						<h4>Book Genre: ${book.bookGenre}</h4>
+						<h4> Genre: ${book.bookGenre}</h4>
 						<div id="rateYo" onchange="star1()"></div>
-						<h4>Book Cost: ${book.bookCost}</h4>
+						<h4> Cost: ${book.bookCost}</h4>
 						<h5>
-							Book Link: <a href=#>${book.bookLink}<span
+							 Link: <a href=#>${book.bookLink}<span
 								class="fa  fa-arrow-circle-down"></span>
 							</a>
 						</h5>
@@ -183,7 +182,7 @@
 					</div>
 				</div>
 				<div class="col-lg-12">
-					<h3 class="text-center" style="border-bottom: 2px #CCC solid;">Book
+					<h3 class="text-center" style="border-bottom: 2px #CCC solid;">
 						Description :</h3>
 					<p>${book.bookDescription}</p>
 				</div>

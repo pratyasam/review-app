@@ -37,7 +37,7 @@ public class SearchController {
 	 * @param query
 	 * @return ModelAndView
 	 */
-	private ModelAndView nonXhrSearch(SearchType searchCategory, ModelAndView model, Map<SearchType, Page> searchResult, String query){
+	private void nonXhrSearch(SearchType searchCategory, ModelAndView model, Map<SearchType, Page> searchResult, String query){
 		model.setViewName("searchresult");
 		model.addObject("SEARCH_TYPE", searchCategory);
 		switch(searchCategory){
@@ -58,7 +58,6 @@ public class SearchController {
 				break;
 		}
 		model.addObject(SEARCHPARAM, query);
-		return model;
 	}
 	
 	/**
@@ -145,6 +144,7 @@ public class SearchController {
 		// Check to see if its a XHR
 		if(httpServletRequest.getHeader("X-Requested-With") == null){
 			 nonXhrSearch(searchCategory, model, searchResult, query);
+			 return model;
 		}
 		
 

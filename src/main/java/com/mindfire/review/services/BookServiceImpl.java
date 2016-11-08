@@ -44,9 +44,6 @@ public class BookServiceImpl implements BookService {
 	private BookLikeRepository bookLikeRepository;
 	@Autowired
 	private UserService userService;
-	
-
-
 
 	/**
 	 * get book by Id
@@ -56,6 +53,7 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Book getBookById(Long id) {
+
 		return bookRepository.findOne(id);
 	}
 
@@ -68,14 +66,18 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Page<Book> getBooks(int pageno, int size) {
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return bookRepository.findAll(page);
 	}
+
 	/**
 	 * returns the list of all books
 	 */
 	@Override
 	public List<Book> getBooks() {
+
 		return bookRepository.findAll();
 	}
 
@@ -87,12 +89,16 @@ public class BookServiceImpl implements BookService {
 	 */
 
 	@Override
-	public Page<Book> getBookByGenre(String genre, boolean choice,int pageno, int size) {
+	public Page<Book> getBookByGenre(String genre, boolean choice, int pageno, int size) {
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return bookRepository.findByBookGenreContainingAndBookVerified(genre, choice, page);
 	}
+
 	/**
 	 * returns book by genre for admin or moderator
+	 * 
 	 * @param genre
 	 * @param choice
 	 * @param pageno
@@ -100,28 +106,36 @@ public class BookServiceImpl implements BookService {
 	 * @return
 	 */
 	@Override
-	public Page<Book> getBookByGenreAdmin(String genre,int pageno, int size) {
+	public Page<Book> getBookByGenreAdmin(String genre, int pageno, int size) {
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return bookRepository.findByBookGenreContaining(genre, page);
 	}
+
 	/**
 	 * get verified books by genre
+	 * 
 	 * @param genre
 	 * @param choice
 	 * @return
 	 */
 	@Override
-	public List<Book> getBookByGenre(String genre,boolean choice) {
+	public List<Book> getBookByGenre(String genre, boolean choice) {
+
 		return bookRepository.findByBookGenreContainingAndBookVerified(genre, choice);
 	}
+
 	/**
 	 * find books by genre name similar
+	 * 
 	 * @param genre
 	 * @param choice
 	 * @return
 	 */
 	@Override
 	public List<Book> getBookByGenreAdmin(String genre) {
+
 		return bookRepository.findByBookGenreContaining(genre);
 	}
 
@@ -134,9 +148,12 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public Page<Book> getBookByRating(float rating, int pageno, int size) {
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return bookRepository.findByBookRating(rating, page);
 	}
+
 	/**
 	 * 
 	 * @param rating
@@ -144,6 +161,7 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public List<Book> getBookByRating(float rating) {
+
 		return bookRepository.findByBookRating(rating);
 	}
 
@@ -155,6 +173,7 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Book getBookByIsbn(String isbn) {
+
 		return bookRepository.findByBookIsbn(isbn);
 	}
 
@@ -167,16 +186,22 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public Page<Book> getBookByNameLikeAndIsbn(String name, String isbn, int page) {
-		return bookRepository.findByBookNameContainingAndBookVerifiedOrBookIsbnContaining(name, true, isbn, Utility.buildPageRequest(10, page));
+
+		return bookRepository.findByBookNameContainingAndBookVerifiedOrBookIsbnContaining(name, true, isbn,
+				Utility.buildPageRequest(10, page));
 	}
+
 	/**
 	 * search book by name or isbn
+	 * 
 	 * @param name
 	 * @return
 	 */
 	@Override
-	public Page<Book> getBookByNameLikeAdminAndIsbn(String name,String isbn, int page) {
-		return bookRepository.findByBookNameContainingOrBookIsbnContaining(name, isbn, Utility.buildPageRequest(10, page));
+	public Page<Book> getBookByNameLikeAdminAndIsbn(String name, String isbn, int page) {
+
+		return bookRepository.findByBookNameContainingOrBookIsbnContaining(name, isbn,
+				Utility.buildPageRequest(10, page));
 	}
 
 	/**
@@ -188,16 +213,21 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<Author> getAuthorByBook(String name) {
+
 		Book book = getBookByName(name);
 		List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
 		List<Author> list = new ArrayList<>();
+
 		for (BookAuthor ba : list1) {
 			list.add(ba.getAuthor());
 		}
+
 		return list;
 	}
+
 	/**
 	 * returns the authors for a book
+	 * 
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -205,23 +235,28 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Page<Author> getAuthorByBook(String name, int pageno, int size) {
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
 		Book book = getBookByName(name);
 		List<BookAuthor> list1 = bookAuthorRepository.findByBook(book);
 		List<Author> list = new ArrayList<>();
+
 		for (BookAuthor ba : list1) {
 			list.add(ba.getAuthor());
 		}
+
 		return new PageImpl<>(list, page, size);
 	}
 
 	/**
 	 * return a specific book
+	 * 
 	 * @param name
 	 * @return
 	 */
 	@Override
 	public Book getBookByName(String name) {
+
 		return bookRepository.findByBookName(name);
 	}
 
@@ -234,21 +269,26 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<ReviewBook> getBookReviewByBook(String name) {
+
 		return reviewBookRepository.findByBook(getBookByName(name));
 	}
-	
+
 	/**
 	 * get total number of reviews for a book
+	 * 
 	 * @param name
 	 * @return
 	 */
-	
+
 	@Override
 	public int getTotalBookReviewByBook(String name) {
+
 		return reviewBookRepository.findByBook(getBookByName(name)).size();
 	}
+
 	/**
 	 * get reviews for the book
+	 * 
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -256,8 +296,10 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Page<ReviewBook> getBookReviewByBook(String name, int pageno, int size) {
-		Pageable page =Utility.buildPageRequest(size, pageno);
+
+		Pageable page = Utility.buildPageRequest(size, pageno);
 		List<ReviewBook> list = reviewBookRepository.findByBook(getBookByName(name));
+
 		return new PageImpl<>(list, page, size);
 	}
 
@@ -269,17 +311,22 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public List<ReviewAuthor> getAuthorReviewByBook(String name) {
+
 		List<Author> authorList = getAuthorByBook(name);
 		List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
 		List<ReviewAuthor> reviewAuthorList1;
+
 		for (Author a : authorList) {
 			reviewAuthorList1 = reviewAuthorRepository.findByAuthor(a);
 			reviewAuthorList.addAll(reviewAuthorList1);
 		}
+
 		return reviewAuthorList;
 	}
+
 	/**
 	 * gets reviews for the author of a book
+	 * 
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -287,14 +334,18 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Page<ReviewAuthor> getAuthorReviewByBook(String name, int pageno, int size) {
+
 		List<Author> authorList = getAuthorByBook(name);
 		List<ReviewAuthor> reviewAuthorList = new ArrayList<>();
 		List<ReviewAuthor> reviewAuthorList1;
+
 		for (Author a : authorList) {
 			reviewAuthorList1 = reviewAuthorRepository.findByAuthor(a);
 			reviewAuthorList.addAll(reviewAuthorList1);
 		}
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return new PageImpl<>(reviewAuthorList, page, size);
 	}
 
@@ -306,17 +357,21 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Page<Book> getVerifiedBook(boolean verified, int pageno, int size) {
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return bookRepository.findByBookVerified(verified, page);
 	}
-	
+
 	/**
 	 * get list of verified books
+	 * 
 	 * @param verified
 	 * @return
 	 */
 	@Override
 	public List<Book> getVerifiedBook(boolean verified) {
+
 		return bookRepository.findByBookVerified(verified);
 	}
 
@@ -329,15 +384,20 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<User> getUserByBookReview(String name) {
+
 		List<User> users = new ArrayList<>();
 		List<ReviewBook> reviewBooks = getBookReviewByBook(name);
+
 		for (ReviewBook r : reviewBooks) {
 			users.add(r.getUser());
 		}
+
 		return users;
 	}
+
 	/**
 	 * returns the users who reviewed the book
+	 * 
 	 * @param name
 	 * @param pageno
 	 * @param size
@@ -345,12 +405,16 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Page<User> getUserByBookReview(String name, int pageno, int size) {
+
 		List<User> users = new ArrayList<>();
 		List<ReviewBook> reviewBooks = getBookReviewByBook(name);
+
 		for (ReviewBook r : reviewBooks) {
 			users.add(r.getUser());
 		}
+
 		Pageable page = Utility.buildPageRequest(size, pageno);
+
 		return new PageImpl<>(users, page, size);
 	}
 
@@ -363,11 +427,10 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public boolean doesBookExist(String isbn) {
+
 		Book book = getBookByIsbn(isbn);
-		if (book != null)
-			return true;
-		else
-			return false;
+
+		return book != null ? true : false;
 	}
 
 	/**
@@ -379,11 +442,15 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void addBook(BookDto bookDto) throws BookExistException {
-		if (bookDto == null)
-			throw new RuntimeException("");
+
+		if (bookDto == null) {
+			throw new NullPointerException("Book Dto should not be null");
+		}
+
 		if (doesBookExist(bookDto.getBookIsbn())) {
 			throw new BookExistException("Book Already Exists");
 		}
+
 		Book book = new Book();
 		book.setBookCost(bookDto.getBookCost());
 		book.setBookDescription(bookDto.getBookDescription());
@@ -392,10 +459,10 @@ public class BookServiceImpl implements BookService {
 		book.setBookName(bookDto.getBookName());
 		book.setBookLink(bookDto.getBookLink());
 		book.setBookReview(bookDto.getBookReview());
-
 		book = bookRepository.save(book);
+
 		if (book == null) {
-			throw new RuntimeException("");
+			throw new NullPointerException("Error persisting data into the database.");
 		}
 
 	}
@@ -409,13 +476,14 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void removeBook(Long id) throws BookDoesNotExistException {
+
 		Book book = getBookById(id);
-		if (book == null) {
-			throw new RuntimeException("");
-		}
-		if (!doesBookExist(book.getBookIsbn())) {
+
+		if (book == null || !doesBookExist(book.getBookIsbn())) {
+
 			throw new BookDoesNotExistException("Book does not exist");
 		}
+
 		bookRepository.delete(book);
 
 	}
@@ -431,13 +499,19 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void updateBook(Long bookId, BookDto bookDto) throws BookDoesNotExistException {
+
 		Book bk = getBookById(bookId);
+
 		if (bookDto == null) {
-			throw new RuntimeException("");
+
+			throw new NullPointerException("Book Dto cannot be null.");
 		}
+
 		if (bk == null) {
+
 			throw new BookDoesNotExistException("Book does not exist");
 		}
+
 		bk.setBookIsbn(bookDto.getBookIsbn());
 		bk.setBookCost(bookDto.getBookCost());
 		bk.setBookGenre(bookDto.getBookGenre());
@@ -455,81 +529,89 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public void verifyBook(Long id, ChoiceDto choiceDto) {
+
 		Book book = getBookById(id);
-			book.setBookVerified(true);
-			bookRepository.save(book);
-		
+		book.setBookVerified(true);
+		bookRepository.save(book);
+
 	}
-	
+
 	/**
 	 * like the book
+	 * 
 	 * @param userName
 	 * @param bookId
 	 * @throws AlreadyReviewedException
 	 */
-	
+
 	@Override
-	public void addBookLikeByUser(String userName, Long bookId)throws AlreadyReviewedException{
+	public void addBookLikeByUser(String userName, Long bookId) throws AlreadyReviewedException {
+
 		User user = userService.getUser(userName);
 		Book book = getBookById(bookId);
-		
-		if(bookLikeRepository.findByBookAndUser(book, user) != null){
+
+		if (bookLikeRepository.findByBookAndUser(book, user) != null) {
+
 			throw new AlreadyReviewedException("Already liked the book");
 		}
-		
+
 		BookLike bookLike = new BookLike();
-	    bookLike.setBook(book);
+		bookLike.setBook(book);
 		bookLike.setUser(user);
 		bookLike = bookLikeRepository.save(bookLike);
-		
 		book.setBookLikes(getNumberOfBookLikesByUsers(bookId));
 		bookRepository.save(book);
-	    
-	    if(bookLike == null){
-	    	throw new RuntimeException("");
-	    }
-		
+
+		if (bookLike == null) {
+
+			throw new NullPointerException("error adding like for the " + book.getBookName());
+		}
+
 	}
-	
+
 	/**
 	 * dislike the book
+	 * 
 	 * @param bookLikeId
 	 * @throws ReviewDoesnotExistException
 	 */
-	
+
 	@Override
-	public void removeBookLikeByUser(String userName, Long bookId) throws ReviewDoesnotExistException{
-		
+	public void removeBookLikeByUser(String userName, Long bookId) throws ReviewDoesnotExistException {
+
 		User user = userService.getUser(userName);
 		Book book = getBookById(bookId);
 		BookLike bookLike = bookLikeRepository.findByBookAndUser(book, user);
-		
-		if(bookLike == null){
+
+		if (bookLike == null) {
+
 			throw new ReviewDoesnotExistException("the book like doesnot exist.");
 		}
-		
+
 		bookLikeRepository.delete(bookLike);
 	}
-	
+
 	/**
 	 * Returns number of total likes by book id.
+	 * 
 	 * @param bookId
 	 * @return
 	 */
-	
+
 	@Override
-	public int getNumberOfBookLikesByUsers(Long bookId){
+	public int getNumberOfBookLikesByUsers(Long bookId) {
+
 		Book book = getBookById(bookId);
 		int likes = bookLikeRepository.findByBook(book).size();
-		
 		book.setBookLikes(likes);
 		bookRepository.save(book);
-		
+
 		return likes;
 	}
 
 	/**
 	 * search books by name or isbn or genre
+	 * 
 	 * @param name
 	 * @param genre
 	 * @param isbn
@@ -538,14 +620,17 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Page<Book> searchForBooks(String name, String genre, String isbn, int page) {
 
-		return bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContainingAndBookVerified(name, genre, isbn, true, Utility.buildPageRequest(10, page)); 
+		return bookRepository.findByBookNameContainingOrBookGenreContainingOrBookIsbnContainingAndBookVerified(name,
+				genre, isbn, true, Utility.buildPageRequest(10, page));
 	}
+
 	/**
 	 * returns top 10 books
 	 */
-	
+
 	@Override
-	public List<Book> getTop10Books(){
+	public List<Book> getTop10Books() {
+		
 		return bookRepository.findTop10ByBookLikesGreaterThanOrderByBookLikesDesc(0);
 	}
 }

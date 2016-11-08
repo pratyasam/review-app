@@ -16,7 +16,7 @@
 <html lang="en">
 
 <head>
-<title>Admin Profile Page</title>
+<title>${userFirstName} ${userLastName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -53,6 +53,7 @@
 							<li><a href="/reviewBook/addauthor">Add Author</a></li>
 							<li><a href="/reviewBook/linkBookAndAuthor">Link Book
 									and Author</a></li>
+									<li><a href="/reviewBook/sendEmail"> Send Newsletter</a></li>
 						</ul></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">All <span class="caret"></span></a>
@@ -60,6 +61,12 @@
 							<li><a href="/reviewBook/books">All Books</a></li>
 							<li><a href="/reviewBook/authors">All Authors</a></li>
 							<li><a href="/reviewBook/users">All Users</a></li>
+						</ul></li>
+						<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown" href="#">Update <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/reviewBook/userupload">profile picture</a></li>
+							<li><a href="/reviewBook/users/${user.userId}/update ">password or Email</a></li>
 						</ul></li>
 						<li><a href="/reviewBook/profile">Hello ${userName}</a></li>
 						<li><img src="/reviewBook/uploads/${userImage}"
@@ -82,7 +89,7 @@
 				<div class="col-sm-8 col-lg-8 col-md-8 pad">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3>${userFirstName}${userLastName}</h3>
+							<h3>${userFirstName} ${userLastName}</h3>
 						</div>
 						<div class="panel-body">
 							<p>User Name: ${user.userName}</p>
@@ -152,7 +159,7 @@
 						<%
 							}
 						%>
-						<br> <br>
+						
 						<div
 							class="col-lg-6 col-lg-offset-3 col--md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 text-center">
 							<%
@@ -183,6 +190,7 @@
 					</div>
 				</div>
 			</div>
+			<br> <br>
 			<div class="col-lg-12 text-center">
 				<h4 style="border-bottom: 2px #CCC solid;">Authors Reviewed by
 					${user.firstName} ${user.lastName} :</h4>
@@ -246,10 +254,13 @@
 						}
 					%>
 				</div>
+				<div class="col-lg-12">
+				    <br> <br>
+		            <jsp:include page='contact.jsp' />
+				</div>
 			</div>
 		</div>
-		<br> <br>
-		<jsp:include page='contact.jsp' />
+		
 		<div class="col-lg-12">
 			<div class="footer text-center">
 				<br> <br> <small>Copyright &copy; Pratyasha</small> <br>

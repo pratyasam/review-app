@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import com.mindfire.review.exceptions.LoginFailException;
 import com.mindfire.review.exceptions.UserDoesNotExistException;
 import com.mindfire.review.exceptions.UserExistException;
+import com.mindfire.review.web.dto.ChoiceDto;
 import com.mindfire.review.web.dto.SignupDto;
+import com.mindfire.review.web.dto.UserUpdateDto;
 import com.mindfire.review.web.models.Author;
 import com.mindfire.review.web.models.Book;
 import com.mindfire.review.web.models.ReviewAuthor;
@@ -138,12 +140,12 @@ public interface UserService {
      * @throws UserDoesNotExistException
      */
 
-    void updateUser(Long userId, SignupDto signupDto) throws UserDoesNotExistException;
+    void updateUser(Long userId, UserUpdateDto userUpdateDto) throws UserDoesNotExistException;
 
     /**
      * @param userName
      * @param password
-     * @return
+     * @return User
      */
     User loginAuthenticate(String userName, String password) throws LoginFailException;
 
@@ -164,23 +166,32 @@ public interface UserService {
     /**
      *
      * @param userId
-     * @return
+     * @return User
      */
     public User getUserById(Long userId);
     
     /**
      * 
      * @param user
-     * @return
+     * @return int
      */
     int totalLikesByUser(User user);
     
     /**
      * 
      * @param user
-     * @return
+     * @return int
      */
     int totalReviewsMadeByTheUser(User user);
+    
+    /**
+     * This method takes a confirmation code and user Id as arguments and checks against the database.
+     * It returns whether the confirmation code matches.
+     * @param choiceDto
+     * @param userId
+     * @return boolean
+     */
+    boolean forgotPasswordService(ChoiceDto choiceDto, Long userId);
 
 
 }

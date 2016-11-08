@@ -32,48 +32,11 @@
 				<div class="panel-body">
 					<div class="col-lg-12 ">
 						<form:form name="signupFrom" id="signupForm"
-							cssClass="form-horizontal" method="post" modelAttribute="userupdate"
-							action="${user.userId}">
+							cssClass="form-horizontal" method="put"
+							modelAttribute="userupdate" action="/reviewBook/users/${user.userId}">
 							<fieldset class="pad-tb-20">
-								<div class="form-group">
-									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"> <span
-												class="fa fa-user fa-2x"></span>
-											</span>
-											<form:input path="firstName" type="text"
-												cssClass="form-control" id="inputFirstName"
-												placeholder="${userName} }" required="required" />
-										</div>
-									</div>
-								</div>
-								<br>
-								<div class="form-group">
-									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"> <span
-												class="fa fa-user fa-2x"></span>
-											</span>
-											<form:input path="lastName" type="text"
-												cssClass="form-control" id="inputLatName"
-												placeholder="Last Name" required="required" />
-										</div>
-									</div>
-								</div>
-								<br>
-								<div class="form-group">
-									<div class="col-lg-12">
-										<div class="input-group">
-											<span class="input-group-addon"> <span
-												class="fa fa-user-plus fa-2x"></span>
-											</span>
-											<form:input path="userName" type="text"
-												cssClass="form-control" id="inputUsername"
-												placeholder="Username" required="required" />
-										</div>
-									</div>
-								</div>
-								<br>
+
+
 								<div class="form-group">
 									<div class="col-lg-12">
 										<div class="input-group">
@@ -82,40 +45,30 @@
 											</span>
 											<form:input path="password" type="password"
 												cssClass="form-control" id="inputPassword"
-												placeholder="Password" required="required" />
+												placeholder="Enter new Password" />
 
 										</div>
 									</div>
 								</div>
 								<br>
 								<div class="form-group">
-									<label class="col-lg-2 control-label"><b>Gender</b></label>
-									<div class="col-lg-10">
-										<div class="radio">
-											<label> <form:radiobutton path="gender"
-													name="optionsRadios" id="optionsRadios1" value="Female"
-													required="required" /> Female
-											</label>
-										</div>
-										<div class="radio">
-											<label> <form:radiobutton path="gender"
-													name="optionsRadios" id="optionsRadios1" value="Male"
-													required="required" /> Male
-											</label>
-										</div>
-										<div class="radio">
-											<label> <form:radiobutton path="gender"
-													name="optionsRadios" id="optionsRadios2" value="Others"
-													required="required" /> Others
-											</label>
+									<div class="col-lg-12">
+										<div class="input-group">
+											<span class="input-group-addon"> <span
+												class="fa fa-pencil fa-2x"></span>
+											</span>
+											<form:input type="email" path="email"
+												cssClass="form-control" id="recipient"
+												placeholder="new Email Address"></form:input>
 										</div>
 									</div>
 								</div>
 								<br>
+
 								<div class="form-group">
 									<div class="col-lg-10 col-lg-offset-2">
 										<input type="reset" class="btn btn-default" value="cancel" />
-										<button type="submit" class="btn btn-primary">Sign-Up</button>
+										<button type="submit" class="btn btn-primary">Submit</button>
 									</div>
 								</div>
 
@@ -125,11 +78,6 @@
 							</fieldset>
 						</form:form>
 						<br>
-						<div class="col-lg-12">
-							<p>
-								Already Have an Account ? <a href="login"><b>LogIn</b></a> here.
-							</p>
-						</div>
 					</div>
 				</div>
 
